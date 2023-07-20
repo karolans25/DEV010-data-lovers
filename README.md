@@ -1,5 +1,77 @@
 # Data Lovers
 
+## Definición del Producto
+
+Para este proyecto he escogido el dataset de Countries. 
+
+### ¿Quiénes son los principales usuarios del producto?
+La aplicación será una aplicación de consulta que permita consultar alguna infomación 
+relevante de los países del mundo. Poder filtrar esa información por el nombre del país,
+por el continente en el que se encuentra, por la subregión en donde se encuentra, por un 
+rango de área o población. Además, permitirá ordenar los datos de forma ascendente o 
+descendente.
+
+### ¿Cuáles son los objetivos de estos usuarios en relación con el producto?
+Poder consultar información sobre países. 
+* Poder ver la lista completa de países.
+* Poder ver imágenes de esos países.
+* Poder filtrar los datos por unos parámetros de búsqueda.
+* Poder ordenar los datos de manera descendente y ascendente.
+* Poder tener interactividad con un mapamundi (Opcional).
+
+
+### ¿Cuáles son los datos más relevantes que quieren ver en la interfaz y por qué?
+Hasta el momento los datos que se mostrarán en la interfaz son:
+* En la tabla:
+  * Nombre común y si se hace click sobre el nombre aparezca el nombre oficial.
+  * Junto al nombre la bandera del país (emoji) y un chulito o una x dependiendo de si
+  es independiente o no.
+  * Capital del país.
+  * Lenguajes que hablan en ese país.
+  * Extensión en área del país.
+  * Población del país.
+  * Coeficiente de Gini, y si se pasa sobre el coeficiente que aparezca el año en el que 
+  se calculó ese índice.
+
+* En las Cards:
+  * En la parte del Frente:
+    * Nombre común
+    * Una imagen del país.
+  * En la parte de Atrás:
+    * Nombre oficial.
+    * Junto al nombre la bandera del país (emoji) y un chulito o una x dependiendo de si
+    es independiente o no.
+    * Capital del país.
+    * Lenguajes que hablan en ese país.
+    * Extensión en área del país.
+    * Población del país.
+    * Coeficiente de Gini y año en el que se calculó ese índice.
+
+### ¿Cuándo utilizan o utilizarían el producto?
+Cuando quiera repasar sus conocimientos sobre los países del mundo.
+* Cuando quiera jugar sobre la ubicación de los países. (Opcional).
+
+### Toda tu investigación previa debe tener como resultado todas las Historias de Usuario de tu proyecto.
+Definición de las historias de Usuario
+![Historias de Usuario](src/documentacion/Project%202%20-%20Historias%20de%20Usuario.png)
+
+
+## Proceso de Diseño
+
+Luego de definir las historias de usuario he identificado que cada historia de usuario tiene 5 partes importantes:
+* Diseño de protoripo de Baja Fidelidad
+* Diseño de protoripo de Alta Fidelidad
+* Test de usabilidad con prototipo de Alta y Baja Fidelidad
+* Diseño de la interfaz gráfica
+* Diseño de las pruebas unitarias
+
+Luego de esto se realizó el backlog del proyecto y se definió el backlog del sprint 1 y la lista 
+de To DO del daily. Con esto, se procedió a iniciar con cada una de las historias de Usuario.
+
+### Historia de Usuario 1: Como usuario quiero una tabla para ver los datos de los países
+
+
+
 ## Índice
 
 * [1. Preámbulo](#1-preámbulo)
