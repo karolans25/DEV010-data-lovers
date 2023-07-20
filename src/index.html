@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Lovers</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png"/>
   </head>
   <body>
     <header>
@@ -16,11 +17,17 @@
       <!-- <div id="results"></div> -->
       <section name="containerTabla">
         <h2></h2>
-        <div id="paginas">
+        <div id="filter">
+          <label for="filter-by">Filter by: </label>
+          <select name="fiter-by" id="filter-by"></select>
+          <select name="fiter-by-option" id="filter-by-option"></select>
+          <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="10px"></button>
+        </div>
+        <div id="pages">
           <label for="select-pages">Page:</label>
-          <img src="assets/flecha-izquierda.png" alt="Anterior" width="10px">
+          <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior" width="10px"></button>
           <select name="select-pages" id="select-pages"></select>
-          <img src="assets/flecha-correcta.png" alt="Siguiente" width="10px">
+          <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente" width="10px"></button>
         </div>
         <table></table>
       </section>

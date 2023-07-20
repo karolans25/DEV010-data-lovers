@@ -1,59 +1,100 @@
 import { filter, search} from './data.js';
 
-//let countries;
 const dir = './data/countries/countries.json';
+const lines = 10;
+const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population'];
+const filters = ['Continents', 'Subregion', 'Languages'];
+const filtersOptions = [[],[],[]];
+const selectFilter = document.querySelector('#filter-by');
+const selectFilterOption = document.querySelector('#filter-by-option');
+const selectPage = document.querySelector('#select-pages');
+const filterBut = document.querySelector('#filter-button');
+const backBut = document.querySelector('#back-button');
+const forwardBut = document.querySelector('#forward-button');
+const table = document.querySelector('table');
+let globalData;
 
 fetch(dir)
   .then(response => response.json())
   .then(data => {
-    //countries = data;
-    fillData(data);
+    globalData = data;
+    fillData();
   })
   .catch(error => console.error(error))
 
-const select = document.querySelector('#select-pages');
-const table = document.querySelector('table');
-
-function fillData (countries){
-  const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population'];
-  //showTable(titles, countries);
-  //function showTable(page, titles, countries){
-  console.log(filter(countries, 'continents', 'America'));
-  console.log(search(countries, 'name', 'Republic of Guatemala'));
-  const lines = 15;
-  const total = Math.ceil(countries.length/lines);
-  createPagination(lines, total);
-  showTable(1, lines, titles, countries)
-  //select.addEventListener('change', showTable(select.text, lines, titles, countries));
-  select.addEventListener('change', function(){
-    showTable(parseInt(select.value)+1, lines, titles, countries);  
+function fillData (){
+  const total = Math.ceil(globalData.length/lines);
+  createPagination(total);
+  createFilters();
+  showTable(1);
+  //backBut.disabled = true;
+  //(select.value === 0) ? backBut.setAttribute("disabled", "disabled") : backBut.removeAttribute("disabled");
+  // Listener para cambios en el selectFilter
+  selectFilter.addEventListener('change', function(){
+    while (selectFilterOption.firstChild) {
+      selectFilterOption.removeChild(selectFilterOption.firstChild);
+    }
+    if(parseInt(selectFilter.value) !== -1){
+      for (const i of filtersOptions[selectFilter.value]){
+        const option = document.createElement('option');
+        option.value = filtersOptions[selectFilter.value].indexOf(i);
+        option.text = i;
+        selectFilterOption.add(option);
+      }
+    } else {
+      const miEvento = new Event('change');
+      selectPage.dispatchEvent(miEvento);
+    }
+  });
+  // Listener para cambios en el selectPage
+  selectPage.addEventListener('change', function(){
+    showTable(parseInt(selectPage.value)+1);
+  });
+  //console.log(search(countries, 'name', 'Republic of Guatemala'));
+  // Listener para click sobre backButton
+  filterBut.addEventListener('click', function(){
+    console.log(selectFilter.value);
+    console.log(selectFilterOption.value);
+    console.log(filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]));
+  });
+  // Listener para click sobre backButton
+  backBut.addEventListener('click', function(){
+    const actual = selectPage.value;
+    if (actual !== 0){
+      selectPage.text = parseInt(actual);
+      selectPage.value = parseInt(actual)-1;
+      showTable(parseInt(selectPage.value)+1);
+    }
+  });
+  // Listener para click sobre forwardButton
+  forwardBut.addEventListener('click', function(){
+    const actual = selectPage.value;
+    if (actual !== Math.ceil(globalData.length/lines)){
+      selectPage.text = parseInt(actual)+2;
+      selectPage.value = parseInt(actual)+1;
+      showTable(parseInt(selectPage.value)+1);
+    }
   });
 }
 
-function showTable(page, lines, titles, data){
-  const init = (page - 1)*lines;
-  const end = init + lines;
-  const dataTable = data.slice(init, end);
-  createTable(page, lines, titles, dataTable);
-}
-
-function createPagination(linesPage, totalPages){
+function createPagination(totalPages){
   for(let i = 0; i < totalPages; i++){
     const option = document.createElement('option');
     option.value = i;
     option.text = i+1;
-    select.add(option);
+    selectPage.add(option);
   }
 }
 
-/**
- * Pinta la tabla para mostrar los países
- * @param {'object'} titles - Títulos para la tabla
- * @param {'object'} data - Datos cargados del archivo countries.json
- */
-function createTable(page, lines, titles, data){
+function showTable(page){
+  const init = (page - 1)*lines;
+  const end = init + lines;
+  const dataTable = globalData.slice(init, end);
+  createTable(page, dataTable);
+}
+
+function createTable(page, data){
   document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Tabla de Países";
-  //const list = tableCountries.children[2];
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
@@ -61,6 +102,7 @@ function createTable(page, lines, titles, data){
   caption.innerHTML = "Tabla de países";
   table.append(caption);
 
+  //Fill the titles of the table
   const thead = document.createElement('thead');
   let tr = document.createElement('tr');
   for (const i of titles){
@@ -71,7 +113,7 @@ function createTable(page, lines, titles, data){
   thead.append(tr);
   table.append(thead);
 
-  // Fill the data
+  // Fill the data of the table
   const tbody = document.createElement('tbody');
   for (const i of data){
     tr = document.createElement('tr');
@@ -88,8 +130,8 @@ function createTable(page, lines, titles, data){
       } else if (j === 'Languages'){
         let lang = "";
         if(typeof(i.languages) === 'object'){
-          for(const value of Object.values(i.languages)){
-            lang += `${value},\t`;
+          for(const key of Object.keys(i.languages)){
+            lang += `${key},\t`;
           }
         }
         td.innerHTML = lang.slice(0,-2);
@@ -105,4 +147,40 @@ function createTable(page, lines, titles, data){
     tbody.append(tr);
   }
   table.append(tbody);
+}
+
+function createFilters(){
+  createFiltersOptions();
+  let option = document.createElement('option');
+  option.value = "-1";
+  option.text = "-----------------";
+  selectFilter.append(option);
+  for(const i of filters){
+    option = document.createElement('option');
+    option.value = filters.indexOf(i);
+    option.text = i;
+    selectFilter.add(option);
+  }
+}
+
+function createFiltersOptions(){
+  for (const i of globalData){
+    for (const j of filters){
+      if (j.toLowerCase() === "continents"){
+        if (!(filtersOptions[filters.indexOf(j)].includes(i.continents[0]))){
+          filtersOptions[filters.indexOf(j)].push(i.continents[0]);
+        }
+      } else if(j.toLowerCase() === "subregion" && typeof(i.subregion) === 'string'){
+        if (!(filtersOptions[filters.indexOf(j)].includes(i.subregion))){
+          filtersOptions[filters.indexOf(j)].push(i.subregion);
+        }
+      } else if(j.toLowerCase() === "languages" && typeof(i.languages) === 'object'){
+        for (const key of Object.keys(i.languages)){
+          if (!(filtersOptions[filters.indexOf(j)].includes(key))){
+            filtersOptions[filters.indexOf(j)].push(key);
+          }
+        }
+      }
+    }
+  }
 }

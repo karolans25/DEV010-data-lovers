@@ -1,8 +1,15 @@
 export const filter = (data, filterBy, lookFor) => {
   if (filterBy === 'continents'){
     return data.filter(country => country.continents[0] === lookFor);
-  } else {
-    return false;
+  } else if (filterBy === 'subregion'){
+    return data.filter(country => country.subregion === lookFor);
+  } else if (filterBy === 'languages'){
+    return data.filter(country => {
+      for (const i of Object.keys(country.laguages)){
+        if(i === lookFor){
+          return true;
+        }  
+      }});
   }
 };
 
