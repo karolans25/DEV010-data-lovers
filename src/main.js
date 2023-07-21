@@ -5,6 +5,7 @@ const lines = 10;
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population'];
 const filters = ['Continents', 'Subregion', 'Languages'];
 const filtersOptions = [[],[],[]];
+const inputSearch = document.querySelector('#search-by');
 const selectFilter = document.querySelector('#filter-by');
 const selectFilterOption = document.querySelector('#filter-by-option');
 const selectPage = document.querySelector('#select-pages');
@@ -18,23 +19,34 @@ let theData;
 async function fetchAndStore() {
   try {
     globalData = await dataJson(dir);
-    console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
+    //console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
     init();
-    fillData();
+    //fillData();
   } catch (error) {
     console.error(error);
   }
 }
 
-fetchAndStore();
-
 function init() {
+  inputSearch.value = '';
   const total = Math.ceil(globalData.length/lines);
   createPagination(total);
   createFilters();
   theData = globalData;
-  //console.log(globalData);
   showTable(1, theData);
+  // Listener para el input Search
+  inputSearch.addEventListener('keyup', (event) => {
+    theData = search(globalData, event.target.value);
+    if(typeof(theData) !== 'undefined'){
+      const total = Math.ceil(theData.length/lines);
+      createPagination(total);
+      showTable(parseInt(selectPage.value) + 1, theData);
+      //createTable(1, theData);
+    } else {
+      showTable(parseInt(selectPage.value) + 1, globalData);
+    }
+  });
+  // Listener para el selector de Filtro
   selectFilter.addEventListener('change', function(){
     while (selectFilterOption.firstChild) {
       selectFilterOption.removeChild(selectFilterOption.firstChild);
@@ -47,28 +59,24 @@ function init() {
         selectFilterOption.add(option);
       }
     } else {
-      const miEvento = new Event('change');
-      selectPage.dispatchEvent(miEvento);
+      while (selectFilter.firstChild) {
+        selectFilter.removeChild(selectFilter.firstChild);
+      }
+      init();
     }
   });
-  // Listener para cambios en el selectPage
+  // Listener para el selector de Página
   selectPage.addEventListener('change', function(){
     showTable(parseInt(selectPage.value)+1, theData);
   });
-  //console.log(search(countries, 'name', 'Republic of Guatemala'));
-  // Listener para click sobre backButton
+  // Listener para el botón Filter
   filterBut.addEventListener('click', function(){
-    console.log(globalData);
-    console.log(filters[selectFilter.value].toLowerCase());
-    console.log(filtersOptions[selectFilter.value][selectFilterOption.value]);
-    
     theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
-    console.log(theData);
     const total = Math.ceil(theData.length/lines);
     createPagination(total);
     showTable(parseInt(selectPage.value) + 1, theData);
   });
-  // Listener para click sobre backButton
+  // Listener para el botón back button
   backBut.addEventListener('click', function(){
     const actual = selectPage.value;
     if (actual !== 0){
@@ -77,7 +85,7 @@ function init() {
       showTable(parseInt(selectPage.value)+1, theData);
     }
   });
-  // Listener para click sobre forwardButton
+  // Listener para el botón forward button
   forwardBut.addEventListener('click', function(){
     const actual = selectPage.value;
     if (actual !== Math.ceil(globalData.length/lines)){
@@ -106,8 +114,12 @@ function createPagination(totalPages){
 function showTable(page, countries){
   const init = (page - 1)*lines;
   const end = init + lines;
-  const dataTable = countries.slice(init, end);
-  createTable(page, dataTable);
+  if(countries.length !== 1){
+    const dataTable = countries.slice(init, end);
+    createTable(page, dataTable);
+  } else{
+    createTable(page, countries);
+  }
 }
 
 function createTable(page, data){
@@ -139,17 +151,23 @@ function createTable(page, data){
       if (j === 'No'){
         td.innerHTML = `${(page-1)*lines + (data.indexOf(i)+1)}`;
       } else if (j === 'Country'){
-        let name = `${i.name.common}\t\t${i.flag}`;
-        (i.independent) ? name += '\t\t✅' : name += '\t\t❌';
+        let name = `${i.name.common}\t${i.flag}`;
+        (i.independent) ? name += '\t✅' : name += '\t❌';
         td.innerHTML = name;
       } else if ( j === 'Capital'){
-        td.innerHTML = i.capital;
+        if (typeof(i.capital) === 'object'){
+          td.innerHTML = i.capital;
+        } else {
+          td.innerHTML = '❌';
+        }
       } else if (j === 'Languages'){
         let lang = "";
         if(typeof(i.languages) === 'object'){
           for(const key of Object.keys(i.languages)){
             lang += `${key},\t`;
           }
+        } else {
+          lang = "❌,\t";
         }
         td.innerHTML = lang.slice(0,-2);
       } else if (j === 'Area'){
@@ -201,3 +219,5 @@ function createFiltersOptions(){
     }
   }
 }
+
+fetchAndStore();

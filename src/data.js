@@ -21,17 +21,7 @@ export const filter = (data, filterBy, lookFor) => {
         theCountries.push(i);
       }
     }
-    console.log(theCountries);
     return theCountries;
-    /*
-    console.log(Object.keys(data[0].laguages));
-    return data.filter(country => { 
-      for (const i of Object.keys(country.laguages)){
-        if(i === lookFor){
-          return true;
-        }  
-      }});
-    */
   }
 };
 
@@ -41,10 +31,27 @@ export const sort = (data, sortBy, direction) =>{
   return `Hola ${data};`
 }
 
-export const search = (data, searchBy, lookFor) => {
-  if (searchBy === 'name'){
-    return data.find(country => country.name.common === lookFor || country.name.official === lookFor);
+export const search = (data, lookFor) => {
+  console.log(lookFor);
+  /*
+  const result =  data.filter(country => country.name.common.startsWith(lookFor) || country.name.common === lookFor || country.name.official.startsWith(lookFor) || country.name.offcial === lookFor);
+  */
+  if(lookFor === ''){
+    return data;
   } else {
-    return false;
+    return data.filter(country => country.name.common.startsWith(lookFor) || country.name.common === lookFor || country.name.official.startsWith(lookFor) || country.name.offcial === lookFor || ((typeof(country.capital) === 'object') ? country.capital[0].startsWith(lookFor) : false ));
+  }
+  
+  
+  
+  //(country.capital[0] !== 'undefined') ? country.capital[0].startsWith(lookFor) || country.capital[0] === lookFor : country.name.oficial.startsWith(lookFor));// || country.name.official.startsWith(lookFor));// || country.fifa.startsWith(lookFor.toUpperCase())); //|| country.tld[0] === lookFor);
+  //country.name.official.startsWidth(lookFor) || country.name.common.startsWith(lookFor) || country.fifa.startsWidth(lookFor.toUpperCase()));
+  /*if (result[0].length === 0){
+    result = [];  
+  }*/
+  if (result.length === 0){
+    //
+  } else {
+    return result;
   }
 };
