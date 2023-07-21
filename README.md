@@ -68,9 +68,14 @@ Luego de definir las historias de usuario he identificado que cada historia de u
 Luego de esto se realizó el backlog del proyecto y se definió el backlog del sprint 1 y la lista 
 de To DO del daily. Con esto, se procedió a iniciar con cada una de las historias de Usuario.
 
+![vista 1](src/documentacion/HU_0.png)
+
+![vista 2](src/documentacion/HU_2.png)
+
+![ vist 3](src/documentacion/HU_3.png)
+
 ### Historia de Usuario 1: Como usuario quiero una tabla para ver los datos de los países
 
-![HU1 paso0](src/documentacion/HU1/HU1_0.png)
 
 ![HU1 paso1](src/documentacion/HU1/HU1_1.png)
 
@@ -82,19 +87,77 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU1 paso5](src/documentacion/HU1/HU1_5.png)
 
-### Historia de Usuario 2: Como usuario quiero una tabla para ver los datos de los países
+![HU1 paso6](src/documentacion/HU1/HU1_6.png)
 
-![HU1 paso0](src/documentacion/HU1/HU1_0.png)
+### Historia de Usuario 2: Como usuario quiero un select para poder filtrar por continente, subregion o language
 
-![HU1 paso1](src/documentacion/HU1/HU1_1.png)
+![HU2 paso1](src/documentacion/HU2/HU2_1.png)
 
-![HU1 paso2](src/documentacion/HU1/HU1_2.png)
+![HU2 paso2](src/documentacion/HU2/HU2_2.png)
 
-![HU1 paso3](src/documentacion/HU1/HU1_3.png)
+![HU2 paso3](src/documentacion/HU2/HU2_3.png)
 
-![HU1 paso4](src/documentacion/HU1/HU1_4.png)
+![HU2 paso4](src/documentacion/HU2/HU2_4.png)
 
-![HU1 paso5](src/documentacion/HU1/HU1_5.png)
+![HU2 paso5](src/documentacion/HU2/HU2_5.png)
+
+![HU2 paso6](src/documentacion/HU2/HU2_6.png)
+
+![HU2 paso7](src/documentacion/HU2/HU2_7.png)
+
+![HU2 paso8](src/documentacion/HU2/HU2_8.png)
+
+![HU2 paso9](src/documentacion/HU2/HU2_9.png)
+
+![HU2 paso10](src/documentacion/HU2/HU2_10.png)
+
+![HU2 paso11](src/documentacion/HU2/HU2_11.png)
+
+![HU2 paso12](src/documentacion/HU2/HU2_12.png)
+
+### Historia de Usuario 3: Como usuario quiero un botón para ordenar los países de manera ascendente o descendente
+
+![HU3 paso1](src/documentacion/HU3/HU3_1.png)
+
+
+### Historia de Usuario 4: Como usuario quiero poder escribir para buscar un país por su nombre común, nombre official o su capital
+
+![HU4 paso1](src/documentacion/HU4/HU4_1.png)
+
+![HU4 paso2](src/documentacion/HU4/HU4_2.png)
+
+![HU4 paso3](src/documentacion/HU4/HU4_3.png)
+
+![HU4 paso4](src/documentacion/HU4/HU4_4.png)
+
+![HU4 paso5](src/documentacion/HU4/HU4_5.png)
+
+![HU4 paso6](src/documentacion/HU4/HU4_6.png)
+
+![HU4 paso7](src/documentacion/HU4/HU4_7.png)
+
+![HU4 paso8](src/documentacion/HU4/HU4_8.png)
+
+![HU4 paso9](src/documentacion/HU4/HU4_9.png)
+
+
+### Historia de Usuario 5: Como usuario quiero poder escribir para buscar un país por su nombre común, nombre official o su capital
+
+![HU5 paso1](src/documentacion/HU5/HU5_1.png)
+
+### Historia de Usuario 6: Como usuario quiero ver las banderas de los países para aprender
+
+![HU6 paso1](src/documentacion/HU6/HU6_1.png)
+
+![HU6 paso2](src/documentacion/HU6/HU6_2.png)
+
+![HU6 paso3](src/documentacion/HU6/HU6_3.png)
+
+![HU6 paso4](src/documentacion/HU6/HU6_4.png)
+
+### (*Opcional) Historia de Usuario 7: Como usuario quiero ver el mapamundi para ubicar a cada país
+
+![HU7 paso1](src/documentacion/HU7/HU7_1.png)
 
 
 ## Índice

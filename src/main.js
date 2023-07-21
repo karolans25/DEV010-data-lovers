@@ -35,6 +35,9 @@ function init() {
   theData = globalData;
   showTable(1, theData);
   // Listener para el input Search
+  inputSearch.addEventListener('click', function() {
+    inputSearch.text = '';
+  });
   inputSearch.addEventListener('keyup', (event) => {
     theData = search(globalData, event.target.value);
     if(typeof(theData) !== 'undefined'){
@@ -45,6 +48,7 @@ function init() {
     } else {
       showTable(parseInt(selectPage.value) + 1, globalData);
     }
+    console.log(theData);
   });
   // Listener para el selector de Filtro
   selectFilter.addEventListener('change', function(){
