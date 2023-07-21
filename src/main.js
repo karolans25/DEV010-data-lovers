@@ -13,21 +13,13 @@ const backBut = document.querySelector('#back-button');
 const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
 let globalData;
-
-/*
-fetch(dir)
-  .then(response => response.json())
-  .then(data => {
-    globalData = data;
-    fillData();
-  })
-  .catch(error => console.error(error))
-*/
+let theData;
 
 async function fetchAndStore() {
   try {
     globalData = await dataJson(dir);
     console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
+    init();
     fillData();
   } catch (error) {
     console.error(error);
@@ -36,14 +28,13 @@ async function fetchAndStore() {
 
 fetchAndStore();
 
-function fillData (){
+function init() {
   const total = Math.ceil(globalData.length/lines);
   createPagination(total);
   createFilters();
-  showTable(1);
-  //backBut.disabled = true;
-  //(select.value === 0) ? backBut.setAttribute("disabled", "disabled") : backBut.removeAttribute("disabled");
-  // Listener para cambios en el selectFilter
+  theData = globalData;
+  //console.log(globalData);
+  showTable(1, theData);
   selectFilter.addEventListener('change', function(){
     while (selectFilterOption.firstChild) {
       selectFilterOption.removeChild(selectFilterOption.firstChild);
@@ -62,14 +53,16 @@ function fillData (){
   });
   // Listener para cambios en el selectPage
   selectPage.addEventListener('change', function(){
-    showTable(parseInt(selectPage.value)+1);
+    showTable(parseInt(selectPage.value)+1, theData);
   });
   //console.log(search(countries, 'name', 'Republic of Guatemala'));
   // Listener para click sobre backButton
   filterBut.addEventListener('click', function(){
-    console.log(selectFilter.value);
-    console.log(selectFilterOption.value);
-    console.log(filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]));
+    theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
+    console.log(theData);
+    const total = Math.ceil(theData.length/lines);
+    createPagination(total);
+    showTable(parseInt(selectPage.value) + 1, theData);
   });
   // Listener para click sobre backButton
   backBut.addEventListener('click', function(){
@@ -77,7 +70,7 @@ function fillData (){
     if (actual !== 0){
       selectPage.text = parseInt(actual);
       selectPage.value = parseInt(actual)-1;
-      showTable(parseInt(selectPage.value)+1);
+      showTable(parseInt(selectPage.value)+1, theData);
     }
   });
   // Listener para click sobre forwardButton
@@ -86,12 +79,18 @@ function fillData (){
     if (actual !== Math.ceil(globalData.length/lines)){
       selectPage.text = parseInt(actual)+2;
       selectPage.value = parseInt(actual)+1;
-      showTable(parseInt(selectPage.value)+1);
+      showTable(parseInt(selectPage.value)+1, theData);
     }
   });
 }
 
+function fillData (){
+}
+
 function createPagination(totalPages){
+  while (selectPage.firstChild) {
+    selectPage.removeChild(selectPage.firstChild);
+  }
   for(let i = 0; i < totalPages; i++){
     const option = document.createElement('option');
     option.value = i;
@@ -100,10 +99,10 @@ function createPagination(totalPages){
   }
 }
 
-function showTable(page){
+function showTable(page, countries){
   const init = (page - 1)*lines;
   const end = init + lines;
-  const dataTable = globalData.slice(init, end);
+  const dataTable = countries.slice(init, end);
   createTable(page, dataTable);
 }
 
