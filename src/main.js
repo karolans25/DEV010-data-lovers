@@ -1,4 +1,4 @@
-import { filter, search} from './data.js';
+import { filter, search, dataJson} from './data.js';
 
 const dir = './data/countries/countries.json';
 const lines = 10;
@@ -14,6 +14,7 @@ const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
 let globalData;
 
+/*
 fetch(dir)
   .then(response => response.json())
   .then(data => {
@@ -21,6 +22,19 @@ fetch(dir)
     fillData();
   })
   .catch(error => console.error(error))
+*/
+
+async function fetchAndStore() {
+  try {
+    globalData = await dataJson(dir);
+    console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
+    fillData();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+fetchAndStore();
 
 function fillData (){
   const total = Math.ceil(globalData.length/lines);

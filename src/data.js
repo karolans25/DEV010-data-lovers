@@ -24,3 +24,11 @@ export const search = (data, searchBy, lookFor) => {
 export const name = (name) =>{
   return `Hola ${name}`
 }
+
+export const dataJson = async function storeResponse(dir) {
+  const response = await fetch(dir);
+  if (response.status !== 200) { 
+    throw new Error('Hubo un problema accediendo al dataset.');
+  }
+  return await response.json();
+}
