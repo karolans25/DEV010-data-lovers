@@ -70,6 +70,31 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ### Historia de Usuario 1: Como usuario quiero una tabla para ver los datos de los países
 
+![HU1 paso0](src/documentacion/HU1/HU1_0.png)
+
+![HU1 paso1](src/documentacion/HU1/HU1_1.png)
+
+![HU1 paso2](src/documentacion/HU1/HU1_2.png)
+
+![HU1 paso3](src/documentacion/HU1/HU1_3.png)
+
+![HU1 paso4](src/documentacion/HU1/HU1_4.png)
+
+![HU1 paso5](src/documentacion/HU1/HU1_5.png)
+
+### Historia de Usuario 2: Como usuario quiero una tabla para ver los datos de los países
+
+![HU1 paso0](src/documentacion/HU1/HU1_0.png)
+
+![HU1 paso1](src/documentacion/HU1/HU1_1.png)
+
+![HU1 paso2](src/documentacion/HU1/HU1_2.png)
+
+![HU1 paso3](src/documentacion/HU1/HU1_3.png)
+
+![HU1 paso4](src/documentacion/HU1/HU1_4.png)
+
+![HU1 paso5](src/documentacion/HU1/HU1_5.png)
 
 
 ## Índice

@@ -58,6 +58,10 @@ function init() {
   //console.log(search(countries, 'name', 'Republic of Guatemala'));
   // Listener para click sobre backButton
   filterBut.addEventListener('click', function(){
+    console.log(globalData);
+    console.log(filters[selectFilter.value].toLowerCase());
+    console.log(filtersOptions[selectFilter.value][selectFilterOption.value]);
+    
     theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
     console.log(theData);
     const total = Math.ceil(theData.length/lines);
