@@ -1,4 +1,4 @@
-import { filter, search, dataJson} from './data.js';
+import {dataJson, filter, sort, search} from './data.js';
 
 const dir = './data/countries/countries.json';
 const lines = 10;
@@ -8,8 +8,11 @@ const filtersOptions = [[],[],[]];
 const inputSearch = document.querySelector('#search-by');
 const selectFilter = document.querySelector('#filter-by');
 const selectFilterOption = document.querySelector('#filter-by-option');
+const selectSort = document.querySelector('#sort-by');
 const selectPage = document.querySelector('#select-pages');
 const filterBut = document.querySelector('#filter-button');
+const ascendingSortBut = document.querySelector('#sort-ascending-button');
+const descendingSortBut = document.querySelector('#sort-descending-button');
 const backBut = document.querySelector('#back-button');
 const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
@@ -97,6 +100,20 @@ function init() {
       selectPage.value = parseInt(actual)+1;
       showTable(parseInt(selectPage.value)+1, theData);
     }
+  });
+  ascendingSortBut.addEventListener('click', function(){
+    console.log(selectSort.value);
+    theData = sort(theData, selectSort.value, 1);
+    const total = Math.ceil(theData.length/lines);
+    createPagination(total);
+    showTable(parseInt(selectPage.value) + 1, theData);
+  });
+  descendingSortBut.addEventListener('click', function(){
+    console.log(selectSort.value);
+    theData = sort(theData, selectSort.value, -1);
+    const total = Math.ceil(theData.length/lines);
+    createPagination(total);
+    showTable(parseInt(selectPage.value) + 1, theData);
   });
 }
 

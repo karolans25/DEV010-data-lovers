@@ -26,32 +26,77 @@ export const filter = (data, filterBy, lookFor) => {
 };
 
 export const sort = (data, sortBy, direction) =>{
-  console.log(sortBy);
-  console.log(direction);
-  return `Hola ${data};`
+  let result;
+  if(sortBy === 'country'){
+    result = data.sort((a, b) => {
+      const aData = a.name.common.toUpperCase(); // convertir a mayúsculas para ordenar alfabéticamente correctamente
+      const bData = b.name.common.toUpperCase();
+      if (aData < bData) {
+        return -1; // si a es menor que b según la orden alfabética, colocar a antes que b
+      }
+      if (aData > bData) {
+        return 1; // si a es mayor que b, colocar a después de b
+      }
+      return 0; // si los nombres son iguales, no cambiar el orden
+    });
+  } else if (sortBy === 'capital'){
+    result = data.sort(function(a, b) {
+      if (typeof a.capital === 'object' && typeof b.capital === 'object'){
+        result = a.capital[0].localeCompare(b.capital[0]);
+      }
+    });
+  }
+  if(parseInt(direction) === 1){
+    return result;
+  } else if (parseInt(direction) === -1){
+    return result.reverse();
+  }
 }
+
 
 export const search = (data, lookFor) => {
   console.log(lookFor);
-  /*
-  const result =  data.filter(country => country.name.common.startsWith(lookFor) || country.name.common === lookFor || country.name.official.startsWith(lookFor) || country.name.offcial === lookFor);
-  */
   if(lookFor === ''){
     return data;
   } else {
     return data.filter(country => country.name.common.startsWith(lookFor) || country.name.common === lookFor || country.name.official.startsWith(lookFor) || country.name.offcial === lookFor || ((typeof(country.capital) === 'object') ? country.capital[0].startsWith(lookFor) : false ));
   }
-  
-  
-  
-  //(country.capital[0] !== 'undefined') ? country.capital[0].startsWith(lookFor) || country.capital[0] === lookFor : country.name.oficial.startsWith(lookFor));// || country.name.official.startsWith(lookFor));// || country.fifa.startsWith(lookFor.toUpperCase())); //|| country.tld[0] === lookFor);
-  //country.name.official.startsWidth(lookFor) || country.name.common.startsWith(lookFor) || country.fifa.startsWidth(lookFor.toUpperCase()));
-  /*if (result[0].length === 0){
-    result = [];  
-  }*/
-  if (result.length === 0){
-    //
-  } else {
-    return result;
-  }
 };
+
+/*
+export const flags = (data) => 
+
+function flags(data){
+  const numColors = [];
+  for (const i of data){
+    if(typeof i.flags !== 'object' || typeof i.flags.alt !== 'string'){
+      continue;
+    } else {
+      const texto = i.flags.alt;
+      const colores = ["green", "golden-yellow", "red", "yellow", "blue", "black", "white", "orange", "purple", "light-blue", "carmine-red", "dark-blue", "navy-blue", "saffron", "sky-blue", "ultramarine", "gold", "golden", "yellow-sun", "teal", "cobalt-blue", "turquoise", "brown-edge", "copper-colored", "maroon"];
+      const coloresEncontrados = [];
+
+      // Encuentra todas las palabras completas que coinciden con los colores y agrega cada color una sola vez
+      colores.forEach(color => {
+        const regex = new RegExp("\\b" + color + "\\b", "ig");
+        if (texto.match(regex) && !coloresEncontrados.includes(color)) {
+          coloresEncontrados.push(color);
+        }
+      });
+      console.log(texto);
+      console.log(coloresEncontrados);
+      numColors.push(coloresEncontrados.length);
+    }
+  }
+  console.log(numColors);
+
+  let mayor = numColors[0];
+  for(const i of numColors){
+    if (i > mayor){
+      mayor = i;
+    }
+  }
+
+  return data[numColors.indexOf(mayor)];
+}
+*/

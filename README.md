@@ -53,7 +53,7 @@ Cuando quiera repasar sus conocimientos sobre los países del mundo.
 
 ### Toda tu investigación previa debe tener como resultado todas las Historias de Usuario de tu proyecto.
 Definición de las historias de Usuario
-![Historias de Usuario](src/documentacion/Project%202%20-%20Historias%20de%20Usuario.png)
+![Historias de Usuario](src/documentacion/Project_2_Historias_de_Usuario.png)
 
 
 ## Proceso de Diseño
@@ -70,11 +70,12 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![vista 1](src/documentacion/HU_0.png)
 
-![vista 2](src/documentacion/HU_2.png)
+![vista 2](src/documentacion/HU_1.png)
 
-![ vist 3](src/documentacion/HU_3.png)
+![vista 3](src/documentacion/HU_2.png)
 
-### Historia de Usuario 1: Como usuario quiero una tabla para ver los datos de los países
+### Historia de Usuario 1: 
+#### Como usuario quiero una tabla para ver los datos de los países
 
 
 ![HU1 paso1](src/documentacion/HU1/HU1_1.png)
@@ -89,7 +90,8 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU1 paso6](src/documentacion/HU1/HU1_6.png)
 
-### Historia de Usuario 2: Como usuario quiero un select para poder filtrar por continente, subregion o language
+### Historia de Usuario 2: 
+#### Como usuario un select para filtrar los países por continente, subregion e idioma
 
 ![HU2 paso1](src/documentacion/HU2/HU2_1.png)
 
@@ -115,12 +117,14 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU2 paso12](src/documentacion/HU2/HU2_12.png)
 
-### Historia de Usuario 3: Como usuario quiero un botón para ordenar los países de manera ascendente o descendente
+### Historia de Usuario 3: 
+#### Como usuario quiero un botón para ordenar la tabla por país, capital, área y población
 
 ![HU3 paso1](src/documentacion/HU3/HU3_1.png)
 
 
-### Historia de Usuario 4: Como usuario quiero poder escribir para buscar un país por su nombre común, nombre official o su capital
+### Historia de Usuario 4: 
+#### Como usuario quiero escirbir por teclado oara buscar el país por nombre común, nombre oficial o capital
 
 ![HU4 paso1](src/documentacion/HU4/HU4_1.png)
 
@@ -141,11 +145,13 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 ![HU4 paso9](src/documentacion/HU4/HU4_9.png)
 
 
-### Historia de Usuario 5: Como usuario quiero poder escribir para buscar un país por su nombre común, nombre official o su capital
+### Historia de Usuario 5: 
+#### Como usuario quiero un botón para ver los cálculos de los países
 
 ![HU5 paso1](src/documentacion/HU5/HU5_1.png)
 
-### Historia de Usuario 6: Como usuario quiero ver las banderas de los países para aprender
+### Historia de Usuario 6: 
+#### Como usuario quiero cards para ver las banderas de los países
 
 ![HU6 paso1](src/documentacion/HU6/HU6_1.png)
 
@@ -155,7 +161,8 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU6 paso4](src/documentacion/HU6/HU6_4.png)
 
-### (*Opcional) Historia de Usuario 7: Como usuario quiero ver el mapamundi para ubicar a cada país
+### (*Opcional) Historia de Usuario 7: 
+#### Como usuario quiero ver el mapamundi para ubicar a cada país
 
 ![HU7 paso1](src/documentacion/HU7/HU7_1.png)
 
