@@ -7,11 +7,11 @@ export const dataJson = async function storeResponse(dir) {
 }
 
 export const filter = (data, filterBy, lookFor) => {
-  if (filterBy === 'continents'){
+  if (filterBy.toLowerCase() === 'continents'){
     return data.filter(country => country.continents[0] === lookFor);
-  } else if (filterBy === 'subregion'){
+  } else if (filterBy.toLowerCase() === 'subregion'){
     return data.filter(country => country.subregion === lookFor);
-  } else if (filterBy === 'languages'){
+  } else if (filterBy.toLowerCase() === 'languages'){
     const theCountries = [];
     for (const i of data){
       if(typeof(i.languages) === 'undefined'){
@@ -27,7 +27,7 @@ export const filter = (data, filterBy, lookFor) => {
 
 export const sort = (data, sortBy, direction) =>{
   let result;
-  if(sortBy === 'country'){
+  if(sortBy.toLowerCase() === 'country'){
     result = data.sort((a, b) => {
       const aData = a.name.common.toUpperCase(); // convertir a mayúsculas para ordenar alfabéticamente correctamente
       const bData = b.name.common.toUpperCase();
@@ -39,7 +39,7 @@ export const sort = (data, sortBy, direction) =>{
       }
       return 0; // si los nombres son iguales, no cambiar el orden
     });
-  } else if (sortBy === 'capital'){
+  } else if (sortBy.toLowerCase() === 'capital'){
     result = data.sort(function(a, b) {
       if (typeof a.capital === 'object' && typeof b.capital === 'object'){
         result = a.capital[0].localeCompare(b.capital[0]);
@@ -55,6 +55,9 @@ export const sort = (data, sortBy, direction) =>{
 
 
 export const search = (data, lookFor) => {
+  if(typeof data !== 'object'){
+    return [];
+  }
   if(lookFor === ''){
     return data;
   } else {

@@ -59,6 +59,7 @@ function init() {
   });
   inputSearch.addEventListener('keyup', (event) => {
     theData = search(globalData, event.target.value);
+    console.log(theData);
     if(typeof(theData) !== 'undefined'){
       totalPages = Math.ceil(theData.length/lines);
       createPagination(totalPages);
