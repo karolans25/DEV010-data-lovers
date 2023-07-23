@@ -1,11 +1,12 @@
 import {dataJson, filter, sort, search} from './data.js';
 
 const dir = './data/countries/countries.json';
-const lines = 10;
+const lines = 9;
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population'];
 const filters = ['Continents', 'Subregion', 'Languages'];
 const filtersOptions = [[],[],[]];
 const inputSearch = document.querySelector('#search-by');
+const inputToggle = document.querySelector('header nav label input');
 const selectFilter = document.querySelector('#filter-by');
 const selectFilterOption = document.querySelector('#filter-by-option');
 const selectSort = document.querySelector('#sort-by');
@@ -16,6 +17,8 @@ const descendingSortBut = document.querySelector('#sort-descending-button');
 const backBut = document.querySelector('#back-button');
 const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
+const cards = document.querySelector('#cards');
+let totalPages;
 let globalData;
 let theData;
 
@@ -24,7 +27,6 @@ async function fetchAndStore() {
     globalData = await dataJson(dir);
     //console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
     init();
-    //fillData();
   } catch (error) {
     console.error(error);
   }
@@ -32,11 +34,25 @@ async function fetchAndStore() {
 
 function init() {
   inputSearch.value = '';
-  const total = Math.ceil(globalData.length/lines);
-  createPagination(total);
+  totalPages = Math.ceil(globalData.length/lines);
+  createPagination(totalPages);
   createFilters();
   theData = globalData;
+  showCards(1, theData);
   showTable(1, theData);
+  (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
+  //backBut.disabled = true;
+  /**Event Listeners */
+  // Listener para el input Toggle
+  inputToggle.addEventListener('click', function() {
+    if(inputToggle.checked === true){
+      cards.style.display = 'none';
+      table.style.display = 'block';
+    } else if(inputToggle.checked === false){
+      cards.style.display = 'flex';
+      table.style.display = 'none';
+    }
+  });
   // Listener para el input Search
   inputSearch.addEventListener('click', function() {
     inputSearch.text = '';
@@ -44,12 +60,14 @@ function init() {
   inputSearch.addEventListener('keyup', (event) => {
     theData = search(globalData, event.target.value);
     if(typeof(theData) !== 'undefined'){
-      const total = Math.ceil(theData.length/lines);
-      createPagination(total);
+      totalPages = Math.ceil(theData.length/lines);
+      createPagination(totalPages);
       showTable(parseInt(selectPage.value) + 1, theData);
+      showCards(parseInt(selectPage.value) + 1, theData);
       //createTable(1, theData);
     } else {
       showTable(parseInt(selectPage.value) + 1, globalData);
+      showCards(parseInt(selectPage.value) + 1, theData);
     }
     console.log(theData);
   });
@@ -75,13 +93,15 @@ function init() {
   // Listener para el selector de Página
   selectPage.addEventListener('change', function(){
     showTable(parseInt(selectPage.value)+1, theData);
+    showCards(parseInt(selectPage.value)+1, theData);
   });
   // Listener para el botón Filter
   filterBut.addEventListener('click', function(){
     theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
-    const total = Math.ceil(theData.length/lines);
-    createPagination(total);
+    totalPages = Math.ceil(theData.length/lines);
+    createPagination(totalPages);
     showTable(parseInt(selectPage.value) + 1, theData);
+    showCards(parseInt(selectPage.value) + 1, theData);
   });
   // Listener para el botón back button
   backBut.addEventListener('click', function(){
@@ -90,34 +110,47 @@ function init() {
       selectPage.text = parseInt(actual);
       selectPage.value = parseInt(actual)-1;
       showTable(parseInt(selectPage.value)+1, theData);
+      showCards(parseInt(selectPage.value)+1, theData);
+      //forwardBut.disabled = false;
+    } else if(actual === 0){
+      //backBut.disabled = true;
     }
   });
   // Listener para el botón forward button
   forwardBut.addEventListener('click', function(){
     const actual = selectPage.value;
-    if (actual !== Math.ceil(globalData.length/lines)){
+    if (actual !== Math.ceil(theData.length/lines)){
       selectPage.text = parseInt(actual)+2;
       selectPage.value = parseInt(actual)+1;
       showTable(parseInt(selectPage.value)+1, theData);
+      showCards(parseInt(selectPage.value)+1, theData);
+      //backBut.disabled = false;
+    } else if(actual === totalPages){
+      //forwardBut.disabled = true;
     }
   });
+  // Listener para el botón ascending sort
   ascendingSortBut.addEventListener('click', function(){
-    console.log(selectSort.value);
     theData = sort(theData, selectSort.value, 1);
-    const total = Math.ceil(theData.length/lines);
-    createPagination(total);
-    showTable(parseInt(selectPage.value) + 1, theData);
+    totalPages = Math.ceil(theData.length/lines);
+    createPagination(totalPages);
+    if(inputToggle.checked === true){
+      showTable(parseInt(selectPage.value) + 1, theData);
+    } else if(inputToggle.checked === false){
+      showCards(parseInt(selectPage.value) + 1, theData);
+    }
   });
+  // Listener para el botón descending sort
   descendingSortBut.addEventListener('click', function(){
-    console.log(selectSort.value);
     theData = sort(theData, selectSort.value, -1);
-    const total = Math.ceil(theData.length/lines);
-    createPagination(total);
-    showTable(parseInt(selectPage.value) + 1, theData);
+    totalPages = Math.ceil(theData.length/lines);
+    createPagination(totalPages);
+    if(inputToggle.checked === true){
+      showTable(parseInt(selectPage.value) + 1, theData);
+    } else if(inputToggle.checked === false){
+      showCards(parseInt(selectPage.value) + 1, theData);
+    }
   });
-}
-
-function fillData (){
 }
 
 function createPagination(totalPages){
@@ -129,6 +162,14 @@ function createPagination(totalPages){
     option.value = i;
     option.text = i+1;
     selectPage.add(option);
+  }
+  if(selectPage.value ===  0){
+    //backBut.disabled = true;
+  } else if(selectPage.value ===  totalPages){
+    //forwardBut.disabled = true;
+  } else{
+    //backBut.disabled = false;
+    //forwardBut.disabled = false;
   }
 }
 
@@ -143,13 +184,24 @@ function showTable(page, countries){
   }
 }
 
+function showCards(page, countries){
+  const init = (page - 1)*lines;
+  const end = init + lines;
+  if(countries.length !== 1){
+    const dataTable = countries.slice(init, end);
+    createCards(page, dataTable);
+  } else{
+    createCards(page, countries);
+  }
+}
+
 function createTable(page, data){
-  document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Tabla de Países";
+  document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Table of Countries";
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
   const caption = document.createElement('caption');
-  caption.innerHTML = "Tabla de países";
+  caption.innerHTML = "Table of Countries";
   table.append(caption);
 
   //Fill the titles of the table
@@ -203,6 +255,91 @@ function createTable(page, data){
     tbody.append(tr);
   }
   table.append(tbody);
+}
+
+function createCards(page, countries){
+  document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Flags of Countries";
+  
+  while (cards.firstChild) {
+    cards.removeChild(cards.firstChild);
+  }
+
+  for (const i of countries){
+    const div1 = document.createElement('div');
+    div1.style.margin = '10px';
+    div1.className = "flip-card";
+
+    const div2 = document.createElement('div');
+    div2.className = "flip-card-inner";
+    //div2.style.height = "fit-content";
+    
+    const div3 = document.createElement('div');
+    div3.className = "flip-card-front";
+    const img = document.createElement('img');
+    img.src = i.flags.png;
+    img.alt = i.flags.alt;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.border = 'solid';
+    //img.style.border-color = 'blue';
+
+    const div4 = document.createElement('div');
+    div4.className = 'flip-card-back';
+    div4.style.border = 'solid';
+    const h1 = document.createElement('h1');
+    h1.innerHTML = `${i.name.common}`;
+    const h6 = document.createElement('h6');
+    h6.innerHTML = `${i.name.official}\t${i.independent ? '\t✅' : '\t❌'}`;
+    //h1.append(h3);
+    const p1 = document.createElement('p');
+    p1.innerHTML = (typeof i.capital === 'object') ? `Capital: ${i.capital[0]}`: `Capital: ❌`;
+    const p2 = document.createElement('p');
+    p2.innerHTML = (typeof i.area === 'number') ? `Area: ${i.area}`: `Area: ❌`;
+    const p3 = document.createElement('p');
+    p3.innerHTML = (typeof i.population === 'number') ? `Population: ${i.population}`: `Population: ❌`;
+    if(i.continents[0] === 'America'){
+      div4.style.backgroundColor = 'purple';
+    } else if(i.continents[0] === 'Asia'){
+      div4.style.backgroundColor = 'yellow';
+      div4.style.color = 'blue';
+      div4.style.borderColor = 'white';
+    } else if(i.continents[0] === 'Europe'){
+      div4.style.backgroundColor = 'pink';
+      div4.style.color = 'blue';
+      div4.style.borderColor = 'white';
+    } else if(i.continents[0] === 'Africa'){
+      div4.style.backgroundColor = 'green';
+    } else if(i.continents[0] === 'Oceania'){
+      div4.style.backgroundColor = 'blue';
+    } else if(i.continents[0] === 'Antarctica'){
+      div4.style.backgroundColor = 'orange';
+    }
+  
+    cards.append(div1);
+    div1.appendChild(div2);
+    div2.appendChild(div3);
+    div2.appendChild(div4);
+    div3.appendChild(img);
+    div4.appendChild(h1);
+    div4.append(h6);
+    div4.append(p1);
+    div4.append(p2);
+    div4.append(p3);
+  }
+  /*
+  <div class="flip-card"> 1
+    <div class="flip-card-inner"> 2
+      <div class="flip-card-front"> 3
+        <img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">
+      </div>
+      <div class="flip-card-back">
+        <h1>John Doe</h1>
+        <p>Architect & Engineer</p>
+        <p>We love that guy</p>
+      </div>
+    </div>
+  </div> 
+  */
 }
 
 function createFilters(){

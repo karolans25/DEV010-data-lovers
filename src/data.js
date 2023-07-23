@@ -55,14 +55,12 @@ export const sort = (data, sortBy, direction) =>{
 
 
 export const search = (data, lookFor) => {
-  console.log(lookFor);
   if(lookFor === ''){
     return data;
   } else {
-    return data.filter(country => country.name.common.startsWith(lookFor) || country.name.common === lookFor || country.name.official.startsWith(lookFor) || country.name.offcial === lookFor || ((typeof(country.capital) === 'object') ? country.capital[0].startsWith(lookFor) : false ));
+    return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
   }
 };
-
 /*
 export const flags = (data) => 
 

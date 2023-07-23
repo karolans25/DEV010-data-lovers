@@ -8,46 +8,71 @@
     <link rel="icon" type="image/png" href="./assets/favicon.png"/>
   </head>
   <body>
-    <header>
+    <header style="flex-direction: row;">
       <h1>Contries Around the World</h1>
-      <nav></nav>
+      <nav>
+        <button><img src="assets/stadistics.png" style="width: 20px; height: 20px;" alt="stadistics"></button>
+        <button><img src="assets/play.png" style="width: 20px; height: 20px;" alt="play"></button>
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </nav>
     </header>
+
     <article>
-      <p>Countries</p>
-      <!-- <div id="results"></div> -->
-      <section name="containerTabla">
-        <h2></h2>
-        <div id="search">
-          <label for="search-by">Search by: </label>
-          <input type="text" name="search-by" id="search-by">
-          <!-- <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="10px"></button> -->
+      <section class="flex-container" name="containerTabla" style="justify-content: left;">
+        <div class="flex-container" style="flex-direction: row;">
+          <h2></h2>
         </div>
-        <div id="filter">
-          <label for="filter-by">Filter by: </label>
-          <select name="fiter-by" id="filter-by"></select>
-          <select name="fiter-by-option" id="filter-by-option"></select>
-          <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="10px"></button>
+        <div class="flex-container" style="flex-direction: row;">
+          <div id="search">
+            <label for="search-by">Search by: </label>
+            <input type="text" name="search-by" id="search-by">
+          </div>
+          <div id="filter">
+            <label for="filter-by">Filter by: </label>
+            <select name="fiter-by" id="filter-by"></select>
+            <select name="fiter-by-option" id="filter-by-option"></select>
+            <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="10px"></button>
+          </div>
+          <div id="sort">
+            <label for="sort-by">Sort by: </label>
+            <select name="sort-by" id="sort-by">
+              <option value="country">Country</option>
+              <option value="capital">Capital</option>
+              <option value="area">Area</option>
+              <option value="population">Population</option>
+            </select>
+            <button id="sort-ascending-button"><img src="assets/sort_ascendent.png" alt="Asc." width="10px"></button>
+            <button id="sort-descending-button"><img src="assets/sort_descendent.png" alt="Des." width="10px"></button> 
+          </div>
+          <div id="pages">
+            <label for="select-pages">Page:</label>
+            <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior" width="10px"></button>
+            <select name="select-pages" id="select-pages"></select>
+            <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente" width="10px"></button>
+          </div>
         </div>
-        <div id="sort">
-          <label for="sort-by">Sort by: </label>
-          <select name="sort-by" id="sort-by">
-            <option value="country">Country</option>
-            <option value="capital">Capital</option>
-            <option value="area">Area</option>
-            <option value="population">Population</option>
-          </select>
-          <button id="sort-ascending-button"><img src="assets/sort_ascendent.png" alt="Asc." width="10px"></button>
-          <button id="sort-descending-button"><img src="assets/sort_descendent.png" alt="Des." width="10px"></button>        </div>
-        <div id="pages">
-          <label for="select-pages">Page:</label>
-          <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior" width="10px"></button>
-          <select name="select-pages" id="select-pages"></select>
-          <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente" width="10px"></button>
+        <div class="flex-container" id="cards"></div>
+
+        <div class="flex-container" id="table">
+          <table></table>
         </div>
-        <table></table>
+
       </section>
     </article>
-    <footer></footer>
+
+    <footer>
+      <div>Hecho con <ion-icon name="heart"></ion-icon> por <strong>Carolina Pulido Gómez</strong></div>
+      <div>
+        <a href="https://www.twitch.tv/karolans25" ><ion-icon name="logo-twitch"></ion-icon><span>Twitch</span></a>
+        <a href="https://github.com/karolans25/DEV010-cipher" ><ion-icon name="logo-github"></ion-icon><span>Github</span></a>
+      </div>
+    </footer>
+
     <script src="main.js" type="module"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   </body>
 </html>
