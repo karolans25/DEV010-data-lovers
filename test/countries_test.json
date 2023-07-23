@@ -1,0 +1,111 @@
+[ 
+  {
+    "name": {
+      "common": "Turks and Caicos Islands",
+      "official": "Turks and Caicos Islands"
+    },
+    "tld": [
+      ".tc"
+    ],
+    "independent": false,
+    "capital": [
+      "Cockburn Town"
+    ],
+    "subregion": "Caribbean",
+    "languages": {
+      "eng": "English"
+    },
+    "area": 948,
+    "flag": "🇹🇨",
+    "population": 38718,
+    "fifa": "TCA",
+    "timezones": [
+      "UTC-04:00"
+    ],
+    "continents": [
+      "America"
+    ],
+    "flags": {
+      "png": "https://flagcdn.com/w320/tc.png",
+      "svg": "https://flagcdn.com/tc.svg"
+    }
+  },
+  {
+    "name": {
+      "common": "Colombia",
+      "official": "Republic of Colombia"
+    },
+    "tld": [
+      ".co"
+    ],
+    "independent": true,
+    "capital": [
+      "Bogotá"
+    ],
+    "subregion": "South America",
+    "languages": {
+      "spa": "Spanish"
+    },
+    "borders": [
+      "BRA",
+      "ECU",
+      "PAN",
+      "PER",
+      "VEN"
+    ],
+    "area": 1141748,
+    "flag": "🇨🇴",
+    "population": 50882884,
+    "gini": {
+      "2019": 51.3
+    },
+    "fifa": "COL",
+    "timezones": [
+      "UTC-05:00"
+    ],
+    "continents": [
+      "America"
+    ],
+    "flags": {
+      "png": "https://flagcdn.com/w320/co.png",
+      "svg": "https://flagcdn.com/co.svg",
+      "alt": "The flag of Colombia is composed of three horizontal bands of yellow, blue and red, with the yellow band twice the height of the other two bands."
+    }
+  },
+  {
+    "name": {
+      "common": "Malaysia",
+      "official": "Malaysia"
+    },
+    "tld": [
+      ".my"
+    ],
+    "independent": true,
+    "capital": [
+      "Kuala Lumpur"
+    ],
+    "subregion": "South-Eastern Asia",
+    "languages": {
+      "eng": "English",
+      "msa": "Malay"
+    },
+    "borders": [
+      "BRN",
+      "IDN",
+      "THA"
+    ],
+    "area": 330803,
+    "flag": "🇲🇾",
+    "population": 32365998,
+    "gini": {
+      "2015": 41.1
+    },
+    "fifa": "MAS",
+    "timezones": [
+      "UTC+08:00"
+    ],
+    "continents": [
+      "Asia"
+    ]
+  }
+]

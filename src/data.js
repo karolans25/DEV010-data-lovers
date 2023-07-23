@@ -53,7 +53,6 @@ export const sort = (data, sortBy, direction) =>{
   }
 }
 
-
 export const search = (data, lookFor) => {
   if(typeof data !== 'object'){
     return [];
@@ -64,6 +63,23 @@ export const search = (data, lookFor) => {
     return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
   }
 };
+
+export const densityPopulation = (data) => {
+  const density = [];
+  if(typeof data !== 'object'){
+    return [];
+  } else {
+    for(let i = 0; i<data.length; i++){
+      if(typeof i.population === 'number' && typeof i.area === 'number'){
+        density.push = parseFloat((i.population/i.area).toFixed(2));
+      } else{
+        density.push('❌');
+      }
+    }
+  }
+  return density;
+}
+
 /*
 export const flags = (data) => 
 

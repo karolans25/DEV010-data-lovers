@@ -1,3 +1,4 @@
+//const DATA = 
 const DATA_TEMP = '[{"name":{"common":"Turks and Caicos Islands","official":"Turks and Caicos Islands"},"tld":[".tc"],"independent":false,"capital":["Cockburn Town"],"subregion":"Caribbean","languages":{"eng":"English"},"area":948,"flag":"🇹🇨","population":38718,"fifa":"TCA","timezones":["UTC-04:00"],"continents":["America"],"flags":{"png":"https://flagcdn.com/w320/tc.png","svg":"https://flagcdn.com/tc.svg"}},{"name":{"common":"Colombia","official":"Republic of Colombia"},"tld":[".co"],"independent":true,"capital":["Bogotá"],"subregion":"South America","languages":{"spa":"Spanish"},"borders":["BRA","ECU","PAN","PER","VEN"],"area":1141748,"flag":"🇨🇴","population":50882884,"gini":{"2019":51.3},"fifa":"COL","timezones":["UTC-05:00"],"continents":["America"],"flags":{"png":"https://flagcdn.com/w320/co.png","svg":"https://flagcdn.com/co.svg","alt":"The flag of Colombia is composed of three horizontal bands of yellow, blue and red, with the yellow band twice the height of the other two bands."}},{"name":{"common":"Malaysia","official":"Malaysia"},"tld":[".my"],"independent":true,"capital":["Kuala Lumpur"],"subregion":"South-Eastern Asia","languages":{"eng":"English","msa":"Malay"},"borders":["BRN","IDN","THA"],"area":330803,"flag":"🇲🇾","population":32365998,"gini":{"2015":41.1},"fifa":"MAS","timezones":["UTC+08:00"],"continents":["Asia"],"flags":{"png":"https://flagcdn.com/w320/my.png","svg":"https://flagcdn.com/my.svg","alt":"The flag of Malaysia is composed of fourteen equal horizontal bands of red alternating with white. A blue rectangle, bearing a fly-side facing yellow crescent and a fourteen-pointed yellow star placed just outside the crescent opening, is superimposed in the canton."}}]';
 
 const COLOMBIA = '[{"name":{"common":"Colombia","official":"Republic of Colombia"},"tld":[".co"],"independent":true,"capital":["Bogotá"],"subregion":"South America","languages":{"spa":"Spanish"},"borders":["BRA","ECU","PAN","PER","VEN"],"area":1141748,"flag":"🇨🇴","population":50882884,"gini":{"2019":51.3},"fifa":"COL","timezones":["UTC-05:00"],"continents":["America"],"flags":{"png":"https://flagcdn.com/w320/co.png","svg":"https://flagcdn.com/co.svg","alt":"The flag of Colombia is composed of three horizontal bands of yellow, blue and red, with the yellow band twice the height of the other two bands."}}]';
@@ -6,22 +7,63 @@ const COLOMBIA = '[{"name":{"common":"Colombia","official":"Republic of Colombia
 //import { example, anotherExample } from '../src/data.js';
 import { dataJson, filter, sort, search } from '../src/data.js';
 
+import fetchMock from 'fetch-mock';
+//import { storeResponse } from './path/to/module';
+
+describe('dataJson', () => {
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('returns the parsed JSON from the response when the status is 200', async () => {
+    const expectedJson = JSON.parse(DATA_TEMP);
+    const url = './countries_test.json';
+    fetchMock.get(url, { status: 200, body: expectedJson });
+
+    const result = await dataJson(url);
+
+    expect(result).toEqual(expectedJson);
+  });
+
+  it('throws an error when the status is not 200', async () => {
+    const url = './countries_test.json';
+    fetchMock.get(url, { status: 404 });
+
+    await expect(dataJson(url)).rejects.toThrow(
+      'Hubo un problema accediendo al dataset.'
+    );
+  });
+});
+
+//import { storeResponse } from './path/to/storeResponse';
 /*
-test('dataJson funciona correctamente', async () => {
-  const expectedResult = {"propiedad1": "valor1", "propiedad2": "valor2"}; // JSON de ejemplo
-  const mockFetch = jest.fn(() =>
-    Promise.resolve({ json: () => Promise.resolve(expectedResult) })
-  );
+describe('storeResponse', () => {
+  it('returns the parsed JSON when response status is 200', async () => {
+    const mockResponse = {
+      status: 200,
+      json: jest.fn().mockResolvedValue(JSON.parse(DATA))
+    };
+    jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
 
-  // Llamamos a dataJson, asegurándonos de que usa el fetch imaginario.
-  const result = await dataJson('http://ejemplo.com/dataset', { fetch: mockFetch });
-  expect(result).toEqual(expectedResult);
+    const result = await storeResponse('https://example.com/data.json');
+    
+    expect(global.fetch).toHaveBeenCalledWith('https://example.com/data.json');
+    expect(result).toEqual({ data: 'some data' });
+  });
 
-  // Aseguramos que fetch haya sido llamada con los argumentos correctos.
-  expect(mockFetch.mock.calls.length).toEqual(1);
-  expect(mockFetch.mock.calls[0][0]).toEqual('http://ejemplo.com/dataset');
+  it('throws an error when response status is not 200', async () => {
+    const mockResponse = {
+      status: 404,
+      json: jest.fn().mockResolvedValue({ message: 'not found' })
+    };
+    jest.spyOn(global, 'fetch').mockResolvedValue(mockResponse);
+
+    await expect(storeResponse('https://example.com/data.json')).rejects.toThrow('Hubo un problema accediendo al dataset.');
+    expect(global.fetch).toHaveBeenCalledWith('https://example.com/data.json');
+  });
 });
 */
+
 
 describe('dataJson', () => {
   it('is a function', () => {

@@ -122,6 +122,21 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU3 paso1](src/documentacion/HU3/HU3_1.png)
 
+![HU3 paso2](src/documentacion/HU3/HU3_2.png)
+
+![HU3 paso3](src/documentacion/HU3/HU3_3.png)
+
+![HU3 paso4](src/documentacion/HU3/HU3_4.png)
+
+![HU3 paso5](src/documentacion/HU3/HU3_5.png)
+
+![HU3 paso6](src/documentacion/HU3/HU3_6.png)
+
+![HU3 paso7](src/documentacion/HU3/HU3_7.png)
+
+![HU3 paso8](src/documentacion/HU3/HU3_8.png)
+
+![HU3 paso9](src/documentacion/HU3/HU3_9.png)
 
 ### Historia de Usuario 4: 
 #### Como usuario quiero escirbir por teclado oara buscar el país por nombre común, nombre oficial o capital

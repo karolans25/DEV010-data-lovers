@@ -33,6 +33,7 @@
     "commit": "4ea26447e1a259476f237a7a6212e3a02409910b"
   },
   "dependencies": {
+    "fetch-mock": "^9.11.0",
     "jest-fetch-mock": "^3.0.3",
     "node-fetch": "^3.3.1",
     "node-global": "^1.0.0"

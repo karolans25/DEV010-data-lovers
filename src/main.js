@@ -347,7 +347,7 @@ function createFilters(){
   createFiltersOptions();
   let option = document.createElement('option');
   option.value = "-1";
-  option.text = "-----------------";
+  option.text = "--------";
   selectFilter.append(option);
   for(const i of filters){
     option = document.createElement('option');
@@ -355,6 +355,7 @@ function createFilters(){
     option.text = i;
     selectFilter.add(option);
   }
+  selectFilter.style.width = '80px';
 }
 
 function createFiltersOptions(){
