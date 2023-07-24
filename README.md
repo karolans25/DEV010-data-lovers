@@ -90,6 +90,9 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU1 paso6](src/documentacion/HU1/HU1_6.png)
 
+
+
+
 ### Historia de Usuario 2: 
 #### Como usuario un select para filtrar los países por continente, subregion e idioma
 
