@@ -90,7 +90,13 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 ![HU1 paso6](src/documentacion/HU1/HU1_6.png)
 
+El proptotipo de alta fidelidad es el siguiente:
 
+![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+
+Después de los test de usabilidad el nuevo prototipo de alta fidelidad es el siguiente:
+
+![HU1 paso6](src/documentacion/HU1/HU1_6.png)
 
 
 ### Historia de Usuario 2: 
