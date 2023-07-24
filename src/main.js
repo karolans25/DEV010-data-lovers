@@ -1,14 +1,15 @@
 import {dataJson, filter, sort, search} from './data.js';
 
 const dir = './data/countries/countries.json';
-const lines = 9;
-const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population'];
+const lines = 10;
+const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
 const filters = ['Continents', 'Subregion', 'Languages'];
 const filtersOptions = [[],[],[]];
 const inputSearch = document.querySelector('#search-by');
-const inputToggle = document.querySelector('header nav label input');
+const inputToggle = document.querySelector('article section nav label input');
 const selectFilter = document.querySelector('#filter-by');
-const selectFilterOption = document.querySelector('#filter-by-option');
+// const selectFilterOption = document.querySelector('#filter-by-option');
+let selectFilterOption;
 const selectSort = document.querySelector('#sort-by');
 const selectPage = document.querySelector('#select-pages');
 const filterBut = document.querySelector('#filter-button');
@@ -18,6 +19,7 @@ const backBut = document.querySelector('#back-button');
 const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
 const cards = document.querySelector('#cards');
+
 let totalPages;
 let globalData;
 let theData;
@@ -33,33 +35,36 @@ async function fetchAndStore() {
 }
 
 function init() {
-  inputSearch.value = '';
+  //inputSearch.value = 'Search';
   totalPages = Math.ceil(globalData.length/lines);
+  document.querySelector('article h3').innerHTML = "Flags of Countries";
+  inputSearch.value = '';
+  filterBut.disabled = true;
   createPagination(totalPages);
   createFilters();
   theData = globalData;
   showCards(1, theData);
   showTable(1, theData);
   (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
-  //backBut.disabled = true;
-  /**Event Listeners */
   // Listener para el input Toggle
   inputToggle.addEventListener('click', function() {
     if(inputToggle.checked === true){
       cards.style.display = 'none';
       table.style.display = 'block';
+      document.querySelector('article h3').innerHTML = "Table of Countries";
     } else if(inputToggle.checked === false){
       cards.style.display = 'flex';
       table.style.display = 'none';
+      document.querySelector('article h3').innerHTML = "Flags of Countries";
     }
   });
   // Listener para el input Search
-  inputSearch.addEventListener('click', function() {
-    inputSearch.text = '';
-  });
   inputSearch.addEventListener('keyup', (event) => {
+    /*while (selectFilterOption.firstChild) {
+      selectFilterOption.removeChild(selectFilterOption.firstChild);
+    }*/
+    selectFilter.value = '-1';
     theData = search(globalData, event.target.value);
-    console.log(theData);
     if(typeof(theData) !== 'undefined'){
       totalPages = Math.ceil(theData.length/lines);
       createPagination(totalPages);
@@ -68,26 +73,47 @@ function init() {
       //createTable(1, theData);
     } else {
       showTable(parseInt(selectPage.value) + 1, globalData);
-      showCards(parseInt(selectPage.value) + 1, theData);
+      showCards(parseInt(selectPage.value) + 1, globalData);
     }
-    console.log(theData);
   });
   // Listener para el selector de Filtro
   selectFilter.addEventListener('change', function(){
-    while (selectFilterOption.firstChild) {
-      selectFilterOption.removeChild(selectFilterOption.firstChild);
-    }
+    inputSearch.value = '';
     if(parseInt(selectFilter.value) !== -1){
+      filterBut.disabled = false;
+      const filter = document.querySelector('#filter-by-option')
+      if (filter.children.length > 0){
+        for (let i=0; i<filter.children.length; i++){
+          if(parseInt(i) !== 0 && parseInt(i) !== (filter.children.length -1)){
+            filter.removeChild(filter.children[i]);
+          }
+        }
+      }
+      selectFilterOption = document.createElement('select');
+      while (selectFilterOption.firstChild) {
+        selectFilterOption.removeChild(selectFilterOption.firstChild);
+      }
       for (const i of filtersOptions[selectFilter.value]){
         const option = document.createElement('option');
         option.value = filtersOptions[selectFilter.value].indexOf(i);
         option.text = i;
         selectFilterOption.add(option);
       }
+      document.querySelector('#filter-by-option').appendChild(selectFilterOption);
+      document.querySelector('#filter-by-option').append(document.querySelector('#filter-button'));
     } else {
+      const filter = document.querySelector('#filter-by-option')
+      if (filter.children.length > 2){
+        for (let i=0; i<filter.children.length; i++){
+          if(parseInt(i) !== 0 && parseInt(i) !== (filter.children.length -1)){
+            filter.removeChild(filter.children[i]);
+          }
+        }
+      }
       while (selectFilter.firstChild) {
         selectFilter.removeChild(selectFilter.firstChild);
       }
+      filterBut.disabled = true;
       init();
     }
   });
@@ -98,11 +124,16 @@ function init() {
   });
   // Listener para el botón Filter
   filterBut.addEventListener('click', function(){
+    inputSearch.value = '';
+    if(selectFilter.value === -1){
+      selectFilterOption.style.display = "none";
+    }
     theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
     totalPages = Math.ceil(theData.length/lines);
     createPagination(totalPages);
     showTable(parseInt(selectPage.value) + 1, theData);
     showCards(parseInt(selectPage.value) + 1, theData);
+    inputSearch.value = "Search";
   });
   // Listener para el botón back button
   backBut.addEventListener('click', function(){
@@ -197,7 +228,6 @@ function showCards(page, countries){
 }
 
 function createTable(page, data){
-  document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Table of Countries";
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
@@ -248,9 +278,21 @@ function createTable(page, data){
         td.innerHTML = i.area;
       } else if (j === 'Population'){
         td.innerHTML = i.population;
-      }/* else if (j === 'Gini'){
-        td.innerHTML = i.population;
-      } */
+      } else if (j === 'Gini'){
+        if (typeof i.gini === 'object'){
+          for (const k of Object.keys(i.gini)){
+            //td.innerHTML = i.gini[`${k}`];
+            td;
+            const abbr = document.createElement('abbr');
+            abbr.title = k;
+            abbr.innerHTML = i.gini[`${k}`];
+            td.appendChild(abbr);
+            //<span class="ribbon">NEW</span>
+          }
+        } else {
+          td.innerHTML = "❌";
+        }
+      }
       tr.append(td);
     }
     tbody.append(tr);
@@ -258,9 +300,7 @@ function createTable(page, data){
   table.append(tbody);
 }
 
-function createCards(page, countries){
-  document.querySelector('article section[name="containerTabla"] h2').innerHTML = "Flags of Countries";
-  
+function createCards(page, countries){  
   while (cards.firstChild) {
     cards.removeChild(cards.firstChild);
   }
@@ -268,20 +308,24 @@ function createCards(page, countries){
   for (const i of countries){
     const div1 = document.createElement('div');
     div1.style.margin = '10px';
+    div1.style.height = '250px';
+    //div1.style.width = '30vw';
     div1.className = "flip-card";
 
     const div2 = document.createElement('div');
     div2.className = "flip-card-inner";
-    //div2.style.height = "fit-content";
-    
+
     const div3 = document.createElement('div');
     div3.className = "flip-card-front";
+    //div3.style.alignItems = "bottom";
+    //div3.style.justifyContent = "center";
     const img = document.createElement('img');
     img.src = i.flags.png;
     img.alt = i.flags.alt;
     img.style.width = '100%';
-    img.style.height = '100%';
+    img.style.height = '200px';
     img.style.border = 'solid';
+    div3.style.alignSelf = "center";
     //img.style.border-color = 'blue';
 
     const div4 = document.createElement('div');
@@ -347,7 +391,7 @@ function createFilters(){
   createFiltersOptions();
   let option = document.createElement('option');
   option.value = "-1";
-  option.text = "--------";
+  option.text = "--- Filter ---";
   selectFilter.append(option);
   for(const i of filters){
     option = document.createElement('option');
@@ -355,7 +399,6 @@ function createFilters(){
     option.text = i;
     selectFilter.add(option);
   }
-  selectFilter.style.width = '80px';
 }
 
 function createFiltersOptions(){

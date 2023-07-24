@@ -6,53 +6,53 @@
     <title>Data Lovers</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="./assets/favicon.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
     <header style="flex-direction: row;">
       <h1>Contries Around the World</h1>
-      <nav>
-        <button><img src="assets/stadistics.png" style="width: 20px; height: 20px;" alt="stadistics"></button>
-        <button><img src="assets/play.png" style="width: 20px; height: 20px;" alt="play"></button>
-        <label class="switch">
-          <input type="checkbox">
-          <span class="slider round"></span>
-        </label>
-      </nav>
     </header>
 
     <article>
-      <section class="flex-container" name="containerTabla" style="justify-content: left;">
-        <div class="flex-container" style="flex-direction: row;">
-          <h2></h2>
+      <section class="flex-container">
+        <h3></h3>
+        <nav>
+          <button id="stadistics"><img src="assets/stadistics.png" alt="stadistics"></button>
+          <button id="play"><img src="assets/play.png" alt="play"></button>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+        </nav>
+      </section>
+      <section class="flex-container" name="container-options">
+        <div id="search">
+          <input type="text" name="search-by" id="search-by" placeholder="Search &#f002">
         </div>
-        <div class="flex-container" style="flex-direction: row;">
-          <div id="search">
-            <label for="search-by">Search by: </label>
-            <input type="text" name="search-by" id="search-by">
-          </div>
-          <div id="filter">
-            <label for="filter-by">Filter by: </label>
+        <div id="filter">
+          <div id="filter-by-option">
             <select name="fiter-by" id="filter-by"></select>
-            <select name="fiter-by-option" id="filter-by-option"></select>
-            <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="10px"></button>
+            <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button>
           </div>
-          <div id="sort">
-            <label for="sort-by">Sort by: </label>
-            <select name="sort-by" id="sort-by">
-              <option value="country">Country</option>
-              <option value="capital">Capital</option>
-              <option value="area">Area</option>
-              <option value="population">Population</option>
-            </select>
-            <button id="sort-ascending-button"><img src="assets/sort_ascendent.png" alt="Asc." width="10px"></button>
-            <button id="sort-descending-button"><img src="assets/sort_descendent.png" alt="Des." width="10px"></button> 
-          </div>
-          <div id="pages">
-            <label for="select-pages">Page:</label>
-            <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior" width="10px"></button>
-            <select name="select-pages" id="select-pages"></select>
-            <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente" width="10px"></button>
-          </div>
+        </div>
+        <div id="sort">
+          <label for="sort-by">Sort by: </label>
+          <select name="sort-by" id="sort-by">
+            <option value="country">Country</option>
+            <option value="capital">Capital</option>
+            <option value="area">Area</option>
+            <option value="population">Population</option>
+          </select>
+          <button id="sort-ascending-button"><img src="assets/sort_ascendent.png" alt="Asc." width="10px"></button>
+          <button id="sort-descending-button"><img src="assets/sort_descendent.png" alt="Des." width="10px"></button> 
+        </div>
+      </section>
+      <section class="flex-container" id="data">
+        <div id="pages">
+          <label for="select-pages">Page:</label>
+          <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior"></button>
+          <select name="select-pages" id="select-pages"></select>
+          <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente"></button>
         </div>
         <div class="flex-container" id="cards"></div>
 

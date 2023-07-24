@@ -39,13 +39,58 @@ export const sort = (data, sortBy, direction) =>{
       }
       return 0; // si los nombres son iguales, no cambiar el orden
     });
-  } else if (sortBy.toLowerCase() === 'capital'){
-    result = data.sort(function(a, b) {
-      if (typeof a.capital === 'object' && typeof b.capital === 'object'){
-        result = a.capital[0].localeCompare(b.capital[0]);
+  } else if (sortBy.toLowerCase() === 'area'){
+    result = data.sort((a, b) => {
+      const aData = a.area;
+      const bData = b.area;
+      if (aData < bData) {
+        return -1; // si a es menor que b, colocar a antes que b
       }
+      if (aData > bData) {
+        return 1; // si a es mayor que b, colocar a después de b
+      }
+      return 0; // si los nombres son iguales, no cambiar el orden
     });
-  }
+  } else if (sortBy.toLowerCase() === 'population'){
+    result = data.sort((a, b) => {
+      const aData = a.population;
+      const bData = b.population;
+      if (aData < bData) {
+        return -1; // si a es menor que b, colocar a antes que b
+      }
+      if (aData > bData) {
+        return 1; // si a es mayor que b, colocar a después de b
+      }
+      return 0; // si los nombres son iguales, no cambiar el orden
+    });
+  } /*else if (sortBy.toLowerCase() === 'capital'){
+    let counter = 1;  
+    result = data.sort((a, b) => {
+      if (typeof a.capital !== 'object'){
+        a.capital = ['❌'];
+      } else if (typeof b.capital !== 'object'){
+        b.capital = ['❌'];
+      } else{
+        result = data.sort((a, b) => {
+          console.log(counter);
+          console.log(a.capital[0]);
+          console.log(b.capital[0]);
+          const aData = a.capital[0].toUpperCase(); // convertir a mayúsculas para ordenar alfabéticamente correctamente
+          const bData = b.capital[0].toUpperCase();
+          if (aData < bData) {
+            counter ++;
+            return -1; // si a es menor que b según la orden alfabética, colocar a antes que b
+          }
+          if (aData > bData) {
+            counter ++;
+            return 1; // si a es mayor que b, colocar a después de b
+          }
+          return 0; // si los nombres son iguales, no cambiar el orden
+        });
+      }
+    //result = a.capital[0].localeCompare(b.capital[0]);
+    });
+  }*/
   if(parseInt(direction) === 1){
     return result;
   } else if (parseInt(direction) === -1){
