@@ -92,11 +92,11 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 
 El proptotipo de alta fidelidad es el siguiente:
 
-![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+![AF:HU1](src/documentacion/HU1/AF_HU1.png)
 
 Después de los test de usabilidad el nuevo prototipo de alta fidelidad es el siguiente:
 
-![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+![AF:HU1 usabilidad](src/documentacion/HU1/AF_HU1_testUsabilidad.png)
 
 
 ### Historia de Usuario 2: 
