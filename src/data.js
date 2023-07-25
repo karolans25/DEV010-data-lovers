@@ -7,6 +7,11 @@ export const dataJson = async function storeResponse(dir) {
 }
 
 export const filter = (data, filterBy, lookFor) => {
+  if(typeof data !== 'object' || typeof filterBy !== 'string' || typeof lookFor !== 'string'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || filterBy === '' || lookFor === ''){
+    throw new TypeError("Los datos vienen incompletos");
+  }
   if (filterBy.toLowerCase() === 'continents'){
     return data.filter(country => country.continents[0] === lookFor);
   } else if (filterBy.toLowerCase() === 'subregion'){
@@ -26,6 +31,11 @@ export const filter = (data, filterBy, lookFor) => {
 };
 
 export const sort = (data, sortBy, direction) =>{
+  if(typeof data !== 'object' || typeof sortBy !== 'string' || typeof direction !== 'number'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || sortBy === '' || ![1,-1].includes(direction)){
+    throw new TypeError("Los datos vienen incompletos");
+  }
   let result;
   if(sortBy.toLowerCase() === 'country'){
     result = data.sort((a, b) => {
@@ -99,15 +109,14 @@ export const sort = (data, sortBy, direction) =>{
 }
 
 export const search = (data, lookFor) => {
-  if(typeof data !== 'object'){
-    return [];
+  if(typeof data !== 'object' || typeof lookFor !== 'string'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0){
+    throw new TypeError("Los datos vienen incompletos");
   }
-  if(lookFor === ''){
-    return data;
-  } else {
-    return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
-  }
+  return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
 };
+
 
 export const densityPopulation = (data) => {
   const density = [];
