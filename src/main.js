@@ -27,7 +27,7 @@ let theData;
 async function fetchAndStore() {
   try {
     globalData = await dataJson(dir);
-    //console.log(globalData); // imprimirá los datos de la variable global si la promesa se resolvió correctamente
+    console.log(globalData);
     init();
   } catch (error) {
     console.error(error);
@@ -163,6 +163,11 @@ function init() {
   });
   // Listener para el botón ascending sort
   ascendingSortBut.addEventListener('click', function(){
+    //console.log(typeof theData);
+    //console.log(typeof selectSort.value);
+    //console.log(typeof 1);
+    //console.log(typeof filters[selectFilter.value].toLowerCase());
+    //console.log(typeof filtersOptions[selectFilter.value][selectFilterOption.value]);
     theData = sort(theData, selectSort.value, 1);
     totalPages = Math.ceil(theData.length/lines);
     createPagination(totalPages);
