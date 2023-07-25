@@ -77,113 +77,145 @@ de To DO del daily. Con esto, se procedió a iniciar con cada una de las histori
 ### Historia de Usuario 1: 
 #### Como usuario quiero una tabla para ver los datos de los países
 
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU1/HU1_1.png" alt="HU1 paso 1" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU1 paso1](src/documentacion/HU1/HU1_1.png)
+<img src="src/documentacion/HU1/HU1_2.png" alt="HU1 paso 2" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU1 paso2](src/documentacion/HU1/HU1_2.png)
+<img src="src/documentacion/HU1/HU1_3.png" alt="HU1 paso 3" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU1 paso3](src/documentacion/HU1/HU1_3.png)
+<img src="src/documentacion/HU1/HU1_4.png" alt="HU1 paso 4" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU1 paso4](src/documentacion/HU1/HU1_4.png)
+<img src="src/documentacion/HU1/HU1_5.png" alt="HU1 paso 5" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU1 paso5](src/documentacion/HU1/HU1_5.png)
+<img src="src/documentacion/HU1/HU1_6.png" alt="HU1 paso 6" width="46%" style="border: 1px solid blue;padding: 1%;">
+</div>
 
-![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+##### Prototipo de Alta Fidelidad HU1:
 
-El proptotipo de alta fidelidad es el siguiente:
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU1/HU1_AF_1.png" alt="Prototipo de AF antes de test de usabilidad opción 1" width="40%" style="border: 1px solid blue; padding: 1%;">
 
-![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+<img src="src/documentacion/HU1/HU1_AF_2.png" alt="Prototipo de AF antes de test de usabilidad opción 2" width="40%" style="border: 1px solid blue; padding: 1%;">
+</div>
 
-Después de los test de usabilidad el nuevo prototipo de alta fidelidad es el siguiente:
+##### Test de usabilidad:
 
-![HU1 paso6](src/documentacion/HU1/HU1_6.png)
+**Comentarios del test:**
+* El toggle noo era claro que era para cambiar de imágenes a tabla sugirieron que fuera más gráfico donde al lado izquierdo hubiese una imagen de la opción de la izquierda y al lado derecha de la opción de la derecha. Además, sugirieron que estuviera dentro del contenedor de los datos para que no se asociara con el cambio de tema de dark a ligth que se tiene en muchas páginas.
+* Querían que el filtrado fuese con el cambio del select y no al hacer click en el botón de filtrar
+* Querían que se aplicara los dos filtros al tiempo que si escribía algo y seleccionaba algo en el filter realizara los dos filtros
+* El sort no era muy claro y puede que si se pone dentro del contenedor de la data podría ser más fácil de asociar con el ordenamiento de la data
+
+<img src="src/documentacion/HU1/HU1_AF_usabilidad.png" alt="Prototipo de AF después de test de usabilidad" width="40%" style="border: 1px solid blue; padding: 1%;">
+
+### Historia de Usuario 6: 
+#### Como usuario quiero cards para ver las banderas de los países
+
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU6/HU6_1.png" alt="HU6 paso 1" width="46%" style="border: 1px solid blue; padding: 1%;">
+
+<img src="src/documentacion/HU6/HU6_2.png" alt="HU6 paso 2" width="46%" style="border: 1px solid blue;padding: 1%;">
+
+<img src="src/documentacion/HU6/HU6_3.png" alt="HU6 paso 3" width="46%" style="border: 1px solid blue;padding: 1%;">
+
+<img src="src/documentacion/HU6/HU6_4.png" alt="HU6 paso 4" width="46%" style="border: 1px solid blue;padding: 1%;">
+</div>
+
+##### Prototipo de Alta Fidelidad HU6:
+
+<img src="src/documentacion/HU6/HU6_AF.png" alt="HU6 Prototipo de AF opción 1" width="46%" style="border: 1px solid blue; padding: 1%;">
+
+##### Test de usabilidad:
+
+**Comentarios del test:**
+* Además de las sugerencias de la historia de usuario 1 para el toggle y demás elementos de interacción, sugirieron una ventana o alguna parte en la que le preguntara al usuario qué datos quería ver en la tabla por si no le interesa toda la información o evitar que al ver muchos datos en una tabla prefiriesen ver sólo las banderas o dejar de utilizar la aplicación.
+
+<img src="src/documentacion/HU6/HU6_AF_usabilidad.png" alt="Prototipo de AF después de test de usabilidad" width="40%" style="border: 1px solid blue; padding: 1%;">
 
 
-### Historia de Usuario 2: 
+
+### Historia de Usuario 2: FILTER
 #### Como usuario un select para filtrar los países por continente, subregion e idioma
 
-![HU2 paso1](src/documentacion/HU2/HU2_1.png)
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU2/HU2_1.png" alt="HU2 paso 1" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU2 paso2](src/documentacion/HU2/HU2_2.png)
+<img src="src/documentacion/HU2/HU2_2.png" alt="HU2 paso 2" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso3](src/documentacion/HU2/HU2_3.png)
+<img src="src/documentacion/HU2/HU2_3.png" alt="HU2 paso 3" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso4](src/documentacion/HU2/HU2_4.png)
+<img src="src/documentacion/HU2/HU2_4.png" alt="HU2 paso 4" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso5](src/documentacion/HU2/HU2_5.png)
+<img src="src/documentacion/HU2/HU2_5.png" alt="HU2 paso 5" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso6](src/documentacion/HU2/HU2_6.png)
+<img src="src/documentacion/HU2/HU2_1.png" alt="HU2 paso 6" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso7](src/documentacion/HU2/HU2_7.png)
+<img src="src/documentacion/HU2/HU2_7.png" alt="HU2 paso 7" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU2 paso8](src/documentacion/HU2/HU2_8.png)
+<img src="src/documentacion/HU2/HU2_8.png" alt="HU2 paso 8" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso9](src/documentacion/HU2/HU2_9.png)
+<img src="src/documentacion/HU2/HU2_9.png" alt="HU2 paso 9" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso10](src/documentacion/HU2/HU2_10.png)
+<img src="src/documentacion/HU2/HU2_10.png" alt="HU2 paso 10" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso11](src/documentacion/HU2/HU2_11.png)
+<img src="src/documentacion/HU2/HU2_11.png" alt="HU2 paso 11" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-![HU2 paso12](src/documentacion/HU2/HU2_12.png)
+<img src="src/documentacion/HU2/HU2_12.png" alt="HU2 paso 12" width="46%" style="border: 1px solid blue;padding: 1%;">
 
-### Historia de Usuario 3: 
+</div>
+
+
+### Historia de Usuario 3: SORT
 #### Como usuario quiero un botón para ordenar la tabla por país, capital, área y población
 
-![HU3 paso1](src/documentacion/HU3/HU3_1.png)
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU3/HU3_1.png" alt="HU3 paso 1" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso2](src/documentacion/HU3/HU3_2.png)
+<img src="src/documentacion/HU3/HU3_2.png" alt="HU3 paso 2" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso3](src/documentacion/HU3/HU3_3.png)
+<img src="src/documentacion/HU3/HU3_3.png" alt="HU3 paso 3" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso4](src/documentacion/HU3/HU3_4.png)
+<img src="src/documentacion/HU3/HU3_4.png" alt="HU3 paso 4" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso5](src/documentacion/HU3/HU3_5.png)
+<img src="src/documentacion/HU3/HU3_5.png" alt="HU3 paso 5" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso6](src/documentacion/HU3/HU3_6.png)
+<img src="src/documentacion/HU3/HU3_6.png" alt="HU3 paso 6" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso7](src/documentacion/HU3/HU3_7.png)
+<img src="src/documentacion/HU3/HU3_7.png" alt="HU3 paso 7" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso8](src/documentacion/HU3/HU3_8.png)
+<img src="src/documentacion/HU3/HU3_8.png" alt="HU3 paso 8" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU3 paso9](src/documentacion/HU3/HU3_9.png)
+<img src="src/documentacion/HU3/HU3_9.png" alt="HU3 paso 9" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-### Historia de Usuario 4: 
+<img src="src/documentacion/HU3/HU3_10.png" alt="HU3 paso 10" width="46%" style="border: 1px solid blue; padding: 1%;">
+</div>
+
+### Historia de Usuario 4: SEARCH
 #### Como usuario quiero escirbir por teclado oara buscar el país por nombre común, nombre oficial o capital
 
-![HU4 paso1](src/documentacion/HU4/HU4_1.png)
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+<img src="src/documentacion/HU4/HU4_1.png" alt="HU4 paso 1" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso2](src/documentacion/HU4/HU4_2.png)
+<img src="src/documentacion/HU4/HU4_2.png" alt="HU4 paso 2" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso3](src/documentacion/HU4/HU4_3.png)
+<img src="src/documentacion/HU4/HU4_3.png" alt="HU4 paso 3" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso4](src/documentacion/HU4/HU4_4.png)
+<img src="src/documentacion/HU4/HU4_4.png" alt="HU4 paso 4" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso5](src/documentacion/HU4/HU4_5.png)
+<img src="src/documentacion/HU4/HU4_5.png" alt="HU4 paso 5" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso6](src/documentacion/HU4/HU4_6.png)
+<img src="src/documentacion/HU4/HU4_6.png" alt="HU4 paso 6" width="46%" style="border: 1px solid blue; padding: 1%;">
 
-![HU4 paso7](src/documentacion/HU4/HU4_7.png)
-
-![HU4 paso8](src/documentacion/HU4/HU4_8.png)
-
-![HU4 paso9](src/documentacion/HU4/HU4_9.png)
-
+<img src="src/documentacion/HU4/HU4_7.png" alt="HU4 paso 7" width="46%" style="border: 1px solid blue; padding: 1%;">
+</div>
 
 ### Historia de Usuario 5: 
 #### Como usuario quiero un botón para ver los cálculos de los países
 
 ![HU5 paso1](src/documentacion/HU5/HU5_1.png)
 
-### Historia de Usuario 6: 
-#### Como usuario quiero cards para ver las banderas de los países
 
-![HU6 paso1](src/documentacion/HU6/HU6_1.png)
-
-![HU6 paso2](src/documentacion/HU6/HU6_2.png)
-
-![HU6 paso3](src/documentacion/HU6/HU6_3.png)
-
-![HU6 paso4](src/documentacion/HU6/HU6_4.png)
 
 ### (*Opcional) Historia de Usuario 7: 
 #### Como usuario quiero ver el mapamundi para ubicar a cada país
