@@ -6,7 +6,7 @@ const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', '
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
 const subFilterOptions = [[],[],[]];
 const inputSearch = document.querySelector('#search-by');
-const inputToggle = document.querySelector('article section nav label input');
+const inputToggle = document.querySelector('#toggle');
 const selectFilter = document.querySelector('#filter-by');
 // const selectFilterOption = document.querySelector('#filter-by-option');
 let selectSubFilter;
@@ -27,7 +27,6 @@ let theData;
 async function fetchAndStore() {
   try {
     globalData = await dataJson(dir);
-    console.log(globalData);
     init();
   } catch (error) {
     console.error(error);
@@ -196,17 +195,12 @@ function createPaginator(totalPages){
   }
 }
 
-let count = 0; 
 function printData(){
   totalPages = Math.ceil(theData.length/lines);
   //REvisar que el alert salga una sola vez
-  if(totalPages === 0 && count < 1){
+  if(totalPages === 0){
     alert("Didn't find countries according to your searching parameters.");
-    count ++;
-  } else {
-    count = 0;
-  } 
-
+  }
   if(totalPages === 1){
     backBut.disabled = true;
     forwardBut.disabled = true;
@@ -273,7 +267,12 @@ function createTable(page, data){
       } else if (j === 'Country'){
         let name = `${i.name.common}\t${i.flag}`;
         (i.independent) ? name += '\t✅' : name += '\t❌';
-        td.innerHTML = name;
+        //td.innerHTML = name;
+        const abbr = document.createElement('abbr');
+        abbr.title = i.name.official;
+        abbr.innerHTML = name;
+        td.appendChild(abbr);
+
       } else if ( j === 'Capital'){
         if (typeof(i.capital) === 'object'){
           td.innerHTML = i.capital;
@@ -301,9 +300,8 @@ function createTable(page, data){
             td;
             const abbr = document.createElement('abbr');
             abbr.title = k;
-            abbr.innerHTML = i.gini[`${k}`];
+            abbr.innerHTML = parseFloat(i.gini[`${k}`]).toFixed(1);
             td.appendChild(abbr);
-            //<span class="ribbon">NEW</span>
           }
         } else {
           td.innerHTML = "❌";
@@ -343,8 +341,8 @@ function createCards(page, countries){
     const div4 = document.createElement('div');
     div4.className = 'flip-card-back';
     div4.style.border = 'solid';
-    const h1 = document.createElement('h1');
-    h1.innerHTML = `${i.name.common}`;
+    const h4 = document.createElement('h1');
+    h4.innerHTML = `${i.name.common}`;
     const h6 = document.createElement('h6');
     h6.innerHTML = `${i.name.official}\t${i.independent ? '\t✅' : '\t❌'}`;
     //h1.append(h3);
@@ -354,30 +352,37 @@ function createCards(page, countries){
     p2.innerHTML = (typeof i.area === 'number') ? `Area: ${i.area}`: `Area: ❌`;
     const p3 = document.createElement('p');
     p3.innerHTML = (typeof i.population === 'number') ? `Population: ${i.population}`: `Population: ❌`;
+    
     if(i.continents[0] === 'America'){
-      div4.style.backgroundColor = 'purple';
+      div4.style.backgroundColor = '#FFFB7B';
+      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Asia'){
-      div4.style.backgroundColor = 'yellow';
-      div4.style.color = 'blue';
-      div4.style.borderColor = 'white';
+      div4.style.backgroundColor = '#CBADE0';
+      //div4.style.color = 'blue';
+      //div4.style.borderColor = 'white';
     } else if(i.continents[0] === 'Europe'){
-      div4.style.backgroundColor = 'pink';
-      div4.style.color = 'blue';
-      div4.style.borderColor = 'white';
+      div4.style.backgroundColor = '#FCC2D2';
+      //div4.style.color = 'blue';
+      //div4.style.borderColor = 'white';
     } else if(i.continents[0] === 'Africa'){
-      div4.style.backgroundColor = 'green';
+      div4.style.backgroundColor = 'lightgreen';
+      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Oceania'){
-      div4.style.backgroundColor = 'blue';
+      div4.style.backgroundColor = 'lightblue';
+      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Antarctica'){
-      div4.style.backgroundColor = 'orange';
+      div4.style.backgroundColor = '#A3C7E3';
+      //div4.style.color = "blue";
     }
+    //div4.style.color = "blue";
+    div4.style.color = "#1D0030";
   
     cards.append(div1);
     div1.appendChild(div2);
     div2.appendChild(div3);
     div2.appendChild(div4);
     div3.appendChild(img);
-    div4.appendChild(h1);
+    div4.appendChild(h4);
     div4.append(h6);
     div4.append(p1);
     div4.append(p2);
