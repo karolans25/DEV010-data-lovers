@@ -3,16 +3,16 @@ import {dataJson, filter, sort, search} from './data.js';
 const dir = './data/countries/countries.json';
 const lines = 10;
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
-const filters = ['Continents', 'Subregion', 'Languages'];
-const filtersOptions = [[],[],[]];
+const filterOptions = ['Continents', 'Subregion', 'Languages'];
+const subFilterOptions = [[],[],[]];
 const inputSearch = document.querySelector('#search-by');
 const inputToggle = document.querySelector('article section nav label input');
 const selectFilter = document.querySelector('#filter-by');
 // const selectFilterOption = document.querySelector('#filter-by-option');
-let selectFilterOption;
+let selectSubFilter;
 const selectSort = document.querySelector('#sort-by');
-const selectPage = document.querySelector('#select-pages');
-const filterBut = document.querySelector('#filter-button');
+const pageSelector = document.querySelector('#page-selector');
+//const filterBut = document.querySelector('#filter-button');
 const ascendingSortBut = document.querySelector('#sort-ascending-button');
 const descendingSortBut = document.querySelector('#sort-descending-button');
 const backBut = document.querySelector('#back-button');
@@ -35,192 +35,197 @@ async function fetchAndStore() {
 }
 
 function init() {
-  //inputSearch.value = 'Search';
   totalPages = Math.ceil(globalData.length/lines);
   document.querySelector('article h3').innerHTML = "Flags of Countries";
   inputSearch.value = '';
-  filterBut.disabled = true;
+  //filterBut.disabled = true;
   backBut.disabled = true;
-  createPagination(totalPages);
-  createFilters();
+  createPaginator(totalPages);
+  createSelectorForFilterBy(); //Create the select for filter by
   theData = globalData;
   showCards(1, theData);
   showTable(1, theData);
   (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
+
   // Listener para el input Toggle
-  inputToggle.addEventListener('click', function() {
-    if(inputToggle.checked === true){
-      cards.style.display = 'none';
-      table.style.display = 'block';
-      document.querySelector('article h3').innerHTML = "Table of Countries";
-    } else if(inputToggle.checked === false){
-      cards.style.display = 'flex';
-      table.style.display = 'none';
-      document.querySelector('article h3').innerHTML = "Flags of Countries";
-    }
+  inputToggle.addEventListener('click', (event) => {
+    toggleView(event);
   });
+
   // Listener para el input Search
   inputSearch.addEventListener('keyup', (event) => {
-    /*while (selectFilterOption.firstChild) {
-      selectFilterOption.removeChild(selectFilterOption.firstChild);
-    }*/
-    selectFilter.value = '-1';
-    theData = search(globalData, event.target.value);
-    if(typeof(theData) !== 'undefined'){
-      totalPages = Math.ceil(theData.length/lines);
-      createPagination(totalPages);
-      showTable(parseInt(selectPage.value) + 1, theData);
-      showCards(parseInt(selectPage.value) + 1, theData);
-      //createTable(1, theData);
-    } else {
-      showTable(parseInt(selectPage.value) + 1, globalData);
-      showCards(parseInt(selectPage.value) + 1, globalData);
-    }
+    searchData(event);
   });
-  // Listener para el selector de Filtro
-  selectFilter.addEventListener('change', function(){
-    inputSearch.value = '';
-    if(parseInt(selectFilter.value) !== -1){
-      filterBut.disabled = false;
-      const filter = document.querySelector('#filter-by-option')
-      if (filter.children.length > 0){
-        for (let i=0; i<filter.children.length; i++){
-          if(parseInt(i) !== 0 && parseInt(i) !== (filter.children.length -1)){
-            filter.removeChild(filter.children[i]);
-          }
-        }
-      }
-      selectFilterOption = document.createElement('select');
-      while (selectFilterOption.firstChild) {
-        selectFilterOption.removeChild(selectFilterOption.firstChild);
-      }
-      for (const i of filtersOptions[selectFilter.value]){
-        const option = document.createElement('option');
-        option.value = filtersOptions[selectFilter.value].indexOf(i);
-        option.text = i;
-        selectFilterOption.add(option);
-      }
-      document.querySelector('#filter-by-option').appendChild(selectFilterOption);
-      document.querySelector('#filter-by-option').append(document.querySelector('#filter-button'));
-    } else {
-      const filter = document.querySelector('#filter-by-option')
-      if (filter.children.length > 2){
-        for (let i=0; i<filter.children.length; i++){
-          if(parseInt(i) !== 0 && parseInt(i) !== (filter.children.length -1)){
-            filter.removeChild(filter.children[i]);
-          }
-        }
-      }
-      while (selectFilter.firstChild) {
-        selectFilter.removeChild(selectFilter.firstChild);
-      }
-      filterBut.disabled = true;
-      init();
-    }
+
+  // Listener for filtering the data (continents, subregion, languages)
+  selectFilter.addEventListener('change', ()=>{
+    filterData();
   });
-  // Listener para el selector de Página
-  selectPage.addEventListener('change', function(){
-    const actual = parseInt(selectPage.value);
-    (actual === Math.ceil(theData.length/lines) - 1) ? forwardBut.disabled = true : forwardBut.disabled = false;
-    (actual === 0) ? backBut.disabled = true : backBut.disabled = false;
-    showTable(actual+1, theData);
-    showCards(actual+1, theData);
+
+  //Listeners for sorting the data (ascending and descending)
+  ascendingSortBut.addEventListener('click', (event) => {
+    sortData(event);
   });
-  // Listener para el botón Filter
-  filterBut.addEventListener('click', function(){
-    inputSearch.value = '';
-    if(selectFilter.value === -1){
-      selectFilterOption.style.display = "none";
-    }
-    theData = filter(globalData, filters[selectFilter.value].toLowerCase(), filtersOptions[selectFilter.value][selectFilterOption.value]);
-    totalPages = Math.ceil(theData.length/lines);
-    createPagination(totalPages);
-    showTable(parseInt(selectPage.value) + 1, theData);
-    showCards(parseInt(selectPage.value) + 1, theData);
-    inputSearch.value = "Search";
+  descendingSortBut.addEventListener('click', (event) => {
+    sortData(event);
   });
-  // Listener para el botón back button
-  backBut.addEventListener('click', function(){
-    const actual = parseInt(selectPage.value);
-    if(actual === 1){
-      backBut.disabled = true;
-    }
-    if (actual !== 0){
-      forwardBut.disabled = false;
-      selectPage.text = parseInt(actual);
-      selectPage.value = parseInt(actual)-1;
-      showTable(parseInt(selectPage.value)+1, theData);
-      showCards(parseInt(selectPage.value)+1, theData);
-    }
+
+  // Listeners for moving between pages with the forward button, the back button and the page selector
+  pageSelector.addEventListener('change', (event) => {
+    moveBetweenPages(event);
   });
-  // Listener para el botón forward button
-  forwardBut.addEventListener('click', function(){
-    const actual = parseInt(selectPage.value);
-    if(actual === Math.ceil(theData.length/lines) - 2){
-      forwardBut.disabled = true;
-    }
-    if (actual !== Math.ceil(theData.length/lines)){
-      backBut.disabled = false;
-      selectPage.text = parseInt(actual)+2;
-      selectPage.value = parseInt(actual)+1;
-      showTable(parseInt(selectPage.value)+1, theData);
-      showCards(parseInt(selectPage.value)+1, theData);
-    }
+  backBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
   });
-  // Listener para el botón ascending sort
-  ascendingSortBut.addEventListener('click', function(){
-    //console.log(typeof theData);
-    //console.log(typeof selectSort.value);
-    //console.log(typeof 1);
-    //console.log(typeof filters[selectFilter.value].toLowerCase());
-    //console.log(typeof filtersOptions[selectFilter.value][selectFilterOption.value]);
-    theData = sort(theData, selectSort.value, 1);
-    totalPages = Math.ceil(theData.length/lines);
-    createPagination(totalPages);
-    if(inputToggle.checked === true){
-      showTable(parseInt(selectPage.value) + 1, theData);
-    } else if(inputToggle.checked === false){
-      showCards(parseInt(selectPage.value) + 1, theData);
-    }
-  });
-  // Listener para el botón descending sort
-  descendingSortBut.addEventListener('click', function(){
-    theData = sort(theData, selectSort.value, -1);
-    totalPages = Math.ceil(theData.length/lines);
-    createPagination(totalPages);
-    if(inputToggle.checked === true){
-      showTable(parseInt(selectPage.value) + 1, theData);
-    } else if(inputToggle.checked === false){
-      showCards(parseInt(selectPage.value) + 1, theData);
-    }
-  });
+  forwardBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
+  }); 
+}
+function toggleView() {
+  if(inputToggle.checked === true){
+    cards.style.display = 'none';
+    table.style.display = 'block';
+    document.querySelector('article h3').innerHTML = "Table of Countries";
+  } else if(inputToggle.checked === false){
+    cards.style.display = 'flex';
+    table.style.display = 'none';
+    document.querySelector('article h3').innerHTML = "Flags of Countries";
+  }
+  printData();
 }
 
-function createPagination(totalPages){
-  while (selectPage.firstChild) {
-    selectPage.removeChild(selectPage.firstChild);
+function searchData(event){
+  theData = search(globalData, event.target.value);
+  if(selectFilter.value !== '-1'){
+    const filterBy = filterOptions[selectFilter.value].toLowerCase();
+    const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
+    theData = filter(theData, filterBy, optionFilterBy);
+  }
+  printData();
+}
+
+function filterData(){
+  const filterContainer = document.querySelector('#filter');
+  if (filterContainer.children.length > 0 || parseInt(selectFilter.value) === -1){
+    while (filterContainer.children[1]) {
+      filterContainer.removeChild(filterContainer.children[1]);
+    }
+    if (inputSearch.value !== ''){
+      theData = search(globalData, inputSearch.value);
+    } else {
+      theData = globalData;
+    }
+    printData();
+  }
+
+  //Filtering with the option of the subfilter
+  if (parseInt(selectFilter.value) !== -1){
+    selectSubFilter = document.createElement('select');
+    selectSubFilter.id = "filter-by-option";
+    const opciones = subFilterOptions[selectFilter.value];
+    for (const i of opciones){
+      const option = document.createElement('option');
+      option.value = opciones.indexOf(i);
+      option.text = i;
+      selectSubFilter.add(option);
+    }
+    filterContainer.append(selectSubFilter);
+
+    subFilter(); //Filtra la primera vez antes de empezar a recibir cambios
+    selectSubFilter.addEventListener('change', () => {
+      subFilter();
+    });
+  }
+}
+
+function subFilter(){
+  const filterBy = filterOptions[selectFilter.value].toLowerCase();
+  const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
+  theData = filter(globalData, filterBy, optionFilterBy);
+  if (inputSearch.value !== ''){
+    theData = search(theData, inputSearch.value);
+  }
+  printData();
+}
+
+function sortData(event){
+  if (event.target.id.includes("ascending")){
+    theData = sort(theData, selectSort.value, 1);
+  } else if(event.target.id.includes("descending")){
+    theData = sort(theData, selectSort.value, -1);
+  }
+  printData();
+}
+
+function moveBetweenPages(event){
+  const actual = parseInt(pageSelector.value);
+  if(event.target.id.endsWith("button")){
+    (actual === 1) ? backBut.disabled = true : backBut.disabled = false;
+    (actual === Math.ceil(theData.length/lines) - 2) ? forwardBut.disabled = true : forwardBut.disabled = false;
+  } else if (event.target.id.endsWith("selector")){
+    (actual === 0) ? backBut.disabled = true : backBut.disabled = false;
+    (actual === Math.ceil(theData.length/lines) - 1) ? forwardBut.disabled = true : forwardBut.disabled = false;
+  }
+  if ( actual >= 0 && actual < Math.ceil(theData.length/lines) ){
+    if(event.target.id === "back-button"){
+      forwardBut.disabled = false;
+      pageSelector.text = parseInt(actual);
+      pageSelector.value = parseInt(actual)-1;
+    } else if(event.target.id === "forward-button"){
+      backBut.disabled = false;
+      pageSelector.text = parseInt(actual)+2;
+      pageSelector.value = parseInt(actual)+1;
+    }
+  }
+  if (inputToggle.checked){
+    showTable(parseInt(pageSelector.value) + 1, theData);
+  } else{
+    showCards(parseInt(pageSelector.value) + 1, theData);
+  }
+}
+
+function createPaginator(totalPages){
+  while (pageSelector.firstChild) {
+    pageSelector.removeChild(pageSelector.firstChild);
   }
   for(let i = 0; i < totalPages; i++){
     const option = document.createElement('option');
     option.value = i;
     option.text = i+1;
-    selectPage.add(option);
+    pageSelector.add(option);
   }
-  if(selectPage.value ===  0){
-    //backBut.disabled = true;
-  } else if(selectPage.value ===  totalPages){
-    //forwardBut.disabled = true;
+}
+
+let count = 0; 
+function printData(){
+  totalPages = Math.ceil(theData.length/lines);
+  //REvisar que el alert salga una sola vez
+  if(totalPages === 0 && count < 1){
+    alert("Didn't find countries according to your searching parameters.");
+    count ++;
+  } else {
+    count = 0;
+  } 
+
+  if(totalPages === 1){
+    backBut.disabled = true;
+    forwardBut.disabled = true;
+  } else {
+    forwardBut.disabled = false;
+  }
+  createPaginator(totalPages);
+  if (inputToggle.checked){
+    showTable(parseInt(pageSelector.value) + 1, theData);
   } else{
-    //backBut.disabled = false;
-    //forwardBut.disabled = false;
+    showCards(parseInt(pageSelector.value) + 1, theData);
   }
 }
 
 function showTable(page, countries){
-  const init = (page - 1)*lines;
-  const end = init + lines;
+  const initial = (page - 1)*lines;
+  const final = initial + lines;
   if(countries.length !== 1){
-    const dataTable = countries.slice(init, end);
+    const dataTable = countries.slice(initial, final);
     createTable(page, dataTable);
   } else{
     createTable(page, countries);
@@ -228,10 +233,10 @@ function showTable(page, countries){
 }
 
 function showCards(page, countries){
-  const init = (page - 1)*lines;
-  const end = init + lines;
+  const initial = (page - 1)*lines;
+  const final = initial + lines;
   if(countries.length !== 1){
-    const dataTable = countries.slice(init, end);
+    const dataTable = countries.slice(initial, final);
     createCards(page, dataTable);
   } else{
     createCards(page, countries);
@@ -320,7 +325,6 @@ function createCards(page, countries){
     const div1 = document.createElement('div');
     div1.style.margin = '10px';
     div1.style.height = '250px';
-    //div1.style.width = '30vw';
     div1.className = "flip-card";
 
     const div2 = document.createElement('div');
@@ -328,8 +332,6 @@ function createCards(page, countries){
 
     const div3 = document.createElement('div');
     div3.className = "flip-card-front";
-    //div3.style.alignItems = "bottom";
-    //div3.style.justifyContent = "center";
     const img = document.createElement('img');
     img.src = i.flags.png;
     img.alt = i.flags.alt;
@@ -337,7 +339,6 @@ function createCards(page, countries){
     img.style.height = '200px';
     img.style.border = 'solid';
     div3.style.alignSelf = "center";
-    //img.style.border-color = 'blue';
 
     const div4 = document.createElement('div');
     div4.className = 'flip-card-back';
@@ -382,55 +383,43 @@ function createCards(page, countries){
     div4.append(p2);
     div4.append(p3);
   }
-  /*
-  <div class="flip-card"> 1
-    <div class="flip-card-inner"> 2
-      <div class="flip-card-front"> 3
-        <img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">
-      </div>
-      <div class="flip-card-back">
-        <h1>John Doe</h1>
-        <p>Architect & Engineer</p>
-        <p>We love that guy</p>
-      </div>
-    </div>
-  </div> 
-  */
 }
 
-function createFilters(){
-  createFiltersOptions();
+function createSelectorForFilterBy(){
+  createSubFilterOptions();
   let option = document.createElement('option');
   option.value = "-1";
-  option.text = "--- Filter ---";
+  option.text = "Filter &#f002";
   selectFilter.append(option);
-  for(const i of filters){
+  for(const i of filterOptions){
     option = document.createElement('option');
-    option.value = filters.indexOf(i);
+    option.value = filterOptions.indexOf(i);
     option.text = i;
     selectFilter.add(option);
   }
 }
 
-function createFiltersOptions(){
+function createSubFilterOptions(){
   for (const i of globalData){
-    for (const j of filters){
+    for (const j of filterOptions){
       if (j.toLowerCase() === "continents"){
-        if (!(filtersOptions[filters.indexOf(j)].includes(i.continents[0]))){
-          filtersOptions[filters.indexOf(j)].push(i.continents[0]);
+        if (!(subFilterOptions[filterOptions.indexOf(j)].includes(i.continents[0]))){
+          subFilterOptions[filterOptions.indexOf(j)].push(i.continents[0]);
         }
+        subFilterOptions[filterOptions.indexOf(j)].sort();
       } else if(j.toLowerCase() === "subregion" && typeof(i.subregion) === 'string'){
-        if (!(filtersOptions[filters.indexOf(j)].includes(i.subregion))){
-          filtersOptions[filters.indexOf(j)].push(i.subregion);
+        if (!(subFilterOptions[filterOptions.indexOf(j)].includes(i.subregion))){
+          subFilterOptions[filterOptions.indexOf(j)].push(i.subregion);
         }
+        subFilterOptions[filterOptions.indexOf(j)].sort();
       } else if(j.toLowerCase() === "languages" && typeof(i.languages) === 'object'){
-        for (const key of Object.keys(i.languages)){
-          if (!(filtersOptions[filters.indexOf(j)].includes(key))){
-            filtersOptions[filters.indexOf(j)].push(key);
+        for (const value of Object.values(i.languages)){
+          if (!(subFilterOptions[filterOptions.indexOf(j)].includes(value))){
+            subFilterOptions[filterOptions.indexOf(j)].push(value);
           }
         }
+        subFilterOptions[filterOptions.indexOf(j)].sort();
       }
-      filtersOptions[filters.indexOf(j)].sort();
     }
   }
 }

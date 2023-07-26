@@ -10,7 +10,7 @@ export const filter = (data, filterBy, lookFor) => {
   if(typeof data !== 'object' || typeof filterBy !== 'string' || typeof lookFor !== 'string'){
     throw new TypeError("Ingresó un valor inválido");
   } else if (data.length === 0 || filterBy === '' || lookFor === ''){
-    throw new TypeError("Los datos vienen incompletos");
+    throw new TypeError("Los datos vienen vacíos");
   }
   if (filterBy.toLowerCase() === 'continents'){
     return data.filter(country => country.continents[0] === lookFor);
@@ -20,7 +20,7 @@ export const filter = (data, filterBy, lookFor) => {
     const theCountries = [];
     for (const i of data){
       if(typeof(i.languages) === 'object'){
-        if(Object.keys(i.languages).includes(lookFor)){
+        if(Object.values(i.languages).includes(lookFor)){
           theCountries.push(i);
         }
       }
@@ -112,6 +112,8 @@ export const search = (data, lookFor) => {
     throw new TypeError("Ingresó un valor inválido");
   } else if (data.length === 0){
     throw new TypeError("Los datos vienen incompletos");
+  } else if (lookFor === ''){
+    return data;
   }
   return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
 };
