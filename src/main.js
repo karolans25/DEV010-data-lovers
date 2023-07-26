@@ -430,6 +430,7 @@ function createFiltersOptions(){
           }
         }
       }
+      filtersOptions[filters.indexOf(j)].sort();
     }
   }
 }
