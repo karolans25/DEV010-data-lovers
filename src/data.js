@@ -19,11 +19,10 @@ export const filter = (data, filterBy, lookFor) => {
   } else if (filterBy.toLowerCase() === 'languages'){
     const theCountries = [];
     for (const i of data){
-      if(typeof(i.languages) === 'undefined'){
-        continue;
-      }
-      if(Object.keys(i.languages).includes(lookFor)){
-        theCountries.push(i);
+      if(typeof(i.languages) === 'object'){
+        if(Object.keys(i.languages).includes(lookFor)){
+          theCountries.push(i);
+        }
       }
     }
     return theCountries;
@@ -47,7 +46,7 @@ export const sort = (data, sortBy, direction) =>{
       if (aData > bData) {
         return 1; // si a es mayor que b, colocar a después de b
       }
-      return 0; // si los nombres son iguales, no cambiar el orden
+      //return 0; // si los nombres son iguales, no cambiar el orden
     });
   } else if (sortBy.toLowerCase() === 'area'){
     result = data.sort((a, b) => {
@@ -59,7 +58,7 @@ export const sort = (data, sortBy, direction) =>{
       if (aData > bData) {
         return 1; // si a es mayor que b, colocar a después de b
       }
-      return 0; // si los nombres son iguales, no cambiar el orden
+      //return 0; // si los nombres son iguales, no cambiar el orden
     });
   } else if (sortBy.toLowerCase() === 'population'){
     result = data.sort((a, b) => {
@@ -71,7 +70,7 @@ export const sort = (data, sortBy, direction) =>{
       if (aData > bData) {
         return 1; // si a es mayor que b, colocar a después de b
       }
-      return 0; // si los nombres son iguales, no cambiar el orden
+      //return 0; // si los nombres son iguales, no cambiar el orden
     });
   } /*else if (sortBy.toLowerCase() === 'capital'){
     let counter = 1;  
