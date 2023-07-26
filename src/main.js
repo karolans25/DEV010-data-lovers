@@ -40,6 +40,7 @@ function init() {
   document.querySelector('article h3').innerHTML = "Flags of Countries";
   inputSearch.value = '';
   filterBut.disabled = true;
+  backBut.disabled = true;
   createPagination(totalPages);
   createFilters();
   theData = globalData;
@@ -119,8 +120,11 @@ function init() {
   });
   // Listener para el selector de Página
   selectPage.addEventListener('change', function(){
-    showTable(parseInt(selectPage.value)+1, theData);
-    showCards(parseInt(selectPage.value)+1, theData);
+    const actual = parseInt(selectPage.value);
+    (actual === Math.ceil(theData.length/lines) - 1) ? forwardBut.disabled = true : forwardBut.disabled = false;
+    (actual === 0) ? backBut.disabled = true : backBut.disabled = false;
+    showTable(actual+1, theData);
+    showCards(actual+1, theData);
   });
   // Listener para el botón Filter
   filterBut.addEventListener('click', function(){
@@ -137,28 +141,30 @@ function init() {
   });
   // Listener para el botón back button
   backBut.addEventListener('click', function(){
-    const actual = selectPage.value;
+    const actual = parseInt(selectPage.value);
+    if(actual === 1){
+      backBut.disabled = true;
+    }
     if (actual !== 0){
+      forwardBut.disabled = false;
       selectPage.text = parseInt(actual);
       selectPage.value = parseInt(actual)-1;
       showTable(parseInt(selectPage.value)+1, theData);
       showCards(parseInt(selectPage.value)+1, theData);
-      //forwardBut.disabled = false;
-    } else if(actual === 0){
-      //backBut.disabled = true;
     }
   });
   // Listener para el botón forward button
   forwardBut.addEventListener('click', function(){
-    const actual = selectPage.value;
+    const actual = parseInt(selectPage.value);
+    if(actual === Math.ceil(theData.length/lines) - 2){
+      forwardBut.disabled = true;
+    }
     if (actual !== Math.ceil(theData.length/lines)){
+      backBut.disabled = false;
       selectPage.text = parseInt(actual)+2;
       selectPage.value = parseInt(actual)+1;
       showTable(parseInt(selectPage.value)+1, theData);
       showCards(parseInt(selectPage.value)+1, theData);
-      //backBut.disabled = false;
-    } else if(actual === totalPages){
-      //forwardBut.disabled = true;
     }
   });
   // Listener para el botón ascending sort
