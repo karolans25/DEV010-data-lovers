@@ -112,6 +112,7 @@ describe('sort', () => {
     expect(() => sort()).toThrow(TypeError);
     expect(() => sort(0)).toThrow(TypeError);
     expect(() => sort(null, [], undefined)).toThrow(TypeError);
+    expect(() => sort([], '', 5)).toThrow(TypeError);
     expect(() => sort(0, 0, 0)).toThrow(TypeError);
   });
 
@@ -150,9 +151,11 @@ describe('search', () => {
 
   it('should throw TypeError when invoked with wrong argument types', () => {
     expect(() => search()).toThrow(TypeError);
+    expect(() => search([])).toThrow(TypeError);
+    expect(() => search([], '')).toThrow(TypeError);
     expect(() => search(0)).toThrow(TypeError);
     expect(() => search(null, [], undefined)).toThrow(TypeError);
-    expect(() => search(0, 0, 0)).toThrow(TypeError);
+    expect(() => search(0, 0)).toThrow(TypeError);
   });
   it(`should return ${JSON.parse(DATA_TEMP)} for '' `, () => {
     expect(search(JSON.parse(DATA_TEMP), '')).toStrictEqual(JSON.parse(DATA_TEMP));
