@@ -30,10 +30,10 @@
           <input type="text" name="search-by" id="search-by" placeholder="Search &#f002">
         </div>
         <div id="filter">
-          <div id="filter-by-option">
+          <!-- <div id="filter-by"> -->
             <select name="fiter-by" id="filter-by"></select>
-            <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button>
-          </div>
+            <!-- <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button> -->
+          <!-- </div> -->
         </div>
         <div id="sort">
           <label for="sort-by">Sort by: </label>
@@ -43,16 +43,18 @@
             <option value="area">Area</option>
             <option value="population">Population</option>
           </select>
-          <button id="sort-ascending-button"><img src="assets/sort_ascendent.png" alt="Asc." width="10px"></button>
-          <button id="sort-descending-button"><img src="assets/sort_descendent.png" alt="Des." width="10px"></button> 
+          <button id="sort-ascending-button"><img id="sort-ascending-button" src="assets/sort_ascendent.png" alt="Ascending sort" ></button>
+          <button id="sort-descending-button"><img id="sort-descending-button" src="assets/sort_descendent.png" alt="Descending sort" ></button> 
         </div>
       </section>
       <section class="flex-container" id="data">
         <div id="pages">
           <label for="select-pages">Page:</label>
-          <button id="back-button"><img src="assets/flecha-izquierda.png" alt="Anterior"></button>
-          <select name="select-pages" id="select-pages"></select>
-          <button id="forward-button"><img src="assets/flecha-correcta.png" alt="Siguiente"></button>
+          <button id="back-button">&laquo;</button>
+          <!-- <button id="back-button">&laquo<img id="back-button" src="assets/flecha-izquierda.png" alt="Anterior"></button-->
+          <select name="page-selector" id="page-selector"></select>
+          <button id="forward-button">&raquo;</button>
+          <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
         </div>
         <div class="flex-container" id="cards"></div>
 
