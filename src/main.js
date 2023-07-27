@@ -1,18 +1,19 @@
-import {dataJson, filter, sort, search} from './data.js';
+import {dataJson, filter, sort, search, canvas} from './data.js';
+import {chartData} from './canvas.js';
+
 
 const dir = './data/countries/countries.json';
 const lines = 10;
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
 const subFilterOptions = [[],[],[]];
+const arrayOfYears = [];
 const inputSearch = document.querySelector('#search-by');
 const inputToggle = document.querySelector('#toggle');
 const selectFilter = document.querySelector('#filter-by');
-// const selectFilterOption = document.querySelector('#filter-by-option');
 let selectSubFilter;
 const selectSort = document.querySelector('#sort-by');
 const pageSelector = document.querySelector('#page-selector');
-//const filterBut = document.querySelector('#filter-button');
 const ascendingSortBut = document.querySelector('#sort-ascending-button');
 const descendingSortBut = document.querySelector('#sort-descending-button');
 const backBut = document.querySelector('#back-button');
@@ -20,6 +21,7 @@ const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
 const cards = document.querySelector('#cards');
 
+let yearSelector;
 let totalPages;
 let globalData;
 let theData;
@@ -45,7 +47,10 @@ function init() {
   showCards(1, theData);
   showTable(1, theData);
   (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
-
+  createSelectForYears();
+  
+  chartData(canvas(globalData, arrayOfYears[yearSelector.value]));
+  
   // Listener para el input Toggle
   inputToggle.addEventListener('click', (event) => {
     toggleView(event);
@@ -427,6 +432,26 @@ function createSubFilterOptions(){
       }
     }
   }
+}
+
+function  createSelectForYears(){
+  const containerCanvasGini = document.querySelector('section[data-test="gini-canvas"]');
+  yearSelector = document.createElement('select');
+  for (let i=0; i<globalData.length; i++){
+    if('gini' in globalData[i]){
+      if(!arrayOfYears.includes(Object.keys(globalData[i].gini)[0])){
+        arrayOfYears.push(Object.keys(globalData[i].gini)[0]);
+      }
+    }
+  }
+  arrayOfYears.sort().reverse();
+  for(const i of arrayOfYears){
+    const option = document.createElement('option');
+    option.value = arrayOfYears.indexOf(i);
+    option.text = i;
+    yearSelector.append(option);
+  }
+  containerCanvasGini.append(yearSelector);
 }
 
 fetchAndStore();
