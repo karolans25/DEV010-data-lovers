@@ -119,6 +119,21 @@ export const search = (data, lookFor) => {
 };
 
 
+export const canvas = (data, lookFor) => {
+  if(typeof data === 'object' && typeof lookFor === 'string'){
+    const countriesWithGini = {};
+    for(let i = 0; i<data.length; i++){
+      if(typeof data[i].gini === 'object' && Object.keys(data[i].gini)[0] === lookFor){
+        if(Object.keys(data[i].gini).length > 1) alert("mas de un GIni");
+        countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
+      }
+    }
+    return countriesWithGini;
+  } else {
+    throw new TypeError("Error en el tipo de dato ingresado");
+  }
+};
+
 export const densityPopulation = (data) => {
   const density = [];
   if(typeof data !== 'object'){
