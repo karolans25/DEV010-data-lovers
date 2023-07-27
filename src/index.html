@@ -19,10 +19,6 @@
         <nav>
           <button id="stadistics"><img src="assets/stadistics.png" alt="stadistics"></button>
           <button id="play"><img src="assets/play.png" alt="play"></button>
-          <label class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-          </label>
         </nav>
       </section>
       <section class="flex-container" name="container-options">
@@ -55,6 +51,10 @@
           <select name="page-selector" id="page-selector"></select>
           <button id="forward-button">&raquo;</button>
           <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
+          <label class="switchBtn">
+            <input id="toggle" type="checkbox">
+            <div class="slide round">Filter On</div>
+          </label>
         </div>
 
         <section data-test="gini-canvas">
@@ -63,7 +63,7 @@
 
         <div class="flex-container" id="cards"></div>
 
-        <div class="flex-container" id="table">
+        <div class="flex-container" id="table" style="flex-direction: columns; justify-items: left;">
           <table></table>
         </div>
 
