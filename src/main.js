@@ -48,14 +48,14 @@ function init() {
   showCards(1, theData);
   showTable(1, theData);
   (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
-  createSelectForYears();
+  //createSelectForYears();
   // const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
   // const containerGiniGraphYears = document.querySelector('#gini-canvas-year');
   // chartDataYear(dataGiniYears, containerGiniGraphYears);
 
-  const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
-  const containerGiniGraph = document.querySelector('#gini-canvas');
-  chartData(dataGini, containerGiniGraph, searchData());  
+  //const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
+  //const containerGiniGraph = document.querySelector('#gini-canvas');
+  //chartData(dataGini, containerGiniGraph, searchData());  
 
   createEventListeners();
 }
@@ -91,9 +91,9 @@ function createEventListeners(){
     sortData(event);
   });
   //Listener para el select de años en la gráfica del índice de Gini
-  yearSelector.addEventListener('change', () => {
-    graphGiniIndex();
-  });
+  //yearSelector.addEventListener('change', () => {
+  //  graphGiniIndex();
+  //});
 }
 
 function graphGiniIndex(...extra){
