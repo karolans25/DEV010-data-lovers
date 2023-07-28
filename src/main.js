@@ -1,5 +1,5 @@
-import {dataJson, filter, sort, search, canvas} from './data.js';
-import {chartData} from './canvas.js';
+import {dataJson, filter, sort, search, canvas, canvasYear} from './data.js';
+import {chartData, chartDataYear} from './canvas.js';
 
 
 const dir = './data/countries/countries.json';
@@ -36,6 +36,7 @@ async function fetchAndStore() {
 }
 
 function init() {
+  startTime();
   totalPages = Math.ceil(globalData.length/lines);
   document.querySelector('article h3').innerHTML = "Flags of Countries";
   inputSearch.value = '';
@@ -48,24 +49,40 @@ function init() {
   showTable(1, theData);
   (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
   createSelectForYears();
-  
-  chartData(canvas(globalData, arrayOfYears[yearSelector.value]));
-  
+  // const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
+  // const containerGiniGraphYears = document.querySelector('#gini-canvas-year');
+  // chartDataYear(dataGiniYears, containerGiniGraphYears);
+
+  const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
+  const containerGiniGraph = document.querySelector('#gini-canvas');
+  chartData(dataGini, containerGiniGraph, searchData());  
+
+  createEventListeners();
+}
+
+function createEventListeners(){
   // Listener para el input Toggle
   inputToggle.addEventListener('click', (event) => {
     toggleView(event);
   });
-
   // Listener para el input Search
-  inputSearch.addEventListener('keyup', (event) => {
-    searchData(event);
+  inputSearch.addEventListener('keyup', () => {
+    searchData();
   });
-
   // Listener for filtering the data (continents, subregion, languages)
   selectFilter.addEventListener('change', ()=>{
     filterData();
   });
-
+  // Listeners for moving between pages with the forward button, the back button and the page selector
+  forwardBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
+  }); 
+  backBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
+  });
+  pageSelector.addEventListener('change', (event) => {
+    moveBetweenPages(event);
+  });
   //Listeners for sorting the data (ascending and descending)
   ascendingSortBut.addEventListener('click', (event) => {
     sortData(event);
@@ -73,18 +90,24 @@ function init() {
   descendingSortBut.addEventListener('click', (event) => {
     sortData(event);
   });
-
-  // Listeners for moving between pages with the forward button, the back button and the page selector
-  pageSelector.addEventListener('change', (event) => {
-    moveBetweenPages(event);
+  //Listener para el select de años en la gráfica del índice de Gini
+  yearSelector.addEventListener('change', () => {
+    graphGiniIndex();
   });
-  backBut.addEventListener('click', (event) => {
-    moveBetweenPages(event);
-  });
-  forwardBut.addEventListener('click', (event) => {
-    moveBetweenPages(event);
-  }); 
 }
+
+function graphGiniIndex(...extra){
+  // const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
+  // const canvasGiniGraphYears = document.querySelector('#gini-canvas-year');  
+  // chartDataYear(dataGiniYears, canvasGiniGraphYears);
+  if(extra){
+    alert("Extra");
+  }
+  const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
+  const containerGiniGraph = document.querySelector('#gini-canvas');
+  chartData(dataGini, containerGiniGraph, searchData());
+}
+
 function toggleView() {
   if(inputToggle.checked === true){
     cards.style.display = 'none';
@@ -98,8 +121,8 @@ function toggleView() {
   printData();
 }
 
-function searchData(event){
-  theData = search(globalData, event.target.value);
+function searchData(){
+  theData = search(globalData, inputSearch.value);
   if(selectFilter.value !== '-1'){
     const filterBy = filterOptions[selectFilter.value].toLowerCase();
     const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
@@ -262,6 +285,7 @@ function createTable(page, data){
   table.append(thead);
 
   // Fill the data of the table
+  /**Implementar esto con .map */
   const tbody = document.createElement('tbody');
   for (const i of data){
     tr = document.createElement('tr');
@@ -360,26 +384,17 @@ function createCards(page, countries){
     
     if(i.continents[0] === 'America'){
       div4.style.backgroundColor = '#FFFB7B';
-      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Asia'){
       div4.style.backgroundColor = '#CBADE0';
-      //div4.style.color = 'blue';
-      //div4.style.borderColor = 'white';
     } else if(i.continents[0] === 'Europe'){
       div4.style.backgroundColor = '#FCC2D2';
-      //div4.style.color = 'blue';
-      //div4.style.borderColor = 'white';
     } else if(i.continents[0] === 'Africa'){
       div4.style.backgroundColor = 'lightgreen';
-      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Oceania'){
       div4.style.backgroundColor = 'lightblue';
-      //div4.style.color = "blue";
     } else if(i.continents[0] === 'Antarctica'){
       div4.style.backgroundColor = '#A3C7E3';
-      //div4.style.color = "blue";
     }
-    //div4.style.color = "blue";
     div4.style.color = "#1D0030";
   
     cards.append(div1);
@@ -451,7 +466,58 @@ function  createSelectForYears(){
     option.text = i;
     yearSelector.append(option);
   }
-  containerCanvasGini.append(yearSelector);
+  //document.querySelector('#gini').append(yearSelector);
 }
+
+
+
+function startTime() {
+  // hora : 10:50 am
+  const today = new Date();
+  const hora = 10;
+  const minutos = 50;
+  const ampm = "am";
+  let afternoon;
+  (ampm === "pm") ? afternoon = true : afternoon = false;
+  let hora24;
+  let UTC = `UTC`;
+  (afternoon) ? hora24 = hora+12 : hora24 = hora ;
+  let horaRef = today.getUTCHours();
+  let minRef = today.getUTCMinutes();
+  if(horaRef > hora24){
+    ((horaRef - hora24) < 10 ) ? UTC += `-0${horaRef-hora24}` : UTC += `-${horaRef-hora24}`;
+  } else { //horaRef <= hora24
+    ((hora24 - horaRef) < 10 ) ? UTC += `+0${hora24 - horaRef}` : UTC += `+${hora24 - horaRef}`;
+  }
+  if(minRef > minutos){
+    ((minRef - minutos) < 30) ? UTC += ':00' : UTC += ':30';
+  } else { //minRef <= minutos
+    ((minutos - minRef) < 30 ) ? UTC += ':00' : UTC += ':30';
+  }
+  console.log(`UTC: ${UTC}`);
+
+  let hr = today.getHours();
+  let min = today.getMinutes();
+  //let sec = today.getSeconds();
+  const ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+  hr = (hr === 0) ? 12 : hr;
+  hr = (hr > 12) ? hr - 12 : hr;
+  //Add a zero in front of numbers<10
+  hr = checkTime(hr);
+  min = checkTime(min);
+  //sec = checkTime(sec);
+  //document.getElementById("clock").innerHTML = hr + " : " + min + " : " + sec + " " + ap;
+  document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap;
+  const time = setTimeout(function(){ startTime() }, 100);
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+
 
 fetchAndStore();

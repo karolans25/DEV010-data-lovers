@@ -119,7 +119,24 @@ export const search = (data, lookFor) => {
 };
 
 
-export const canvas = (data, lookFor) => {
+export const canvas = (data) => {
+  if(typeof data === 'object'){
+    const countriesWithGini = {};
+    for(let i = 0; i<data.length; i++){
+      if(typeof data[i].gini === 'object'){
+        countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
+      }
+    }
+    const sortedCountriesWithGini = Object.fromEntries(
+      Object.entries(countriesWithGini).sort((a, b) => a[1] - b[1]).reverse()
+    );
+    return sortedCountriesWithGini;
+  } else {
+    throw new TypeError("Error en el tipo de dato ingresado");
+  }
+};
+
+export const canvasYear = (data, lookFor) => {
   if(typeof data === 'object' && typeof lookFor === 'string'){
     const countriesWithGini = {};
     for(let i = 0; i<data.length; i++){
@@ -128,7 +145,10 @@ export const canvas = (data, lookFor) => {
         countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
       }
     }
-    return countriesWithGini;
+    const sortedCountriesWithGini = Object.fromEntries(
+      Object.entries(countriesWithGini).sort((a, b) => a[1] - b[1]).reverse()
+    );
+    return sortedCountriesWithGini;
   } else {
     throw new TypeError("Error en el tipo de dato ingresado");
   }
