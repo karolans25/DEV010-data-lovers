@@ -1,81 +1,105 @@
-/*
-let ctx;// = document.getElementById('gini-canvas');
-let labels, values; 
-
-export const chartData = (theData) => {
-  labels = Object.keys(theData);
-  values = Object.values(theData);
-  //ctx = theElement;
-  ctx = document.getElementById('gini-canvas');
-};
-
-const data = {
-  labels: labels,
-  dataSets: [{
-    label: "Gini index",
-    data: values,
-    backgroundColor: 'rgba(9, 129, 176, 0.2)'
-  }]
-};
-
-const config = {
-  type: 'bar',
-  data: data,
-
-  options: {
-    scales:{ 
-      yAxes:[{ 
-        ticks: { 
-          beginAtZero:true 
-        } 
-      }] 
-    } 
+/**
+ * =============================================================================
+ * Functions:
+ * =============================================================================
+ * Exported:
+ * ---------------------------------------------------------------------------- 
+ * chartData(theData, ...element)
+ * 
+ * chartDataYear(theData, element)
+ * =============================================================================
+*/
+export const chartData = (theData, ...element) => {
+  const labels = Object.keys(theData);
+  const values = Object.values(theData);
+  const graph = element[0];
+  const backgroundColor = Array(Object.keys(theData).length).fill('rgba(54, 162, 235, 0.2)'); // Color de fondo
+  const borderColor = Array(Object.keys(theData).length).fill('rgba(54, 162, 235, 1)'); // Color del borde
+  if (element.length > 1){
+    borderColor[labels.indexOf(element[1])] = 'rgba(240, 99, 132, 1)';
+    backgroundColor[labels.indexOf(element[1])] = 'rgba(240, 99, 132, 0.6)';
   }
 
-};
+  // Podemos tener varios conjuntos de datos. Comencemos con uno
+  const dataGini = {
+    label: "Gini Index",
+    data: values, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: backgroundColor, // Color de fondo
+    borderColor: borderColor, // Color del borde
+    borderWidth: 1,// Ancho del borde
+    hoverBorderWidth: 0
+  };
 
-const myChart = new Chart(ctx, config);
-*/
-
-// Obtener una referencia al elemento canvas del DOM
-const $grafica = document.querySelector("#gini-canvas");
-// Las etiquetas son las que van en el eje X. 
-//const etiquetas = ["Enero", "Febrero", "Marzo", "Abril"]
-
-let labels, values;
-export const chartData = (theData) => {
-  labels = Object.keys(theData);
-  values = Object.values(theData);
-  //ctx = theElement;
-  //ctx = document.getElementById('gini-canvas');
-};
-  
-// Podemos tener varios conjuntos de datos. Comencemos con uno
-const dataGini = {
-  label: "Gine Index",
-  data: values, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
-  backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
-  borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
-  borderWidth: 1,// Ancho del borde
-};
-
-// eslint-disable-next-line no-undef
-new Chart($grafica, {
-  type: 'bar',// Tipo de gráfica
-  data: {
-    labels: labels,
-    datasets: [
-      dataGini,
-      // Aquí más datos...
-    ]
-  },
-  options: {
+  const chartOptions = {
     scales: {
       yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
-      }],
+        barPercentage: 0.5
+      }]
     },
+    elements: {
+      rectangle: {
+        borderSkipped: 'left',
+      }
+    }
+  };
+
+  if(window.grafica){
+    window.grafica.clear();
+    window.grafica.destroy();
   }
-});
+
+  // eslint-disable-next-line no-undef
+  window.grafica = new Chart(graph, {
+    type: 'horizontalBar',// Tipo de gráfica
+    data: {
+      labels: labels,
+      datasets: [
+        dataGini,
+      // Aquí más datos...
+      ]
+    },
+    options: chartOptions
+  });
+};
+
+export const chartDataYear = (theData, element) => {
+  const labels = Object.keys(theData);
+  const values = Object.values(theData);
+  const graph = element;
+  // Podemos tener varios conjuntos de datos. Comencemos con uno
+  const dataGini = {
+    label: "Gini Index",
+    data: values, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
+    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de fondo
+    borderColor: 'rgba(54, 162, 235, 1)', // Color del borde
+    borderWidth: 1,// Ancho del borde
+    hoverBorderWidth: 0
+  };
+
+  if(window.grafica){
+    window.grafica.clear();
+    window.grafica.destroy();
+  }
+  
+  // eslint-disable-next-line no-undef
+  window.grafica = new Chart(graph, {
+    type: 'bar',// Tipo de gráfica
+    data: {
+      labels: labels,
+      datasets: [
+        dataGini,
+      // Aquí más datos...
+      ]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }],
+      },
+    }
+  });
+
+};

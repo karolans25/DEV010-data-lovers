@@ -17,65 +17,106 @@
       <section class="flex-container">
         <h3></h3>
         <nav>
-          <button id="stadistics"><img src="assets/stadistics.png" alt="stadistics"></button>
-          <button id="play"><img src="assets/play.png" alt="play"></button>
+          <button id="data"><img src="assets/stadistics.png" alt="stadistics"></button>
+          <button id="calculus"><img src="assets/play.png" alt="play"></button>
+          <button id="map"><img src="assets/stadistics.png" alt="stadistics"></button>
         </nav>
       </section>
-      <section class="flex-container" name="container-options">
-        <div id="search">
-          <input type="text" name="search-by" id="search-by" placeholder="Search &#f002">
-        </div>
-        <div id="filter">
-          <!-- <div id="filter-by"> -->
-            <select name="fiter-by" id="filter-by"></select>
-            <!-- <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button> -->
-          <!-- </div> -->
-        </div>
-        <div id="sort">
-          <label for="sort-by">Sort by: </label>
-          <select name="sort-by" id="sort-by">
-            <option value="country">Country</option>
-            <option value="capital">Capital</option>
-            <option value="area">Area</option>
-            <option value="population">Population</option>
-          </select>
-          <button id="sort-ascending-button"><img id="sort-ascending-button" src="assets/sort_ascendent.png" alt="Ascending sort" ></button>
-          <button id="sort-descending-button"><img id="sort-descending-button" src="assets/sort_descendent.png" alt="Descending sort" ></button> 
-        </div>
-      </section>
-      <section class="flex-container" id="data">
-        <div id="pages">
-          <label for="select-pages">Page:</label>
-          <button id="back-button">&laquo;</button>
-          <!-- <button id="back-button">&laquo<img id="back-button" src="assets/flecha-izquierda.png" alt="Anterior"></button-->
-          <select name="page-selector" id="page-selector"></select>
-          <button id="forward-button">&raquo;</button>
-          <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
-          <label class="switchBtn">
-            <input id="toggle" type="checkbox">
-            <div class="slide round">Filter On</div>
-          </label>
-        </div>
 
-        <section data-test="gini-canvas">
-          <canvas id="gini-canvas" width="400" height="400"></canvas>
+      <section id="data-container" class="flex-container">
+        <section class="flex-container" name="container-options">
+          <div id="search">
+            <input type="text" name="search-by" id="search-by" placeholder="Search &#f002">
+          </div>
+          <div id="filter">
+            <!-- <div id="filter-by"> -->
+              <select name="fiter-by" id="filter-by"></select>
+              <!-- <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button> -->
+            <!-- </div> -->
+          </div>
+          <div id="sort">
+            <label for="sort-by">Sort by: </label>
+            <select name="sort-by" id="sort-by">
+              <option value="country">Country</option>
+              <option value="capital">Capital</option>
+              <option value="area">Area</option>
+              <option value="population">Population</option>
+            </select>
+            <button id="sort-ascending-button"><img id="sort-ascending-button" src="assets/sort_ascendent.png" alt="Ascending sort" ></button>
+            <button id="sort-descending-button"><img id="sort-descending-button" src="assets/sort_descendent.png" alt="Descending sort" ></button> 
+          </div>
+        </section>
+        <section class="flex-container" id="data">
+          <div id="pages">
+            <label for="select-pages">Page:</label>
+            <button id="back-button">&laquo;</button>
+            <!-- <button id="back-button">&laquo<img id="back-button" src="assets/flecha-izquierda.png" alt="Anterior"></button-->
+            <select name="page-selector" id="page-selector"></select>
+            <button id="forward-button">&raquo;</button>
+            <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
+            <label class="switchBtn">
+              <input id="toggle" type="checkbox">
+              <div class="slide round">Filter On</div>
+            </label>
+          </div>
+
+          <div class="flex-container" id="cards"></div>
+
+          <div class="flex-container" id="table">
+            <table></table>
+          </div>
+        </section>
+      </section>
+
+      <section id="calculus-container" class="flex-container">
+
+        <section>
+          <nav class="pagination-container">
+            <button class="pagination-button" id="prev-button" aria-label="Previous page" title="Previous page">
+              &lt;
+            </button>
+            <button class="pagination-button" id="but-1" aria-label="1" title="1">1</button>
+            <button class="pagination-button" id="but-2" aria-label="2" title="1">2</button>
+            <button class="pagination-button" id="but-3" aria-label="3" title="1">3</button>
+            <button class="pagination-button" id="but-4" aria-label="4" title="1">4</button>
+            <button class="pagination-button" id="next-button" aria-label="Next page" title="Next page">
+              &gt;
+            </button>
+          </nav>
+        </section>
+            
+        <section>
+          <section data-test="gini-canvas-year">
+            <canvas id="gini-canvas-year" width="700" height="400"></canvas>
+          </section> 
+
+          <section data-test="gini-canvas">
+            <canvas id="gini-canvas" width="500" height="3000"></canvas>
+          </section>
+
+          <section id="clockdate" class="flex-container">
+            <section class="clockdate-wrapper">
+              <section id="clock"></section>
+            </section>
+            <section class="card-clock">
+              <img src="" alt="bandera1" style="width:100%">
+              <div class="container">
+                <h4><b></b></h4>
+              </div>
+            </section>   
+          </section>
         </section>
 
-        <div class="flex-container" id="cards"></div>
-
-        <div class="flex-container" id="table" style="flex-direction: columns; justify-items: left;">
-          <table></table>
-        </div>
-
-
-        <time datetime="2018-07-07">July 7</time>
-        <time datetime="20:00">20:00</time>
-        <time datetime="PT2H30M">2h 30m</time>
       </section>
+
+      <section id="map-container">
+        
+      </section>
+
     </article>
 
     <footer>
-      <div>Hecho con <ion-icon name="heart"></ion-icon> por <strong>Carolina Pulido Gómez</strong></div>
+      <div>Hecho con <span class="heart">&hearts;</span> por <strong>Carolina Pulido Gómez</strong></div>
       <div>
         <a href="https://www.twitch.tv/karolans25" ><ion-icon name="logo-twitch"></ion-icon><span>Twitch</span></a>
         <a href="https://github.com/karolans25/DEV010-cipher" ><ion-icon name="logo-github"></ion-icon><span>Github</span></a>

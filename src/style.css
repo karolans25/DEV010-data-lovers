@@ -3,7 +3,7 @@
     font-size: 1vw;
     padding: 2vw;
     margin: 2vw;
-    border-radius: 0.3rem;
+    border-radius: 15px;
 }
 
 body{
@@ -120,6 +120,14 @@ article section div[id="pages"]{
 .flex-container[id="cards"]{
   flex-direction: row;
   flex-wrap: wrap;
+  padding: 1vw;
+}
+
+.flex-container[id="calculus-container"]{
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: start;
+  width: fit-content;
   padding: 1vw;
 }
 
@@ -240,3 +248,109 @@ input:checked + .slide:before {
     color: white;
     transform: rotateY(180deg);
   } 
+
+
+  .clockdate-wrapper {
+    background-color: #333;
+    padding:25px;
+    max-width:350px;
+    width:100%;
+    text-align:center;
+    border-radius:5px;
+    margin:0 auto;
+    margin-top:15%;
+}
+#clock{
+    background-color:#333;
+    font-family: sans-serif;
+    font-size:60px;
+    text-shadow:0px 0px 1px #fff;
+    color:#fff;
+}
+#clock span {
+    color:#888;
+    text-shadow:0px 0px 1px #333;
+    font-size:30px;
+    position:relative;
+    top:-27px;
+    left:-10px;
+}
+#date {
+    letter-spacing:10px;
+    font-size:14px;
+    font-family:arial,sans-serif;
+    color:#fff;
+}
+
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.container {
+  padding: 2px 16px;
+}
+/*With rounded corners*/
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 5px; /* 5px rounded corners */
+}
+
+/* Add rounded corners to the top left and the top right corner of the image */
+img {
+  border-radius: 5px 5px 0 0;
+}
+
+
+
+.pagination-container {
+  width: calc(100% - 2rem);
+  display: flex;
+  align-items: center;
+  position: absolute;
+  /*bottom: 0;*/
+  top: 10;
+  padding: 1rem 0;
+  justify-content: center;
+}
+
+.pagination-number,
+.pagination-button{
+  font-size: 1.1rem;
+  background-color: transparent;
+  border: none;
+  color: dodgerblue;
+  margin: 0.25rem 0.25rem;
+  cursor: pointer;
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: .2rem;
+}
+
+.pagination-number:hover,
+.pagination-button:not(.disabled):hover {
+  background: #fff;
+  color: darkblue;
+}
+
+.pagination-number.active {
+  color: #fff;
+  background: #0085b6;
+}
+
+.calculus-container{
+  flex-direction: columns;
+}
+
+footer .heart {
+  color: #DC143C;
+}
