@@ -7,6 +7,8 @@ const lines = 10;
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
 const subFilterOptions = [[],[],[]];
 const arrayOfYears = [];
+const navBarToggle = document.querySelector('.toggle');
+const navBarButtons = document.querySelector('.links');
 const inputSearch = document.querySelector('#search-by');
 const inputToggle = document.querySelector('#toggle');
 const selectFilter = document.querySelector('#filter-by');
@@ -29,7 +31,16 @@ const botonesPaginatorCalculus = document.querySelectorAll('section[id="calculus
 const containerGiniGraphYear = document.querySelector('section[data-test="gini-canvas-year"]');
 const containerGiniGraph = document.querySelector('section[data-test="gini-canvas"]');
 const containerClock = document.querySelector('#clockdate');
-
+const calculus1 = document.querySelector('#tab-option-gini-years');
+const calculus2 = document.querySelector('#tab-option-gini');
+const calculus3 = document.querySelector('#tab-option-density');
+const calculus4 = document.querySelector('#tab-option-clock');
+const contentCalculus1 = document.querySelector('section[data-test="gini-canvas-year"]');
+const contentCalculus2 = document.querySelector('section[data-test="gini-canvas"]');
+const contentCalculus3 = document.querySelector('section[data-test="density-canvas"]');
+const contentCalculus4 = document.querySelector('section[data-test="clock"]');
+let chosen = 1;
+  
 let yearSelector;
 let totalPages;
 let globalData;
@@ -47,7 +58,7 @@ async function fetchAndStore() {
 function init() {
   startTime();
   totalPages = Math.ceil(globalData.length/lines);
-  document.querySelector('article h3').innerHTML = "Flags of Countries";
+  document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   //inputSearch.value = '';
   //filterBut.disabled = true;
   inputToggle.checked = false;
@@ -61,7 +72,8 @@ function init() {
   dataContainer.style.display = "block";
   calculusContainer.style.display = "none";
   mapContainer.style.display = "none";
-  
+  changeOptionCalculus();
+
   const paginationNumbers = document.getElementById("pagination-numbers");
   const nextButton = document.getElementById("next-button");
   const prevButton = document.getElementById("prev-button");
@@ -69,6 +81,10 @@ function init() {
 }
 
 function createEventListeners(){
+  navBarToggle.addEventListener('click', ()=>{
+    navBarToggle.classList.toggle('rotate');
+    navBarButtons.classList.toggle('active');
+  });
   // Listener para el input Toggle
   inputToggle.addEventListener('click', (event) => {
     toggleView(event);
@@ -103,13 +119,17 @@ function createEventListeners(){
   //  graphGiniIndex();
   //});
   navBarDataButton.addEventListener('click', () => {
-    document.querySelector('article h3').innerHTML = "Flags of Countries";
+    navBarToggle.classList.toggle('rotate');
+    navBarButtons.classList.toggle('active');
+    document.querySelector('nav section h3').innerHTML = "Flags of Countries";
     dataContainer.style.display = "block";
     calculusContainer.style.display = "none";
     mapContainer.style.display = "none";  
   });
   navBarCalculusButton.addEventListener('click', () => {
-    document.querySelector('article h3').innerHTML = "Calculus";
+    navBarToggle.classList.toggle('rotate');
+    navBarButtons.classList.toggle('active');
+    document.querySelector('nav section h3').innerHTML = "Calculus";
     dataContainer.style.display = "none";
     calculusContainer.style.display = "flex";
     containerGiniGraphYear.style.display = "block";
@@ -124,6 +144,9 @@ function createEventListeners(){
 
   });
   navBarMapButton.addEventListener('click', () => {
+    navBarToggle.classList.toggle('rotate');
+    navBarButtons.classList.toggle('active');
+    document.querySelector('nav section h3').innerHTML = "Map";
     dataContainer.style.display = "none";
     calculusContainer.style.display = "none";
     mapContainer.style.display = "flex";  
@@ -167,7 +190,66 @@ function createEventListeners(){
       
     }
   }));
+
+  calculus1.addEventListener('click', () => {
+    chosen = 1;
+    changeOptionCalculus();
+  });
+  calculus2.addEventListener('click', () => {
+    chosen = 2;
+    changeOptionCalculus();
+  });
+  calculus3.addEventListener('click', () => {
+    chosen = 3;
+    changeOptionCalculus();
+  });
+  calculus4.addEventListener('click', () => {
+    chosen = 4;
+    changeOptionCalculus();
+  });
+
 }
+function changeOptionCalculus(){
+  if(chosen === 1){
+    calculus1.classList.value = 'option tab-option-active';
+    contentCalculus1.classList.value = 'content content-active';
+  } else {
+    calculus1.classList.value = 'tab-option';
+    contentCalculus1.classList.value = 'content';
+  }
+  if (chosen === 2){
+    calculus2.classList.value = 'option tab-option-active';
+    contentCalculus2.classList.value = 'content content-active';
+  } else {
+    calculus2.classList.value = 'tab-option';
+    contentCalculus2.classList.value = 'content';
+  }
+  if (chosen === 3){
+    calculus3.classList.value = 'option tab-option-active';
+    contentCalculus3.classList.value = 'content content-active';
+  } else {
+    calculus3.classList.value = 'tab-option';
+    contentCalculus3.classList.value = 'content';
+  }
+  if (chosen === 4){
+    calculus4.classList.value = 'option tab-option-active';
+    contentCalculus4.classList.value = 'content content-active';
+  } else {
+    calculus4.classList.value = 'tab-option';
+    contentCalculus4.classList.value = 'content';
+  }
+  console.log(chosen);
+  console.log(calculus1.classList.value);
+  console.log(calculus2.classList.value);
+  console.log(calculus3.classList.value);
+  console.log(calculus4.classList.value);
+  console.log(contentCalculus1.classList.value);
+  console.log(contentCalculus2.classList.value);
+  console.log(contentCalculus3.classList.value);
+  console.log(contentCalculus4.classList.value);
+}
+
+
 function disableButton(button){
   button.classList.add("disabled");
   button.setAttribute("disabled", true);
@@ -199,11 +281,11 @@ function toggleView() {
   if(inputToggle.checked === true){
     cards.style.display = 'none';
     table.style.display = 'block';
-    document.querySelector('article h3').innerHTML = "Table of Countries";
+    document.querySelector('nav section h3').innerHTML = "Table of Countries";
   } else if(inputToggle.checked === false){
     cards.style.display = 'flex';
     table.style.display = 'none';
-    document.querySelector('article h3').innerHTML = "Flags of Countries";
+    document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   }
   printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
 }
@@ -263,12 +345,14 @@ function subFilter(){
 }
 
 function sortData(event){
-  if (event.target.id.includes("ascending")){
-    theData = sort(theData, selectSort.value, 1);
-  } else if(event.target.id.includes("descending")){
-    theData = sort(theData, selectSort.value, -1);
+  if(selectSort.value !== "-1"){
+    if (event.target.id.includes("ascending")){
+      theData = sort(theData, selectSort.value, 1);
+    } else if(event.target.id.includes("descending")){
+      theData = sort(theData, selectSort.value, -1);
+    }
+    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
   }
-  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
 }
 
 function moveBetweenPages(event){
@@ -292,9 +376,9 @@ function moveBetweenPages(event){
     }
   }
   if (inputToggle.checked){
-    showTable(theData, table, parseInt(pageSelector.value) + 1, lines)(parseInt(pageSelector.value) + 1, theData);
+    showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
   } else{
-    showCards(theData, cards, parseInt(pageSelector.value) + 1, lines)(parseInt(pageSelector.value) + 1, theData);
+    showCards(theData, cards, parseInt(pageSelector.value) + 1, lines);
   }
 }
 
@@ -339,7 +423,6 @@ function createSubFilterOptions(){
 
 function  createSelectForYears(){
   const containerCanvasGiniYear = document.querySelector('section[data-test="gini-canvas-year"]');
-  console.log();
   yearSelector = document.createElement('select');
   for (let i=0; i<globalData.length; i++){
     if('gini' in globalData[i]){

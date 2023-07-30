@@ -79,10 +79,11 @@ const createTable = (page, data, lines, table) =>{
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
+  /*
   const caption = document.createElement('caption');
   caption.innerHTML = "Table of Countries";
   table.append(caption);
-  
+  */
   //Fill the titles of the table
   const thead = document.createElement('thead');
   let tr = document.createElement('tr');
@@ -192,16 +193,22 @@ const createCards = (countries, cards) => {
     p3.innerHTML = (typeof i.population === 'number') ? `Population: ${i.population}`: `Population: ❌`;
       
     if(i.continents[0] === 'America'){
+      div3.style.backgroundColor = '#FFFB7B';
       div4.style.backgroundColor = '#FFFB7B';
     } else if(i.continents[0] === 'Asia'){
+      div3.style.backgroundColor = '#CBADE0';
       div4.style.backgroundColor = '#CBADE0';
     } else if(i.continents[0] === 'Europe'){
+      div3.style.backgroundColor = '#FCC2D2';
       div4.style.backgroundColor = '#FCC2D2';
     } else if(i.continents[0] === 'Africa'){
+      div3.style.backgroundColor = 'lightgreen';
       div4.style.backgroundColor = 'lightgreen';
     } else if(i.continents[0] === 'Oceania'){
+      div3.style.backgroundColor = 'lightblue';
       div4.style.backgroundColor = 'lightblue';
     } else if(i.continents[0] === 'Antarctica'){
+      div3.style.backgroundColor = '#A3C7E3';
       div4.style.backgroundColor = '#A3C7E3';
     }
     div4.style.color = "#1D0030";
