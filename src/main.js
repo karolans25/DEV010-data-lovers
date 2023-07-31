@@ -21,9 +21,9 @@ const backBut = document.querySelector('#back-button');
 const forwardBut = document.querySelector('#forward-button');
 const table = document.querySelector('table');
 const cards = document.querySelector('#cards');
-const navBarDataButton = document.querySelector('#data');
-const navBarCalculusButton = document.querySelector('#calculus');
-const navBarMapButton = document.querySelector('#map');
+const navBarDataButton = document.querySelector('#data-link');
+const navBarCalculusButton = document.querySelector('#calculus-link');
+const navBarMapButton = document.querySelector('#map-link');
 const dataContainer = document.querySelector('#data-container');
 const calculusContainer = document.querySelector('#calculus-container');
 const mapContainer = document.querySelector('#map-container');
@@ -264,6 +264,7 @@ function changeOptionCalculus(){
   }
 }
 
+/*
 function disableButton(button){
   button.classList.add("disabled");
   button.setAttribute("disabled", true);
@@ -273,6 +274,7 @@ function enableButton(button){
   button.classList.remove("disabled");
   button.removeAttribute("disabled");
 }
+*/
 
 function graphGiniIndex(...extra){
   if(parseInt(extra[extra.length-1]) === 0){
@@ -281,7 +283,6 @@ function graphGiniIndex(...extra){
     chartDataYear(dataGiniYears, canvasGiniGraphYears);
   } else if(parseInt(extra[extra.length-1]) === 1){
     const dataGini = canvas(globalData);
-    console.log(dataGini);
     alert();
     const containerGiniGraph = document.querySelector('#gini-canvas');
     chartData(dataGini, containerGiniGraph, 'Colombia');
@@ -484,7 +485,6 @@ function startTime() {
   } else { //minRef <= minutos
     ((minutos - minRef) < 30 ) ? UTC += ':00' : UTC += ':30';
   }
-  console.log(`UTC: ${UTC}`);
 
   let hr = today.getHours();
   let min = today.getMinutes();
@@ -498,7 +498,7 @@ function startTime() {
   //sec = checkTime(sec);
   //document.getElementById("clock").innerHTML = hr + " : " + min + " : " + sec + " " + ap;
   document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap;
-  const time = setTimeout(function(){ startTime() }, 100);
+  setTimeout(function(){ startTime() }, 100);
 }
 
 function checkTime(i) {

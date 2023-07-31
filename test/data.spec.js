@@ -97,8 +97,8 @@ describe('filter', () => {
     expect(filter(JSON.parse(DATA_TEMP), 'Subregion', 'South-Eastern Asia')).toStrictEqual([JSON.parse(DATA_TEMP)[2]]);
   });
 
-  it(`should return ${[JSON.parse(COLOMBIA)[0], JSON.parse(COLOMBIA)[2]]} for 'Languages' and 'eng' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Languages', 'eng')).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]);
+  it(`should return ${[JSON.parse(COLOMBIA)[0], JSON.parse(COLOMBIA)[2]]} for 'Languages' and 'English' `, () => {
+    expect(filter(JSON.parse(DATA_TEMP), 'Languages', 'English')).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]);
   });
 });
 
