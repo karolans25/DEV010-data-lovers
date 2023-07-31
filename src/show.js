@@ -23,8 +23,7 @@
 */
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
 //const titles = ['No', 'Country', 'Capital', 'Area', 'Population', 'Gini'];
-let data, cards, table, backBut, forwardBut, pageSelector, lines, check, page;
-
+let data, cards, table, lines, page;
 
 export const printData = (data, cards, table, backBut, forwardBut, pageSelector, lines, check) => {
   const totalPages = Math.ceil(data.length/lines);
