@@ -11,6 +11,8 @@
  * showTable(countries, table, page, lines)
  * 
  * showCards(countries, cards, page, lines)
+ * 
+ * moveBetweenPages(thePage, backBut, theData, lines, forwardBut, inputToggle, tables, cards, event)
  * =============================================================================
  * Locals: 
  * ---------------------------------------------------------------------------- 
@@ -20,6 +22,9 @@
  * =============================================================================
 */
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
+//const titles = ['No', 'Country', 'Capital', 'Area', 'Population', 'Gini'];
+let data, cards, table, backBut, forwardBut, pageSelector, lines, check, page;
+
 
 export const printData = (data, cards, table, backBut, forwardBut, pageSelector, lines, check) => {
   const totalPages = Math.ceil(data.length/lines);
@@ -53,37 +58,44 @@ export const createPaginator = (totalPages, pageSelector) => {
   }
 }
 
-export const showTable = (countries, table, page, lines) => {
+export const showTable = (theData, theTable, thePage, theLines) => {
+  data = theData;
+  table = theTable;
+  lines = theLines;
+  page = thePage;
   const initial = (page - 1)*lines;
   const final = initial + lines;
-  if(countries.length > 1){
-    const dataTable = countries.slice(initial, final);
+  if(data.length > 1){
+    const dataTable = data.slice(initial, final);
     createTable(page, dataTable, lines, table);
   } else{
-    createTable(page, countries, lines, table);
+    createTable(page, data, lines, table);
   }
 }
   
-export const showCards = (countries, cards, page, lines) => {
+export const showCards = (theData, theCards, thePage, theLines) => {
+  data = theData;
+  cards = theCards;
+  page = thePage;
+  lines = theLines;
   const initial = (page - 1)*lines;
   const final = initial + lines;
-  if(countries.length > 1){
-    const dataTable = countries.slice(initial, final);
+  if(data.length > 1){
+    const dataTable = data.slice(initial, final);
     createCards(dataTable, cards);
   } else{
-    createCards(countries, cards);
+    createCards(data, cards);
   }
 }
 
-const createTable = (page, data, lines, table) =>{
+const createTable = (thePage, theData, theLines, theTable) =>{
+  page = thePage;
+  data = theData;
+  lines = theLines;
+  table = theTable;
   while (table.firstChild) {
     table.removeChild(table.firstChild);
   }
-  /*
-  const caption = document.createElement('caption');
-  caption.innerHTML = "Table of Countries";
-  table.append(caption);
-  */
   //Fill the titles of the table
   const thead = document.createElement('thead');
   let tr = document.createElement('tr');
@@ -107,7 +119,6 @@ const createTable = (page, data, lines, table) =>{
       } else if (j === 'Country'){
         let name = `${i.name.common}\t${i.flag}`;
         (i.independent) ? name += '\t✅' : name += '\t❌';
-        //td.innerHTML = name;
         const abbr = document.createElement('abbr');
         abbr.title = i.name.official;
         abbr.innerHTML = name;
@@ -129,7 +140,7 @@ const createTable = (page, data, lines, table) =>{
           lang = "❌,\t";
         }
         td.innerHTML = lang.slice(0,-2);
-      } else if (j === 'Area'){
+      }   else if (j === 'Area'){
         td.innerHTML = i.area;
       } else if (j === 'Population'){
         td.innerHTML = i.population;
@@ -154,11 +165,13 @@ const createTable = (page, data, lines, table) =>{
   table.append(tbody);
 }
   
-const createCards = (countries, cards) => {  
+const createCards = (theData, theCards) => {
+  data = theData;
+  cards = theCards;  
   while (cards.firstChild) {
     cards.removeChild(cards.firstChild);
   }
-  for (const i of countries){
+  for (const i of data){
     const div1 = document.createElement('div');
     div1.style.margin = '10px';
     div1.style.height = '250px';
@@ -225,4 +238,3 @@ const createCards = (countries, cards) => {
     div4.append(p3);
   }
 }
-  
