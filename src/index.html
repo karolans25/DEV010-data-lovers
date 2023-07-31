@@ -9,46 +9,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
   <body>
-    <header style="flex-direction: row;">
+    <header>
       <h1>Contries Around the World</h1>
     </header>
 
-    <article>
-      <section class="flex-container">
+    <nav>
+      <section class="container">
         <h3></h3>
-        <nav>
-          <button id="data"><img src="assets/stadistics.png" alt="stadistics"></button>
-          <button id="calculus"><img src="assets/play.png" alt="play"></button>
-          <button id="map"><img src="assets/stadistics.png" alt="stadistics"></button>
-        </nav>
+        <ul class="links">
+          <li class="link">
+            <button class="link-button" id="data">Data</button>
+          </li>
+          <li class="link">
+            <button class="link-button" id="calculus">Calculus</button>
+          </li>
+          <li class="link">
+            <button class="link-button" id="map">Map</button>
+          </li>
+        </ul>
+        <section class="toggle">
+          |||
+        </section>
       </section>
+    </nav>
 
-      <section id="data-container" class="flex-container">
-        <section class="flex-container" name="container-options">
-          <div id="search">
+    <article>
+
+      <section id="data-container" class="container">
+        <section class="container" name="container-options">
+          <section id="search">
             <input type="text" name="search-by" id="search-by" placeholder="Search &#f002">
-          </div>
-          <div id="filter">
-            <!-- <div id="filter-by"> -->
+          </section>
+          <section id="filter">
               <select name="fiter-by" id="filter-by"></select>
-              <!-- <button id="filter-button"><img src="assets/filter.png" alt="Siguiente" width="15vw"></button> -->
-            <!-- </div> -->
-          </div>
-          <div id="sort">
-            <label for="sort-by">Sort by: </label>
+          </section>
+          <section id="sort">
+            <!-- <label for="sort-by">Sort by: </label> -->
             <select name="sort-by" id="sort-by">
+              <!-- <option value="-1">Sort</option> -->
               <option value="country">Country</option>
               <option value="capital">Capital</option>
               <option value="area">Area</option>
               <option value="population">Population</option>
             </select>
-            <button id="sort-ascending-button"><img id="sort-ascending-button" src="assets/sort_ascendent.png" alt="Ascending sort" ></button>
-            <button id="sort-descending-button"><img id="sort-descending-button" src="assets/sort_descendent.png" alt="Descending sort" ></button> 
-          </div>
+            <button id="sort-ascending-button">A-Z</button>
+            <button id="sort-descending-button">Z-A</button> 
+          </section>
         </section>
-        <section class="flex-container" id="data">
-          <div id="pages">
-            <label for="select-pages">Page:</label>
+        <section class="container" id="data">
+          <section id="pages">
+            <label for="select-pages">Page: </label>
             <button id="back-button">&laquo;</button>
             <!-- <button id="back-button">&laquo<img id="back-button" src="assets/flecha-izquierda.png" alt="Anterior"></button-->
             <select name="page-selector" id="page-selector"></select>
@@ -56,71 +66,102 @@
             <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
             <label class="switchBtn">
               <input id="toggle" type="checkbox">
-              <div class="slide round">Filter On</div>
+              <section class="slide round"></section>
             </label>
-          </div>
+          </section>
 
-          <div class="flex-container" id="cards"></div>
+          <section class="container" id="cards"></section>
 
-          <div class="flex-container" id="table">
+          <section class="container" id="table">
             <table></table>
-          </div>
+          </section>
         </section>
       </section>
 
-      <section id="calculus-container" class="flex-container">
+      <section id="calculus-container" class="container">
+        <section class="tab-container">
+          <ul class="tab-options">
+            <li id="tab-option-gini-years" class="tab-option option-active">Gini Index (years)</li>
+            <li id="tab-option-gini" class="tab-option">Gini Index</li>
+            <li id="tab-option-density" class="tab-option">Population Density</li>
+            <li id="tab-option-clock" class="tab-option">Clock Converter</li>
+          </ul>
 
-        <section>
-          <nav class="pagination-container">
-            <button class="pagination-button" id="prev-button" aria-label="Previous page" title="Previous page">
-              &lt;
-            </button>
-            <button class="pagination-button" id="but-1" aria-label="1" title="1">1</button>
-            <button class="pagination-button" id="but-2" aria-label="2" title="1">2</button>
-            <button class="pagination-button" id="but-3" aria-label="3" title="1">3</button>
-            <button class="pagination-button" id="but-4" aria-label="4" title="1">4</button>
-            <button class="pagination-button" id="next-button" aria-label="Next page" title="Next page">
-              &gt;
-            </button>
-          </nav>
+          <section class="contents">
+            <section data-test="gini-canvas-year" class="content">
+              <h4>Gini index for each year registered</h4>
+              <section data-test="gini-canvas-year">
+                <canvas id="gini-canvas-year" width="500" height="400"></canvas>
+              </section> 
+            </section>
+
+            <section data-test="gini-canvas" class="content">
+              <h4>Gini index registered</h4>
+              <section data-test="gini-canvas">
+                <canvas id="gini-canvas" width="500" height="3000"></canvas>
+              </section>
+            </section>
+
+            <section data-test="density-canvas" class="content">
+              <h4>Poblacional density</h4>
+              <section id="clockdate" class="clockdate-wrapper">
+                <section id="clock"></section>
+              </section>
+              <section class="card-clock">
+                <img src="" alt="bandera1" style="width:100%">
+                <section class="container">
+                  <h4><b></b></h4>
+                </section>
+              </section>   
+            </section>
+
+            <section data-test="clock" class="clockdate-wrapper content">
+              <h4>Looking for the time</h4>
+              <p>Clock searcher</p>
+              <section id="clock"></section>
+            </section>
+          </section>
         </section>
+        
             
-        <section>
+        <!-- <section class="chartjs">
           <section data-test="gini-canvas-year">
-            <canvas id="gini-canvas-year" width="700" height="400"></canvas>
+            <canvas id="gini-canvas-year"></canvas>
           </section> 
 
           <section data-test="gini-canvas">
-            <canvas id="gini-canvas" width="500" height="3000"></canvas>
+            <canvas id="gini-canvas"></canvas>
           </section>
 
-          <section id="clockdate" class="flex-container">
+          <section id="clockdate" class="container">
             <section class="clockdate-wrapper">
               <section id="clock"></section>
             </section>
             <section class="card-clock">
               <img src="" alt="bandera1" style="width:100%">
-              <div class="container">
+              <section class="container">
                 <h4><b></b></h4>
-              </div>
+              </section>
             </section>   
           </section>
-        </section>
+        </section> -->
 
       </section>
 
-      <section id="map-container">
-        
+      <section id="map-container" class="container">
+        <!-- <section class="tab-container"> -->
+          
+        <!-- </section> -->
       </section>
 
     </article>
 
     <footer>
-      <div>Hecho con <span class="heart">&hearts;</span> por <strong>Carolina Pulido Gómez</strong></div>
-      <div>
+      <section>Hecho con <span class="heart">&hearts;</span> por <strong>Carolina Pulido Gómez</strong></section>
+      <section>
         <a href="https://www.twitch.tv/karolans25" ><ion-icon name="logo-twitch"></ion-icon><span>Twitch</span></a>
         <a href="https://github.com/karolans25/DEV010-cipher" ><ion-icon name="logo-github"></ion-icon><span>Github</span></a>
-      </div>
+      </section>
     </footer>
 
     <script src="main.js" type="module"></script>
@@ -128,5 +169,13 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+    <script>
+      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: "YOUR_API_KEY_HERE",
+        // Add other bootstrap parameters as needed, using camel case.
+        // Use the 'v' parameter to indicate the version to load (alpha, beta, weekly, etc.)
+      });
+    </script>
+    
   </body>
 </html>

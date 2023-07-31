@@ -7,6 +7,8 @@ const lines = 10;
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
 const subFilterOptions = [[],[],[]];
 const arrayOfYears = [];
+const navBarToggle = document.querySelector('.toggle');
+const navBarButtons = document.querySelector('.links');
 const inputSearch = document.querySelector('#search-by');
 const inputToggle = document.querySelector('#toggle');
 const selectFilter = document.querySelector('#filter-by');
@@ -25,11 +27,19 @@ const navBarMapButton = document.querySelector('#map');
 const dataContainer = document.querySelector('#data-container');
 const calculusContainer = document.querySelector('#calculus-container');
 const mapContainer = document.querySelector('#map-container');
-const botonesPaginatorCalculus = document.querySelectorAll('section[id="calculus-container"] nav button');
 const containerGiniGraphYear = document.querySelector('section[data-test="gini-canvas-year"]');
 const containerGiniGraph = document.querySelector('section[data-test="gini-canvas"]');
 const containerClock = document.querySelector('#clockdate');
-
+const calculus1 = document.querySelector('#tab-option-gini-years');
+const calculus2 = document.querySelector('#tab-option-gini');
+const calculus3 = document.querySelector('#tab-option-density');
+const calculus4 = document.querySelector('#tab-option-clock');
+const contentCalculus1 = document.querySelector('section[data-test="gini-canvas-year"]');
+const contentCalculus2 = document.querySelector('section[data-test="gini-canvas"]');
+const contentCalculus3 = document.querySelector('section[data-test="density-canvas"]');
+const contentCalculus4 = document.querySelector('section[data-test="clock"]');
+let chosen = 1;
+  
 let yearSelector;
 let totalPages;
 let globalData;
@@ -47,13 +57,14 @@ async function fetchAndStore() {
 function init() {
   startTime();
   totalPages = Math.ceil(globalData.length/lines);
-  document.querySelector('article h3').innerHTML = "Flags of Countries";
+  document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   //inputSearch.value = '';
   //filterBut.disabled = true;
   inputToggle.checked = false;
   backBut.disabled = true;
   createPaginator(totalPages, pageSelector);
   createSelectorForFilterBy(); //Create the select for filter by
+  createSelectForYears();
   theData = globalData;
   showCards(theData, cards, parseInt(pageSelector.value) + 1, lines);
   showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
@@ -61,14 +72,58 @@ function init() {
   dataContainer.style.display = "block";
   calculusContainer.style.display = "none";
   mapContainer.style.display = "none";
-  
-  const paginationNumbers = document.getElementById("pagination-numbers");
-  const nextButton = document.getElementById("next-button");
-  const prevButton = document.getElementById("prev-button");
+  changeOptionCalculus();
   createEventListeners();
+
+  /*
+  // check if geolocation is supported by the browser
+  if ("geolocation" in navigator) {
+  // get current position
+    navigator.geolocation.getCurrentPosition(showPosition);
+    console.log(navigator.geolocation.getCurrentPosition(showPosition));
+  } else {
+    console.log("Geolocation is not supported by this browser.");
+  }
+
+  function showPosition(position) {
+  // log latitude and longitude
+    console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
+  }
+  // Initialize and add the map
+  let map;
+
+  async function initMap() {
+  // The location of Uluru
+    const position = { lat: position.coords.latitude, lng: position.coords.longitude };
+    // Request needed libraries.
+    //@ts-ignore
+    const { Map } = await google.maps.importLibrary("maps");
+    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+
+    // The map, centered at Uluru
+    map = new Map(document.getElementById("map"), {
+      zoom: 4,
+      center: position,
+      mapId: "DEMO_MAP_ID",
+    });
+
+    // The marker, positioned at Uluru
+    const marker = new AdvancedMarkerView({
+      map: map,
+      position: position,
+      title: "Uluru",
+    });
+  }
+
+  await initMap();
+  */
 }
 
 function createEventListeners(){
+  navBarToggle.addEventListener('click', ()=>{
+    navBarToggle.classList.toggle('rotate');
+    navBarButtons.classList.toggle('active');
+  });
   // Listener para el input Toggle
   inputToggle.addEventListener('click', (event) => {
     toggleView(event);
@@ -83,12 +138,15 @@ function createEventListeners(){
   });
   // Listeners for moving between pages with the forward button, the back button and the page selector
   forwardBut.addEventListener('click', (event) => {
+    // ((parseInt(pageSelector.value)+1) === pageSelector.length) ? disableButton(forwardBut) : enableButton(forwardBut);
     moveBetweenPages(event);
   }); 
   backBut.addEventListener('click', (event) => {
+    // ((parseInt(pageSelector.value)+1) === 1) ? disableButton(backBut) : enableButton(backBut);
     moveBetweenPages(event);
   });
   pageSelector.addEventListener('change', (event) => {
+    // ((parseInt(pageSelector.value)+1) === 1) ? disableButton(backBut) : ((parseInt(pageSelector.value)+1) === pageSelector.length) ? disableButton(forwardBut) : enableButton(forwardBut) enableButton(backBut));  
     moveBetweenPages(event);
   });
   //Listeners for sorting the data (ascending and descending)
@@ -98,76 +156,114 @@ function createEventListeners(){
   descendingSortBut.addEventListener('click', (event) => {
     sortData(event);
   });
-  //Listener para el select de años en la gráfica del índice de Gini
-  //yearSelector.addEventListener('change', () => {
-  //  graphGiniIndex();
-  //});
+
   navBarDataButton.addEventListener('click', () => {
-    document.querySelector('article h3').innerHTML = "Flags of Countries";
-    dataContainer.style.display = "block";
-    calculusContainer.style.display = "none";
-    mapContainer.style.display = "none";  
+    showData();
   });
   navBarCalculusButton.addEventListener('click', () => {
-    document.querySelector('article h3').innerHTML = "Calculus";
-    dataContainer.style.display = "none";
-    calculusContainer.style.display = "flex";
-    containerGiniGraphYear.style.display = "block";
-    containerGiniGraph.style.display = "none";
-    containerClock.style.display = "none";
-    mapContainer.style.display = "none";
-    createSelectForYears();
-    graphGiniIndex(0);
-    yearSelector.addEventListener('change', ()=>{
-      graphGiniIndex(0);
-    });
-
+    showCalculus();
   });
   navBarMapButton.addEventListener('click', () => {
-    dataContainer.style.display = "none";
-    calculusContainer.style.display = "none";
-    mapContainer.style.display = "flex";  
+    showMap();
   });
 
+  calculus1.addEventListener('click', () => {
+    chosen = 1;
+    containerGiniGraphYear.style.display = "block";
+    containerGiniGraph.style.display = "none";
+    changeOptionCalculus();
+  });
+  calculus2.addEventListener('click', () => {
+    chosen = 2;
+    containerGiniGraphYear.style.display = "none";
+    containerGiniGraph.style.display = "block";
+    changeOptionCalculus();
+  });
+  calculus3.addEventListener('click', () => {
+    chosen = 3;
+    containerGiniGraphYear.style.display = "none";
+    containerGiniGraph.style.display = "none";
+    changeOptionCalculus();
+  });
+  calculus4.addEventListener('click', () => {
+    chosen = 4;
+    containerGiniGraphYear.style.display = "none";
+    containerGiniGraph.style.display = "none";
+    changeOptionCalculus();
+  });
 
-  console.log(botonesPaginatorCalculus);
-  botonesPaginatorCalculus.forEach(element => element.addEventListener('click', (event) =>{
-    console.log(event.currentTarget);
-    event.target.classList.add("active");
-    console.log(event.target.classList);
-    disableButton(event.target);
-    botonesPaginatorCalculus.forEach(element => {
-      if (element.id !== event.target.id){
-        enableButton(element);
-      }
-      if (event.target.id === 'but-4'){
-        disableButton(botonesPaginatorCalculus[botonesPaginatorCalculus.length - 1]);
-      }
-      if (event.target.id === 'but-1'){
-        disableButton(botonesPaginatorCalculus[0]);
-      }
-    });
-    if(event.target.id === 'but-1'){
-      containerGiniGraphYear.style.display = "block";
-      containerGiniGraph.style.display = "none";
-      containerClock.style.display = "none";
-      createSelectForYears();
-      //containerGiniGraph.append(yearSelector);
-      graphGiniIndex(0);    
-    } else if (event.target.id === 'but-2'){
-      containerGiniGraphYear.style.display = "none";
-      containerGiniGraph.style.display = "block";
-      containerClock.style.display = "none";
-      graphGiniIndex('Colombia', 1);
-    } else if (event.target.id === 'but-3'){
-      containerGiniGraphYear.style.display = "none";
-      containerGiniGraph.style.display = "none";
-      containerClock.style.display = "flex";
-    } else if (event.target.id === 'but-4'){
-      
-    }
-  }));
 }
+
+function showData(){
+  navBarToggle.classList.toggle('rotate');
+  navBarButtons.classList.toggle('active');
+  document.querySelector('nav section h3').innerHTML = "Flags of Countries";
+  dataContainer.style.display = "block";
+  calculusContainer.style.display = "none";
+  mapContainer.style.display = "none";  
+}
+
+function showCalculus(){
+  navBarToggle.classList.toggle('rotate');
+  navBarButtons.classList.toggle('active');
+  document.querySelector('nav section h3').innerHTML = "Calculus";
+  dataContainer.style.display = "none";
+  calculusContainer.style.display = "flex";
+  containerGiniGraphYear.style.display = "block";
+  containerGiniGraph.style.display = "none";
+  containerClock.style.display = "none";
+  mapContainer.style.display = "none";
+  calculus1.classList.value = 'tab-option tab-option-active';
+  contentCalculus1.classList.value = 'content content-active';
+  graphGiniIndex(0);
+  yearSelector.addEventListener('change', ()=>{
+    graphGiniIndex(0);
+  });
+}
+
+function showMap(){
+  navBarToggle.classList.toggle('rotate');
+  navBarButtons.classList.toggle('active');
+  document.querySelector('nav section h3').innerHTML = "Map";
+  dataContainer.style.display = "none";
+  calculusContainer.style.display = "none";
+  mapContainer.style.display = "flex";
+}
+
+function changeOptionCalculus(){
+  if(chosen === 1){
+    calculus1.classList.value = 'tab-option tab-option-active';
+    contentCalculus1.classList.value = 'content content-active';
+    graphGiniIndex(0);
+  } else {
+    calculus1.classList.value = 'tab-option';
+    contentCalculus1.classList.value = 'content';
+  }
+  if (chosen === 2){
+
+    calculus2.classList.value = 'tab-option tab-option-active';
+    contentCalculus2.classList.value = 'content content-active';
+    graphGiniIndex(1);
+  } else {
+    calculus2.classList.value = 'tab-option';
+    contentCalculus2.classList.value = 'content';
+  }
+  if (chosen === 3){
+    calculus3.classList.value = 'tab-option tab-option-active';
+    contentCalculus3.classList.value = 'content content-active';
+  } else {
+    calculus3.classList.value = 'tab-option';
+    contentCalculus3.classList.value = 'content';
+  }
+  if (chosen === 4){
+    calculus4.classList.value = 'tab-option tab-option-active';
+    contentCalculus4.classList.value = 'content content-active';
+  } else {
+    calculus4.classList.value = 'tab-option';
+    contentCalculus4.classList.value = 'content';
+  }
+}
+
 function disableButton(button){
   button.classList.add("disabled");
   button.setAttribute("disabled", true);
@@ -185,6 +281,8 @@ function graphGiniIndex(...extra){
     chartDataYear(dataGiniYears, canvasGiniGraphYears);
   } else if(parseInt(extra[extra.length-1]) === 1){
     const dataGini = canvas(globalData);
+    console.log(dataGini);
+    alert();
     const containerGiniGraph = document.querySelector('#gini-canvas');
     chartData(dataGini, containerGiniGraph, 'Colombia');
   }
@@ -199,11 +297,11 @@ function toggleView() {
   if(inputToggle.checked === true){
     cards.style.display = 'none';
     table.style.display = 'block';
-    document.querySelector('article h3').innerHTML = "Table of Countries";
+    document.querySelector('nav section h3').innerHTML = "Table of Countries";
   } else if(inputToggle.checked === false){
     cards.style.display = 'flex';
     table.style.display = 'none';
-    document.querySelector('article h3').innerHTML = "Flags of Countries";
+    document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   }
   printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
 }
@@ -263,40 +361,16 @@ function subFilter(){
 }
 
 function sortData(event){
-  if (event.target.id.includes("ascending")){
-    theData = sort(theData, selectSort.value, 1);
-  } else if(event.target.id.includes("descending")){
-    theData = sort(theData, selectSort.value, -1);
+  if(selectSort.value !== "-1"){
+    if (event.target.id.includes("ascending")){
+      theData = sort(theData, selectSort.value, 1);
+    } else if(event.target.id.includes("descending")){
+      theData = sort(theData, selectSort.value, -1);
+    }
+    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
   }
-  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
 }
 
-function moveBetweenPages(event){
-  const actual = parseInt(pageSelector.value);
-  if(event.target.id.endsWith("button")){
-    (actual === 1) ? backBut.disabled = true : backBut.disabled = false;
-    (actual === Math.ceil(theData.length/lines) - 2) ? forwardBut.disabled = true : forwardBut.disabled = false;
-  } else if (event.target.id.endsWith("selector")){
-    (actual === 0) ? backBut.disabled = true : backBut.disabled = false;
-    (actual === Math.ceil(theData.length/lines) - 1) ? forwardBut.disabled = true : forwardBut.disabled = false;
-  }
-  if ( actual >= 0 && actual < Math.ceil(theData.length/lines) ){
-    if(event.target.id === "back-button"){
-      forwardBut.disabled = false;
-      pageSelector.text = parseInt(actual);
-      pageSelector.value = parseInt(actual)-1;
-    } else if(event.target.id === "forward-button"){
-      backBut.disabled = false;
-      pageSelector.text = parseInt(actual)+2;
-      pageSelector.value = parseInt(actual)+1;
-    }
-  }
-  if (inputToggle.checked){
-    showTable(theData, table, parseInt(pageSelector.value) + 1, lines)(parseInt(pageSelector.value) + 1, theData);
-  } else{
-    showCards(theData, cards, parseInt(pageSelector.value) + 1, lines)(parseInt(pageSelector.value) + 1, theData);
-  }
-}
 
 function createSelectorForFilterBy(){
   createSubFilterOptions();
@@ -339,7 +413,6 @@ function createSubFilterOptions(){
 
 function  createSelectForYears(){
   const containerCanvasGiniYear = document.querySelector('section[data-test="gini-canvas-year"]');
-  console.log();
   yearSelector = document.createElement('select');
   for (let i=0; i<globalData.length; i++){
     if('gini' in globalData[i]){
@@ -355,15 +428,38 @@ function  createSelectForYears(){
     option.text = i;
     yearSelector.append(option);
   }
-  console.log(containerCanvasGiniYear.children.length);
-  console.log(containerCanvasGiniYear.children);
   while (containerCanvasGiniYear.children[2]) {
     containerCanvasGiniYear.removeChild(containerCanvasGiniYear.children[2]);
   }
   containerCanvasGiniYear.append(yearSelector);
 }
 
-
+function moveBetweenPages(event){
+  const actual = parseInt(pageSelector.value);
+  if(event.target.id.endsWith("button")){
+    (actual === 1) ? backBut.disabled = true : backBut.disabled = false;
+    (actual === Math.ceil(theData.length/lines) - 2) ? forwardBut.disabled = true : forwardBut.disabled = false;
+  } else if (event.target.id.endsWith("selector")){
+    (actual === 0) ? backBut.disabled = true : backBut.disabled = false;
+    (actual === Math.ceil(theData.length/lines) - 1) ? forwardBut.disabled = true : forwardBut.disabled = false;
+  }
+  if ( actual >= 0 && actual < Math.ceil(theData.length/lines) ){
+    if(event.target.id === "back-button"){
+      forwardBut.disabled = false;
+      pageSelector.text = parseInt(actual);
+      pageSelector.value = parseInt(actual)-1;
+    } else if(event.target.id === "forward-button"){
+      backBut.disabled = false;
+      pageSelector.text = parseInt(actual)+2;
+      pageSelector.value = parseInt(actual)+1;
+    }
+  }
+  if (inputToggle.checked){
+    showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
+  } else{
+    showCards(theData, cards, parseInt(pageSelector.value) + 1, lines);
+  }
+}
 
 function startTime() {
   // hora : 10:50 am
@@ -376,8 +472,8 @@ function startTime() {
   let hora24;
   let UTC = `UTC`;
   (afternoon) ? hora24 = hora+12 : hora24 = hora ;
-  let horaRef = today.getUTCHours();
-  let minRef = today.getUTCMinutes();
+  const horaRef = today.getUTCHours();
+  const minRef = today.getUTCMinutes();
   if(horaRef > hora24){
     ((horaRef - hora24) < 10 ) ? UTC += `-0${horaRef-hora24}` : UTC += `-${horaRef-hora24}`;
   } else { //horaRef <= hora24
