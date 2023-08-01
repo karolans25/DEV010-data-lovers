@@ -1,5 +1,5 @@
-import {dataJson, filter, sort, search, canvas, canvasYear} from './data.js';
-import {chartData, chartDataYear, pieData} from './canvas.js';
+import {dataJson, filter, sort, search, canvas, densityPopulation} from './data.js';
+import {chartData} from './canvas.js';
 import {printData, createPaginator, showTable, showCards} from './show.js';
 
 const dir = './data/countries/countries.json';
@@ -207,6 +207,7 @@ function createEventListeners(){
     changeOptionCalculus();
   });
   yearSelector.addEventListener('change', ()=>{
+    // graphGiniIndex(0, 'bar');
     graphGiniIndex(0);
   });
 
@@ -235,6 +236,8 @@ function showCalculus(){
   calculus1.classList.value = 'tab-option tab-option-active';
   contentCalculus1.classList.value = 'content content-active';
   fillYearSelector();
+  // graphGiniIndex(0, 'bar');
+  // graphGiniIndex(1, 'horizontalBar');
   graphGiniIndex(0);
   graphGiniIndex(1);
 }
@@ -257,26 +260,41 @@ function  fillYearSelector(){
   }
 }
 
-function graphGiniIndex(indicator){
-  if(parseInt(indicator) === 0){
-    const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
-    const labels = Object.keys(dataGiniYears);
-    const values = Object.values(dataGiniYears);
-    const canvasGiniYear = document.querySelector('#gini-canvas-year');
+function graphGiniIndex(...elements){
+  // 0: 0 by year, 1 global
+  // 1: type 'bar' o 'horizontalBar'
+  console.log(elements);
+  let dataGini, canvasGini, labels, values;
+  if(elements[0] === 0){
+    dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
+    labels = Object.keys(dataGini);
+    values = Object.values(dataGini);
+    canvasGini = document.querySelector('#gini-canvas-year');
     if(typeof chart === 'object'){
+      //chart.config.type = 'horizontalBar';
       chart.config.data.labels = labels;
-      chart.config.data.datasets[0].label = `Gini Indexes reported in ${arrayOfYears[yearSelector.value]}`;
       chart.config.data.datasets[0].data = values;
+      //chart.config.data.datasets[0].label = `Gini Indexes reported in ${arrayOfYears[yearSelector.value]}`;
       chart.update();
     } else {
-      chart = pieData(dataGiniYears, canvasGiniYear);
-      //chart = chartDataYear(dataGiniYears, canvasGiniYear);
+      chart = chartData(dataGini, canvasGini, elements[0]);
     }
-  } else if(parseInt(indicator) === 1){
-    const dataGini = canvas(globalData);
-    const canvasGini = document.querySelector('#gini-canvas');
-    chartData(dataGini, canvasGini);
-  }
+  } else if (elements[0] === 1){
+    dataGini = canvas(globalData);
+    canvasGini = document.querySelector('#gini-canvas');
+    chartData(dataGini, canvasGini, elements[0]);
+  } else if (elements[0] === 2){
+    const dataDensity = {};
+    subFilterOptions[0].forEach(continent => {
+      theData = filter(globalData, 'continents', continent);
+      const tempData = densityPopulation(theData);
+      dataDensity[continent] = tempData.averageDensity;
+    });
+
+    const canvasDensity = document.querySelector('#density-canvas-pie');
+    chartData(dataDensity, canvasDensity, 2);
+  }    
+
 }
 
 function changeOptionCalculus(){
@@ -284,6 +302,8 @@ function changeOptionCalculus(){
     alert("chosen 1");
     calculus1.classList.value = 'tab-option tab-option-active';
     contentCalculus1.classList.value = 'content content-active';
+    // graphGiniIndex(0, 'bar');
+    // graphGiniIndex(1, 'horizontalBar');
     graphGiniIndex(0);
     graphGiniIndex(1);
   } else {
@@ -294,8 +314,7 @@ function changeOptionCalculus(){
     alert("chosen 2");
     calculus2.classList.value = 'tab-option tab-option-active';
     contentCalculus2.classList.value = 'content content-active';
-    console.log(calculus2);
-    console.log(contentCalculus2);
+    graphGiniIndex(2);
   } else {
     calculus2.classList.value = 'tab-option';
     contentCalculus2.classList.value = 'content';

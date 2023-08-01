@@ -105,44 +105,55 @@
           <!-- </section> -->
             <section class="chartBox" name="gini-canvas-year">
               <select id="year-selector"></select>
-              <canvas id="gini-canvas-year"></canvas>
+              <canvas id="gini-canvas-year" width="100%" height="100px"></canvas>
             </section> 
             <h4>Gini Index for each Country</h4>
             <aside>
               In the next graph you can see where is located each country in the inequality global perspective. The first ones are the most inequality countries (colored in red) and the latest ones are the more equality ones (colored in green).
             </aside>
             <section class="chartBox">
-              <canvas id="gini-canvas" width="100%" height="500px"></canvas>
+              <canvas id="gini-canvas" width="100%" height="600px"></canvas>
             </section>
           </section>
 
           <section data-test="density-content" class="content">
-            <h4>Poblacional density</h4>
+            <h3>Population Density</h3>
+            <aside>
+              Population density is the concentration of individuals within a species in a specific geographic locale. Population density data can be used to quantify demographic information and to assess relationships with ecosystems, human health, and infrastructure. Population density can be used to describe the location, growth, and migration of many organisms. In the case of humans, population density is often discussed in relation to urbanization, immigration, and population demographics.
+            <section class="chartBox" name="density-canvas-pie">
+              <canvas id="density-canvas-pie" width="50px" height="50px"></canvas>
+            </section> 
+            <!-- <h4>Gini Index for each Country</h4> -->
+            <aside>
+              Would you like to compare the population density between two countries?
+            </aside>
+            <!-- <section class="chartBox">
+              <canvas id="gini-canvas" width="100%" height="600px"></canvas>
+            </section> -->
           </section>
           <section data-test="clock-content" class="content">
-            <h4>Clock converter to UTC</h4>
+            <h3>Clock converter to UTC</h3>
             <section id="clock"></section>
-          </section>
-          <!-- <section class="card-clock">
-              <img src="./assets/colombia.png" alt="bandera1" style="width:100%">
-              <section class="container">
-                <h4><b></b></h4>
+
+            <section class="card-clock">
+              <section>
+                <img src="./assets/colombia.png" alt="bandera1" width="200px" height="100px">
+                <!-- <p>Colombia</p> -->
+                <h4 style="position: relative;">Colombia</h4>
               </section>
-            </section>   
-          </section> -->
+              <section>
+                <img src="./assets/colombia.png" alt="bandera1" width="200px" height="100px">
+                <!-- <p>Colombia</p> -->
+                <h4 style="position: relative;">Colombia</h4>
+              </section>
+
+            </section>
+          </section>
         </section>
       </section>
         
             
         <!-- <section class="chartjs">
-          <section data-test="gini-canvas-year">
-            <canvas id="gini-canvas-year"></canvas>
-          </section> 
-
-          <section data-test="gini-canvas">
-            <canvas id="gini-canvas"></canvas>
-          </section>
-
           <section id="clockdate" class="container">
             <section class="clockdate-wrapper">
               <section id="clock"></section>

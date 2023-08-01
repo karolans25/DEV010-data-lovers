@@ -26,7 +26,6 @@ export const filter = (data, filterBy, lookFor) => {
       }
     }
     return theCountries;
-  }
 };
 
 export const sort = (data, sortBy, direction) =>{
@@ -119,31 +118,20 @@ export const search = (data, lookFor) => {
 };
 
 
-export const canvas = (data) => {
-  if(typeof data === 'object'){
-    const countriesWithGini = {};
-    for(let i = 0; i<data.length; i++){
-      if(typeof data[i].gini === 'object'){
-        countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
-      }
-    }
-    const sortedCountriesWithGini = Object.fromEntries(
-      Object.entries(countriesWithGini).sort((a, b) => a[1] - b[1]).reverse()
-    );
-    return sortedCountriesWithGini;
-  } else {
-    throw new TypeError("Error en el tipo de dato ingresado");
-  }
-};
+export const canvas = (data, ...elements) => {
+  // 0: lookFor
+  const yearExist = (elements.length > 0) ? true : false;
+  let correctType;
+  if(yearExist) correctType = typeof elements[0] === 'string';
 
-export const canvasYear = (data, lookFor) => {
-  if(typeof data === 'object' && typeof lookFor === 'string'){
+  if(typeof data === 'object' && (!yearExist || correctType)){
     const countriesWithGini = {};
     for(let i = 0; i<data.length; i++){
-      if(typeof data[i].gini === 'object' && Object.keys(data[i].gini)[0] === lookFor){
+      if(typeof data[i].gini === 'object' && (!yearExist || Object.keys(data[i].gini)[0] === elements[0])){
         countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
       }
     }
+
     const sortedCountriesWithGini = Object.fromEntries(
       Object.entries(countriesWithGini).sort((a, b) => a[1] - b[1]).reverse()
     );
@@ -154,53 +142,29 @@ export const canvasYear = (data, lookFor) => {
 };
 
 export const densityPopulation = (data) => {
-  const density = [];
   if(typeof data !== 'object'){
-    return [];
-  } else {
+    return {}
+  } else if(typeof data === 'object'){
+    let average = 0.0, counter = 0;
+    const densityJson = {};
+    console.log("151");
     for(let i = 0; i<data.length; i++){
-      if(typeof i.population === 'number' && typeof i.area === 'number' && i.population !== 0 && i.area > 0){
-        density.push = parseFloat((i.population/i.area).toFixed(2));
+      console.log("152");
+      if(typeof data[i].population === 'number' && typeof data[i].area === 'number' && data[i].population !== 0 && data[i].area > 0){
+        console.log("154");
+        average += parseFloat((data[i].population/data[i].area).toFixed(2));
+        counter ++;
+        densityJson[data[i].name.common] = 
+        { area: data[i].area,
+          population: data[i].population,
+          density: parseFloat((data[i].population/data[i].area).toFixed(2))
+        }
       }
     }
-  }
-  return density;
-}
-
-/*
-export const flags = (data) => 
-
-function flags(data){
-  const numColors = [];
-  for (const i of data){
-    if(typeof i.flags !== 'object' || typeof i.flags.alt !== 'string'){
-      continue;
-    } else {
-      const texto = i.flags.alt;
-      const colores = ["green", "golden-yellow", "red", "yellow", "blue", "black", "white", "orange", "purple", "light-blue", "carmine-red", "dark-blue", "navy-blue", "saffron", "sky-blue", "ultramarine", "gold", "golden", "yellow-sun", "teal", "cobalt-blue", "turquoise", "brown-edge", "copper-colored", "maroon"];
-      const coloresEncontrados = [];
-
-      // Encuentra todas las palabras completas que coinciden con los colores y agrega cada color una sola vez
-      colores.forEach(color => {
-        const regex = new RegExp("\\b" + color + "\\b", "ig");
-        if (texto.match(regex) && !coloresEncontrados.includes(color)) {
-          coloresEncontrados.push(color);
-        }
-      });
-      console.log(texto);
-      console.log(coloresEncontrados);
-      numColors.push(coloresEncontrados.length);
+    if (counter > 0)
+      average = parseFloat(average/counter).toFixed(2);
+    return { averageDensity: average,
+      data: densityJson
     }
   }
-  console.log(numColors);
-
-  let mayor = numColors[0];
-  for(const i of numColors){
-    if (i > mayor){
-      mayor = i;
-    }
-  }
-
-  return data[numColors.indexOf(mayor)];
 }
-*/
