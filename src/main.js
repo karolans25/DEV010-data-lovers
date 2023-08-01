@@ -1,5 +1,5 @@
 import {dataJson, filter, sort, search, canvas, canvasYear} from './data.js';
-import {chartData, chartDataYear} from './canvas.js';
+import {chartData, chartDataYear, pieData} from './canvas.js';
 import {printData, createPaginator, showTable, showCards} from './show.js';
 
 const dir = './data/countries/countries.json';
@@ -7,44 +7,62 @@ const lines = 10;
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
 const subFilterOptions = [[],[],[]];
 const arrayOfYears = [];
-const navBarToggle = document.querySelector('.toggle');
-const navBarButtons = document.querySelector('.links');
-const inputSearch = document.querySelector('#search-by');
-const inputToggle = document.querySelector('#toggle');
-const selectFilter = document.querySelector('#filter-by');
-let selectSubFilter;
-const selectSort = document.querySelector('#sort-by');
-const pageSelector = document.querySelector('#page-selector');
-const ascendingSortBut = document.querySelector('#sort-ascending-button');
-const descendingSortBut = document.querySelector('#sort-descending-button');
-const backBut = document.querySelector('#back-button');
-const forwardBut = document.querySelector('#forward-button');
-const table = document.querySelector('table');
-const cards = document.querySelector('#cards');
-const navBarDataButton = document.querySelector('#data-link');
-const navBarCalculusButton = document.querySelector('#calculus-link');
-const navBarMapButton = document.querySelector('#map-link');
-const dataContainer = document.querySelector('#data-container');
-const calculusContainer = document.querySelector('#calculus-container');
-const mapContainer = document.querySelector('#map-container');
-const containerGiniGraphYear = document.querySelector('section[data-test="gini-canvas-year"]');
-const containerGiniGraph = document.querySelector('section[data-test="gini-canvas"]');
-const containerClock = document.querySelector('#clockdate');
-const calculus1 = document.querySelector('#tab-option-gini-years');
-const calculus2 = document.querySelector('#tab-option-gini');
-const calculus3 = document.querySelector('#tab-option-density');
-const calculus4 = document.querySelector('#tab-option-clock');
-const contentCalculus1 = document.querySelector('section[data-test="gini-canvas-year"]');
-const contentCalculus2 = document.querySelector('section[data-test="gini-canvas"]');
-const contentCalculus3 = document.querySelector('section[data-test="density-canvas"]');
-const contentCalculus4 = document.querySelector('section[data-test="clock"]');
-let chosen = 1;
-  
-let yearSelector;
 let totalPages;
 let globalData;
 let theData;
 
+const navBarToggle = document.querySelector('.toggle');
+const navBarButtons = document.querySelector('.links');
+const navBarDataButton = document.querySelector('#data-link');
+const navBarCalculusButton = document.querySelector('#calculus-link');
+const navBarMapButton = document.querySelector('#map-link');
+
+/**
+ * Data container
+ */
+const dataContainer = document.querySelector('#data-container');
+const switchBut = document.querySelector('#switch');
+const inputSearch = document.querySelector('#search-by');
+const selectFilter = document.querySelector('#filter-by');
+let selectSubFilter;
+const selectSort = document.querySelector('#sort-by');
+const ascendingSortBut = document.querySelector('#sort-ascending-button');
+const descendingSortBut = document.querySelector('#sort-descending-button');
+const pageSelector = document.querySelector('#page-selector');
+const backBut = document.querySelector('#back-button');
+const forwardBut = document.querySelector('#forward-button');
+//Vistas
+const table = document.querySelector('table');
+const cards = document.querySelector('#cards');
+
+/**
+ * Calculus container
+ */
+const calculusContainer = document.querySelector('#calculus-container');
+let chosen = 1;
+// Calculus 1: Gini
+const calculus1 = document.querySelector('#tab-option-gini');
+const contentCalculus1 = document.querySelector('section[data-test="gini-content"]');
+const yearSelector = document.querySelector('#year-selector');
+// Calculus 2: Population density
+const calculus2 = document.querySelector('#tab-option-density');
+const contentCalculus2 = document.querySelector('section[data-test="density-content"]');
+// Calculus 3: UTC converter
+const calculus3 = document.querySelector('#tab-option-clock');
+const contentCalculus3 = document.querySelector('section[data-test="clock-content"]');
+let chart;
+
+/**
+ * Map container
+ */
+const mapContainer = document.querySelector('#map-container');
+
+//const containerClock = document.querySelector('#clockdate');
+  
+
+/**
+ * Función para cargar el dataset
+ */
 async function fetchAndStore() {
   try {
     globalData = await dataJson(dir);
@@ -58,21 +76,14 @@ function init() {
   startTime();
   totalPages = Math.ceil(globalData.length/lines);
   document.querySelector('nav section h3').innerHTML = "Flags of Countries";
-  //inputSearch.value = '';
-  //filterBut.disabled = true;
-  inputToggle.checked = false;
+  switchBut.checked = false;
   backBut.disabled = true;
   createPaginator(totalPages, pageSelector);
-  createSelectorForFilterBy(); //Create the select for filter by
-  createSelectForYears();
+  createSelectorForFilterBy();
   theData = globalData;
   showCards(theData, cards, parseInt(pageSelector.value) + 1, lines);
   showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
-  (inputToggle.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
-  dataContainer.style.display = "block";
-  calculusContainer.style.display = "none";
-  mapContainer.style.display = "none";
-  changeOptionCalculus();
+  (switchBut.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
   createEventListeners();
 
   /*
@@ -120,80 +131,90 @@ function init() {
 }
 
 function createEventListeners(){
+  // Principal Navigation Bar 
   navBarToggle.addEventListener('click', ()=>{
     navBarToggle.classList.toggle('rotate');
     navBarButtons.classList.toggle('active');
   });
-  // Listener para el input Toggle
-  inputToggle.addEventListener('click', (event) => {
-    toggleView(event);
+  navBarDataButton.addEventListener('click', () => {
+    dataContainer.style.display = "block";
+    calculusContainer.style.display = "none";
+    mapContainer.style.display = "none";
+    showData();
   });
-  // Listener para el input Search
+  navBarCalculusButton.addEventListener('click', () => {
+    dataContainer.style.display = "none";
+    calculusContainer.style.display = "block";
+    mapContainer.style.display = "none";
+    showCalculus();
+  });
+  navBarMapButton.addEventListener('click', () => {
+    dataContainer.style.display = "none";
+    calculusContainer.style.display = "none";
+    mapContainer.style.display = "block";
+    showMap();
+  });
+
+  // Data container
+  switchBut.addEventListener('click', (event) => {
+    toggleView(event); //cards or table
+  });
   inputSearch.addEventListener('keyup', () => {
     searchData();
   });
-  // Listener for filtering the data (continents, subregion, languages)
   selectFilter.addEventListener('change', ()=>{
     filterData();
   });
-  // Listeners for moving between pages with the forward button, the back button and the page selector
-  forwardBut.addEventListener('click', (event) => {
-    // ((parseInt(pageSelector.value)+1) === pageSelector.length) ? disableButton(forwardBut) : enableButton(forwardBut);
-    moveBetweenPages(event);
-  }); 
-  backBut.addEventListener('click', (event) => {
-    // ((parseInt(pageSelector.value)+1) === 1) ? disableButton(backBut) : enableButton(backBut);
-    moveBetweenPages(event);
-  });
-  pageSelector.addEventListener('change', (event) => {
-    // ((parseInt(pageSelector.value)+1) === 1) ? disableButton(backBut) : ((parseInt(pageSelector.value)+1) === pageSelector.length) ? disableButton(forwardBut) : enableButton(forwardBut) enableButton(backBut));  
-    moveBetweenPages(event);
-  });
-  //Listeners for sorting the data (ascending and descending)
   ascendingSortBut.addEventListener('click', (event) => {
     sortData(event);
   });
   descendingSortBut.addEventListener('click', (event) => {
     sortData(event);
   });
+  pageSelector.addEventListener('change', (event) => {
+    moveBetweenPages(event);
+  });
+  forwardBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
+  }); 
+  backBut.addEventListener('click', (event) => {
+    moveBetweenPages(event);
+  });
 
-  navBarDataButton.addEventListener('click', () => {
-    showData();
-  });
-  navBarCalculusButton.addEventListener('click', () => {
-    showCalculus();
-  });
-  navBarMapButton.addEventListener('click', () => {
-    showMap();
-  });
-
+  // Calculus container
   calculus1.addEventListener('click', () => {
+    alert("Tab 1");
     chosen = 1;
-    containerGiniGraphYear.style.display = "block";
-    containerGiniGraph.style.display = "none";
+    document.querySelector('section[data-test="gini-content"]').style.display = 'block';
+    document.querySelector('section[data-test="density-content"]').style.display = 'none';
+    document.querySelector('section[data-test="clock-content"]').style.display = 'none';
     changeOptionCalculus();
   });
   calculus2.addEventListener('click', () => {
+    alert("Tab 2");
     chosen = 2;
-    containerGiniGraphYear.style.display = "none";
-    containerGiniGraph.style.display = "block";
+    document.querySelector('section[data-test="gini-content"]').style.display = 'none';
+    document.querySelector('section[data-test="density-content"]').style.display = 'block';
+    document.querySelector('section[data-test="clock-content"]').style.display = 'none';
     changeOptionCalculus();
   });
   calculus3.addEventListener('click', () => {
+    alert("Tab 3");
     chosen = 3;
-    containerGiniGraphYear.style.display = "none";
-    containerGiniGraph.style.display = "none";
+    document.querySelector('section[data-test="gini-content"]').style.display = 'none';
+    document.querySelector('section[data-test="density-content"]').style.display = 'none';
+    document.querySelector('section[data-test="clock-content"]').style.display = 'block';
     changeOptionCalculus();
   });
-  calculus4.addEventListener('click', () => {
-    chosen = 4;
-    containerGiniGraphYear.style.display = "none";
-    containerGiniGraph.style.display = "none";
-    changeOptionCalculus();
+  yearSelector.addEventListener('change', ()=>{
+    graphGiniIndex(0);
   });
 
 }
 
+/**
+ * FUnctions for Data View
+ */
 function showData(){
   navBarToggle.classList.toggle('rotate');
   navBarButtons.classList.toggle('active');
@@ -203,47 +224,78 @@ function showData(){
   mapContainer.style.display = "none";  
 }
 
+/**
+ * FUnctions for Calculus View
+ */
 function showCalculus(){
   navBarToggle.classList.toggle('rotate');
   navBarButtons.classList.toggle('active');
   document.querySelector('nav section h3').innerHTML = "Calculus";
-  dataContainer.style.display = "none";
   calculusContainer.style.display = "flex";
-  containerGiniGraphYear.style.display = "block";
-  containerGiniGraph.style.display = "none";
-  containerClock.style.display = "none";
-  mapContainer.style.display = "none";
   calculus1.classList.value = 'tab-option tab-option-active';
   contentCalculus1.classList.value = 'content content-active';
+  fillYearSelector();
   graphGiniIndex(0);
-  yearSelector.addEventListener('change', ()=>{
-    graphGiniIndex(0);
-  });
+  graphGiniIndex(1);
 }
 
-function showMap(){
-  navBarToggle.classList.toggle('rotate');
-  navBarButtons.classList.toggle('active');
-  document.querySelector('nav section h3').innerHTML = "Map";
-  dataContainer.style.display = "none";
-  calculusContainer.style.display = "none";
-  mapContainer.style.display = "flex";
+function  fillYearSelector(){
+  for (let i=0; i<globalData.length; i++){
+    if('gini' in globalData[i]){
+      if(!arrayOfYears.includes(Object.keys(globalData[i].gini)[0])){
+        arrayOfYears.push(Object.keys(globalData[i].gini)[0]);
+      }
+    }
+  }
+  arrayOfYears.sort().reverse();
+  const yearSelector = document.querySelector('#year-selector');
+  for(const i of arrayOfYears){
+    const option = document.createElement('option');
+    option.value = arrayOfYears.indexOf(i);
+    option.text = i;
+    yearSelector.append(option);
+  }
+}
+
+function graphGiniIndex(indicator){
+  if(parseInt(indicator) === 0){
+    const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
+    const labels = Object.keys(dataGiniYears);
+    const values = Object.values(dataGiniYears);
+    const canvasGiniYear = document.querySelector('#gini-canvas-year');
+    if(typeof chart === 'object'){
+      chart.config.data.labels = labels;
+      chart.config.data.datasets[0].label = `Gini Indexes reported in ${arrayOfYears[yearSelector.value]}`;
+      chart.config.data.datasets[0].data = values;
+      chart.update();
+    } else {
+      chart = pieData(dataGiniYears, canvasGiniYear);
+      //chart = chartDataYear(dataGiniYears, canvasGiniYear);
+    }
+  } else if(parseInt(indicator) === 1){
+    const dataGini = canvas(globalData);
+    const canvasGini = document.querySelector('#gini-canvas');
+    chartData(dataGini, canvasGini);
+  }
 }
 
 function changeOptionCalculus(){
   if(chosen === 1){
+    alert("chosen 1");
     calculus1.classList.value = 'tab-option tab-option-active';
     contentCalculus1.classList.value = 'content content-active';
     graphGiniIndex(0);
+    graphGiniIndex(1);
   } else {
     calculus1.classList.value = 'tab-option';
     contentCalculus1.classList.value = 'content';
   }
   if (chosen === 2){
-
+    alert("chosen 2");
     calculus2.classList.value = 'tab-option tab-option-active';
     contentCalculus2.classList.value = 'content content-active';
-    graphGiniIndex(1);
+    console.log(calculus2);
+    console.log(contentCalculus2);
   } else {
     calculus2.classList.value = 'tab-option';
     contentCalculus2.classList.value = 'content';
@@ -255,13 +307,20 @@ function changeOptionCalculus(){
     calculus3.classList.value = 'tab-option';
     contentCalculus3.classList.value = 'content';
   }
-  if (chosen === 4){
-    calculus4.classList.value = 'tab-option tab-option-active';
-    contentCalculus4.classList.value = 'content content-active';
-  } else {
-    calculus4.classList.value = 'tab-option';
-    contentCalculus4.classList.value = 'content';
-  }
+}
+
+
+
+/**
+ * FUnctions for Map View
+ */
+function showMap(){
+  navBarToggle.classList.toggle('rotate');
+  navBarButtons.classList.toggle('active');
+  document.querySelector('nav section h3').innerHTML = "Map";
+  dataContainer.style.display = "none";
+  calculusContainer.style.display = "none";
+  mapContainer.style.display = "flex";
 }
 
 /*
@@ -276,35 +335,25 @@ function enableButton(button){
 }
 */
 
-function graphGiniIndex(...extra){
-  if(parseInt(extra[extra.length-1]) === 0){
-    const dataGiniYears = canvasYear(globalData, arrayOfYears[yearSelector.value]);
-    const canvasGiniGraphYears = document.querySelector('#gini-canvas-year');  
-    chartDataYear(dataGiniYears, canvasGiniGraphYears);
-  } else if(parseInt(extra[extra.length-1]) === 1){
-    const dataGini = canvas(globalData);
-    alert();
-    const containerGiniGraph = document.querySelector('#gini-canvas');
-    chartData(dataGini, containerGiniGraph, 'Colombia');
-  }
+/*
   if(extra.length > 1){
     const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
     const containerGiniGraph = document.querySelector('#gini-canvas');
     chartData(dataGini, containerGiniGraph, extra[0]);
   }
-}
+*/
 
 function toggleView() {
-  if(inputToggle.checked === true){
+  if(switchBut.checked === true){
     cards.style.display = 'none';
     table.style.display = 'block';
     document.querySelector('nav section h3').innerHTML = "Table of Countries";
-  } else if(inputToggle.checked === false){
+  } else if(switchBut.checked === false){
     cards.style.display = 'flex';
     table.style.display = 'none';
     document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   }
-  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
+  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
 function searchData(){
@@ -314,7 +363,7 @@ function searchData(){
     const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
     theData = filter(theData, filterBy, optionFilterBy);
   }
-  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
+  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
 function filterData(){
@@ -328,7 +377,7 @@ function filterData(){
     } else {
       theData = globalData;
     }
-    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
+    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
   }
 
   //Filtering with the option of the subfilter
@@ -358,7 +407,7 @@ function subFilter(){
   if (inputSearch.value !== ''){
     theData = search(theData, inputSearch.value);
   }
-  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
+  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
 function sortData(event){
@@ -368,7 +417,7 @@ function sortData(event){
     } else if(event.target.id.includes("descending")){
       theData = sort(theData, selectSort.value, -1);
     }
-    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, inputToggle.checked);
+    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
   }
 }
 
@@ -377,7 +426,7 @@ function createSelectorForFilterBy(){
   createSubFilterOptions();
   let option = document.createElement('option');
   option.value = "-1";
-  option.text = "Filter &#f002";
+  option.text = "Filter 🎚️";
   selectFilter.append(option);
   for(const i of filterOptions){
     option = document.createElement('option');
@@ -412,29 +461,6 @@ function createSubFilterOptions(){
   }
 }
 
-function  createSelectForYears(){
-  const containerCanvasGiniYear = document.querySelector('section[data-test="gini-canvas-year"]');
-  yearSelector = document.createElement('select');
-  for (let i=0; i<globalData.length; i++){
-    if('gini' in globalData[i]){
-      if(!arrayOfYears.includes(Object.keys(globalData[i].gini)[0])){
-        arrayOfYears.push(Object.keys(globalData[i].gini)[0]);
-      }
-    }
-  }
-  arrayOfYears.sort().reverse();
-  for(const i of arrayOfYears){
-    const option = document.createElement('option');
-    option.value = arrayOfYears.indexOf(i);
-    option.text = i;
-    yearSelector.append(option);
-  }
-  while (containerCanvasGiniYear.children[2]) {
-    containerCanvasGiniYear.removeChild(containerCanvasGiniYear.children[2]);
-  }
-  containerCanvasGiniYear.append(yearSelector);
-}
-
 function moveBetweenPages(event){
   const actual = parseInt(pageSelector.value);
   if(event.target.id.endsWith("button")){
@@ -455,7 +481,7 @@ function moveBetweenPages(event){
       pageSelector.value = parseInt(actual)+1;
     }
   }
-  if (inputToggle.checked){
+  if (switchBut.checked){
     showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
   } else{
     showCards(theData, cards, parseInt(pageSelector.value) + 1, lines);

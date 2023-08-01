@@ -141,7 +141,6 @@ export const canvasYear = (data, lookFor) => {
     const countriesWithGini = {};
     for(let i = 0; i<data.length; i++){
       if(typeof data[i].gini === 'object' && Object.keys(data[i].gini)[0] === lookFor){
-        if(Object.keys(data[i].gini).length > 1) alert("mas de un GIni");
         countriesWithGini[data[i].name.common] = parseFloat(Object.values(data[i].gini)[0]).toFixed(1);
       }
     }
@@ -160,10 +159,8 @@ export const densityPopulation = (data) => {
     return [];
   } else {
     for(let i = 0; i<data.length; i++){
-      if(typeof i.population === 'number' && typeof i.area === 'number'){
+      if(typeof i.population === 'number' && typeof i.area === 'number' && i.population !== 0 && i.area > 0){
         density.push = parseFloat((i.population/i.area).toFixed(2));
-      } else{
-        density.push('❌');
       }
     }
   }

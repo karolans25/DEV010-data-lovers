@@ -71,6 +71,10 @@ nav{
   padding: 15px;
 }
 
+#calculus-container, #map-container{
+  display: none;
+}
+
 nav section h3{
   color: #01aeed;
   font-weight: 300;
@@ -193,14 +197,18 @@ table tbody tr:hover{
   background: #3F0447;
 }
 
+/*
 section .chartjs{
   align-items: center;
   width: 100%;
 }
+*/
 
+/*
 section .chartjs canvas[id="gini-canvas-year"]{
   max-width: 100%;
 }
+*/
 
 .tab-container{
   width: 90%;
@@ -233,9 +241,7 @@ section .chartjs canvas[id="gini-canvas-year"]{
 
 .tab-option-active{
   border: solid 1px #0085b6;
-  background: #20033D;
   background: #B9ACCD;
-  color: #B9ACCD;
   color: #20033D;
   font-weight: 700;
 }
@@ -247,14 +253,13 @@ section .chartjs canvas[id="gini-canvas-year"]{
 
 .content{
   width: 100%;
-  height: 100%;
+  height: fit-content;
   color: #1D0030;
   display: none;
 }
 
 .content-active{
   display: block;
-  background: #20033D;
   background: #B9ACCD;
   color: #20033D;
   border: solid 2px #0085b6;
@@ -273,6 +278,19 @@ canvas{
   padding: 10px;
 }
 
+#gini-canvas-year{
+  width: 100%;
+  height: 400px;
+}
+
+#gini-canvas{
+  width: 100%;
+  height: 3000px;
+}
+
+.chartBox{
+  padding: 15px;
+}
 
 @media screen and (max-width: 770px) {
   header{
@@ -380,54 +398,55 @@ footer section a {
     color: lightblue;
 }
 
- /* The switch - the box around the slider */
-.switchBtn {
+.switch{
   position: relative;
-  display: inline-block;
-  width: 35px;
-  height: 3px;
-}
-.switchBtn input {
-  display:none;
+  top: 10px;
 }
 
-.slide {
-  position: absolute;
+.lbl{
+  display:inline-block;
+  width: 50px;
+  height: 29.5px;
+  background: #B9ACCD;
+  border-radius: 100px;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  padding: 8px;
-  color: #fff;
+  position: relative;
+  transition: .3s;
 }
-.slide:before {
+
+.lbl::after{
+  content:"";
+  display: block;
+  width: 20px;
+  height: 21px;
+  background: #1D0030;
+  border-radius: 100px;
   position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 78px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  top: 4.5px;
+  left: 5px;
+  transition: .3s;
 }
-input:checked + .slide {
-  background-color: #8CE196;
-  padding-left: 40px;
+
+#switch:checked + .lbl::after{
+  left:25px;
+
 }
-input:focus + .slide {
-  box-shadow: 0 0 1px #01aeed;
+
+#switch:checked + .lbl{
+  background: yellow;
 }
-input:checked + .slide:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-  left: -20px;
+
+#switch{
+  display: none;
 }
+
+aside{
+  font-size: smaller;
+  text-align: left;
+  line-height: 25px;
+  padding: 0px 35px 10px 40px;
+}
+
 
 
 /* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
