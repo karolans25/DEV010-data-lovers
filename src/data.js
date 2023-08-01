@@ -26,6 +26,7 @@ export const filter = (data, filterBy, lookFor) => {
       }
     }
     return theCountries;
+  }
 };
 
 export const sort = (data, sortBy, direction) =>{
