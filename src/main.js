@@ -427,10 +427,8 @@ function sortData(event){
   if(selectSort.value !== "-1"){
     if (event.target.id.includes("ascending")){
       theData = sort(theData, selectSort.value, 1);
-      console.log(theData);
     } else if(event.target.id.includes("descending")){
       theData = sort(theData, selectSort.value, -1);
-      console.log(theData);
     }
     printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
   }
