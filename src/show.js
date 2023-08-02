@@ -29,7 +29,7 @@ export const printData = (data, cards, table, backBut, forwardBut, pageSelector,
   const totalPages = Math.ceil(data.length/lines);
   //Revisar que el alert salga una sola vez
   if(totalPages === 0){
-    alert("Didn't find countries according to your searching parameters.");
+    //alert("Didn't find countries according to your searching parameters.");
   }
   if(totalPages === 1){
     backBut.disabled = true;
@@ -117,7 +117,7 @@ const createTable = (thePage, theData, theLines, theTable) =>{
         td.innerHTML = `${(page-1)*lines + (data.indexOf(i)+1)}`;
       } else if (j === 'Country'){
         let name = `${i.name.common}\t${i.flag}`;
-        (i.independent) ? name += '\t✅' : name += '\t❌';
+        (typeof i.independent === 'boolean')? ((i.independent) ? name += '\t✅' : name += '\t❌') : name += '\t🚫';
         const abbr = document.createElement('abbr');
         abbr.title = i.name.official;
         abbr.innerHTML = name;
@@ -125,9 +125,12 @@ const createTable = (thePage, theData, theLines, theTable) =>{
   
       } else if ( j === 'Capital'){
         if (typeof(i.capital) === 'object'){
-          td.innerHTML = i.capital;
+          i.capital.sort().forEach(element => {
+            td.innerHTML += element + ', ';          
+          });
+          td.innerHTML = td.innerHTML.slice(0,-2);
         } else {
-          td.innerHTML = '❌';
+          td.innerHTML = '🚫  ';
         }
       } else if (j === 'Languages'){
         let lang = "";
@@ -136,7 +139,7 @@ const createTable = (thePage, theData, theLines, theTable) =>{
             lang += `${key},\t`;
           }
         } else {
-          lang = "❌,\t";
+          lang = "🚫,\t";
         }
         td.innerHTML = lang.slice(0,-2);
       }   else if (j === 'Area'){
@@ -154,7 +157,7 @@ const createTable = (thePage, theData, theLines, theTable) =>{
             td.appendChild(abbr);
           }
         } else {
-          td.innerHTML = "❌";
+          td.innerHTML = "🚫";
         }
       }
       tr.append(td);
@@ -171,69 +174,87 @@ const createCards = (theData, theCards) => {
     cards.removeChild(cards.firstChild);
   }
   for (const i of data){
-    const div1 = document.createElement('div');
-    div1.style.margin = '10px';
-    div1.style.height = '250px';
-    div1.className = "flip-card";
+    const section1 = document.createElement('section');
+    section1.className = "flip-card";
   
-    const div2 = document.createElement('div');
-    div2.className = "flip-card-inner";
+    const section2 = document.createElement('section');
+    section2.className = "flip-card-inner";
   
-    const div3 = document.createElement('div');
-    div3.className = "flip-card-front";
+    const section3 = document.createElement('section');
+    section3.className = "flip-card-front";
     const img = document.createElement('img');
+    img.className = "flip-card-img";
     img.src = i.flags.png;
     img.alt = i.flags.alt;
-    img.style.width = '100%';
-    img.style.height = '200px';
-    img.style.border = 'solid';
-    div3.style.alignSelf = "center";
   
-    const div4 = document.createElement('div');
-    div4.className = 'flip-card-back';
-    div4.style.border = 'solid';
-    const h4 = document.createElement('h1');
-    h4.innerHTML = `${i.name.common}`;
-    const h6 = document.createElement('h6');
-    h6.innerHTML = `${i.name.official}\t${i.independent ? '\t✅' : '\t❌'}`;
-    //h1.append(h3);
-    const p1 = document.createElement('p');
-    p1.innerHTML = (typeof i.capital === 'object') ? `Capital: ${i.capital[0]}`: `Capital: ❌`;
-    const p2 = document.createElement('p');
-    p2.innerHTML = (typeof i.area === 'number') ? `Area: ${i.area}`: `Area: ❌`;
-    const p3 = document.createElement('p');
-    p3.innerHTML = (typeof i.population === 'number') ? `Population: ${i.population}`: `Population: ❌`;
-      
-    if(i.continents[0] === 'America'){
-      div3.style.backgroundColor = '#FFFB7B';
-      div4.style.backgroundColor = '#FFFB7B';
-    } else if(i.continents[0] === 'Asia'){
-      div3.style.backgroundColor = '#CBADE0';
-      div4.style.backgroundColor = '#CBADE0';
-    } else if(i.continents[0] === 'Europe'){
-      div3.style.backgroundColor = '#FCC2D2';
-      div4.style.backgroundColor = '#FCC2D2';
-    } else if(i.continents[0] === 'Africa'){
-      div3.style.backgroundColor = 'lightgreen';
-      div4.style.backgroundColor = 'lightgreen';
-    } else if(i.continents[0] === 'Oceania'){
-      div3.style.backgroundColor = 'lightblue';
-      div4.style.backgroundColor = 'lightblue';
-    } else if(i.continents[0] === 'Antarctica'){
-      div3.style.backgroundColor = '#A3C7E3';
-      div4.style.backgroundColor = '#A3C7E3';
+    const section4 = document.createElement('section');
+    section4.className = 'flip-card-back';
+
+    const asideInfo = document.createElement('aside');
+    asideInfo.className = "aside-info";
+    const title = document.createElement('h2');
+    title.innerHTML = `${i.name.common}`;
+    const subtitle = document.createElement('h5');
+    subtitle.innerHTML = `${i.name.official}\t${(typeof i.independent === 'boolean') ? ((i.independent) ? '✅' : '❌') : '🚫'}`;
+    const pCapital = document.createElement('p');
+    pCapital.innerHTML = 'Capital: '.bold();
+    if (typeof(i.capital) === 'object'){
+      i.capital.sort().forEach(element => {
+        pCapital.innerHTML += element + ', ';          
+      });
+      pCapital.innerHTML = pCapital.innerHTML.slice(0,-2);
+    } else {
+      pCapital.innerHTML += '🚫';
     }
-    div4.style.color = "#1D0030";
+    const pArea = document.createElement('p');
+    pArea.innerHTML = (typeof i.area === 'number') ? 'Area: '.bold() + i.area : 'Area: '.bold() + ' 🚫';
+    const pPopulation = document.createElement('p');
+    pPopulation.innerHTML = (typeof i.population === 'number') ? 'Population: '.bold() + i.population : 'Population: '.bold() + ' 🚫';
+    const pGini = document.createElement('p');
+    if (typeof i.gini === 'object'){
+      pGini.innerHTML = 'Gini: '.bold();
+      for (const k of Object.keys(i.gini)){
+        const abbr = document.createElement('abbr');
+        abbr.title = k;
+        abbr.innerHTML = parseFloat(i.gini[`${k}`]).toFixed(1);
+        pGini.appendChild(abbr);
+      }
+    } else {
+      pGini.innerHTML = 'Gini: '.bold() + ' 🚫';
+    }
+    asideInfo.append(title);
+    asideInfo.append(subtitle);
+    asideInfo.append(pCapital);
+    asideInfo.append(pArea);
+    asideInfo.append(pPopulation);
+    asideInfo.append(pGini);
+
+    if(i.continents[0] === 'America'){
+      section3.style.backgroundColor = 'lightgreen';
+      section4.style.backgroundColor = 'lightgreen';
+    } else if(i.continents[0] === 'Asia'){
+      section3.style.backgroundColor = 'lightseagreen';
+      section4.style.backgroundColor = 'lightseagreen';
+    } else if(i.continents[0] === 'Europe'){
+      section3.style.backgroundColor = 'lightyellow';
+      section4.style.backgroundColor = 'lightyellow';
+    } else if(i.continents[0] === 'Africa'){
+      section3.style.backgroundColor = 'lightblue';
+      section4.style.backgroundColor = 'lightblue';
+    } else if(i.continents[0] === 'Oceania'){
+      section3.style.backgroundColor = 'lightcoral';
+      section4.style.backgroundColor = 'lightcoral';
+    } else if(i.continents[0] === 'Antarctica'){
+      section3.style.backgroundColor = 'lightpink';
+      section4.style.backgroundColor = 'lightpink';
+    }
+    section4.style.color = "#1D0030";
     
-    cards.append(div1);
-    div1.appendChild(div2);
-    div2.appendChild(div3);
-    div2.appendChild(div4);
-    div3.appendChild(img);
-    div4.appendChild(h4);
-    div4.append(h6);
-    div4.append(p1);
-    div4.append(p2);
-    div4.append(p3);
+    cards.append(section1);
+    section1.appendChild(section2);
+    section2.appendChild(section3);
+    section2.appendChild(section4);
+    section3.appendChild(img);
+    section4.appendChild(asideInfo);
   }
 }

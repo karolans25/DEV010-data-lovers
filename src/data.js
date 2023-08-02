@@ -72,34 +72,34 @@ export const sort = (data, sortBy, direction) =>{
       }
       //return 0; // si los nombres son iguales, no cambiar el orden
     });
-  } /*else if (sortBy.toLowerCase() === 'capital'){
-    let counter = 1;  
-    result = data.sort((a, b) => {
-      if (typeof a.capital !== 'object'){
-        a.capital = ['❌'];
-      } else if (typeof b.capital !== 'object'){
-        b.capital = ['❌'];
-      } else{
-        result = data.sort((a, b) => {
-          console.log(counter);
-          console.log(a.capital[0]);
-          console.log(b.capital[0]);
-          const aData = a.capital[0].toUpperCase(); // convertir a mayúsculas para ordenar alfabéticamente correctamente
-          const bData = b.capital[0].toUpperCase();
-          if (aData < bData) {
-            counter ++;
-            return -1; // si a es menor que b según la orden alfabética, colocar a antes que b
-          }
-          if (aData > bData) {
-            counter ++;
-            return 1; // si a es mayor que b, colocar a después de b
-          }
-          return 0; // si los nombres son iguales, no cambiar el orden
-        });
+  } else if (sortBy.toLowerCase() === 'capital'){
+    let counter = 0;
+    result = data.sort((a, b) =>{
+      let aData, bData;
+      if (typeof a.capital === 'object') {
+        aData = a.capital.sort()[0];
+      } else {
+        counter ++;
+        const temp = data[data.length-counter];
+        data[data.length-counter] = a;
+        aData = temp;
       }
-    //result = a.capital[0].localeCompare(b.capital[0]);
-    });
-  }*/
+      if (typeof b.capital === 'object') {
+        bData = b.capital.sort()[0];
+      } else {
+        counter ++;
+        const temp = data[data.length-counter];
+        data[data.length-counter] = b;
+        bData = temp;
+      }
+      if (aData < bData){
+        return -1;
+      }
+      if (aData > bData){
+        return 1;
+      }
+    })
+  }
   if(parseInt(direction) === 1){
     return result;
   } else if (parseInt(direction) === -1){
@@ -115,7 +115,8 @@ export const search = (data, lookFor) => {
   } else if (lookFor === ''){
     return data;
   }
-  return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || country.name.common.toLowerCase() === lookFor.lowerCase || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital[0].toLowerCase().startsWith(lookFor.toLowerCase()) : false ));
+  return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital.some(palabra => palabra.toLowerCase().startsWith(lookFor.toLowerCase())) : false ));
+
 };
 
 

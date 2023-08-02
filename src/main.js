@@ -183,7 +183,6 @@ function createEventListeners(){
 
   // Calculus container
   calculus1.addEventListener('click', () => {
-    alert("Tab 1");
     chosen = 1;
     document.querySelector('section[data-test="gini-content"]').style.display = 'block';
     document.querySelector('section[data-test="density-content"]').style.display = 'none';
@@ -191,7 +190,6 @@ function createEventListeners(){
     changeOptionCalculus();
   });
   calculus2.addEventListener('click', () => {
-    alert("Tab 2");
     chosen = 2;
     document.querySelector('section[data-test="gini-content"]').style.display = 'none';
     document.querySelector('section[data-test="density-content"]').style.display = 'block';
@@ -199,7 +197,6 @@ function createEventListeners(){
     changeOptionCalculus();
   });
   calculus3.addEventListener('click', () => {
-    alert("Tab 3");
     chosen = 3;
     document.querySelector('section[data-test="gini-content"]').style.display = 'none';
     document.querySelector('section[data-test="density-content"]').style.display = 'none';
@@ -263,7 +260,6 @@ function  fillYearSelector(){
 function graphGiniIndex(...elements){
   // 0: 0 by year, 1 global
   // 1: type 'bar' o 'horizontalBar'
-  console.log(elements);
   let dataGini, canvasGini, labels, values;
   if(elements[0] === 0){
     dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
@@ -299,7 +295,6 @@ function graphGiniIndex(...elements){
 
 function changeOptionCalculus(){
   if(chosen === 1){
-    alert("chosen 1");
     calculus1.classList.value = 'tab-option tab-option-active';
     contentCalculus1.classList.value = 'content content-active';
     // graphGiniIndex(0, 'bar');
@@ -311,7 +306,6 @@ function changeOptionCalculus(){
     contentCalculus1.classList.value = 'content';
   }
   if (chosen === 2){
-    alert("chosen 2");
     calculus2.classList.value = 'tab-option tab-option-active';
     contentCalculus2.classList.value = 'content content-active';
     graphGiniIndex(2);
@@ -433,8 +427,10 @@ function sortData(event){
   if(selectSort.value !== "-1"){
     if (event.target.id.includes("ascending")){
       theData = sort(theData, selectSort.value, 1);
+      console.log(theData);
     } else if(event.target.id.includes("descending")){
       theData = sort(theData, selectSort.value, -1);
+      console.log(theData);
     }
     printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
   }
