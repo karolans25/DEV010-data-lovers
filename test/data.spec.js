@@ -1,4 +1,4 @@
-const DATA_TEMP = '[{"name":{"common":"South Africa","official":"Republic of South Africa"},"tld":[".za"],"independent":true,"capital":["Pretoria","Bloemfontein","Cape Town"],"subregion":"Southern Africa","languages":{"afr":"Afrikaans","eng":"English","nbl":"Southern Ndebele","nso":"Northern Sotho","sot":"Southern Sotho","ssw":"Swazi","tsn":"Tswana","tso":"Tsonga","ven":"Venda","xho":"Xhosa","zul":"Zulu"},"borders":["BWA","LSO","MOZ","NAM","SWZ","ZWE"],"area":1221037,"flag":"🇿🇦","population":59308690,"gini":{"2014":63},"fifa":"RSA","timezones":["UTC+02:00"],"continents":["Africa"],"flags":{"png":"https://flagcdn.com/w320/za.png","svg":"https://flagcdn.com/za.svg","alt":"The flag of South Africa is composed of two equal horizontal bands of red and blue, with a yellow-edged black isosceles triangle superimposed on the hoist side of the field. This triangle has its base centered on the hoist end, spans about two-fifth the width and two-third the height of the field, and is enclosed on its sides by the arms of a white-edged green horizontally oriented Y-shaped band which extends along the boundary of the red and blue bands to the fly end of the field."}},{"name":{"common":"Kosovo","official":"Republic of Kosovo"},"capital":["Pristina"],"subregion":"Southeast Europe","languages":{"sqi":"Albanian","srp":"Serbian"},"borders":["ALB","MKD","MNE","SRB"],"area":10908,"flag":"🇽🇰","population":1775378,"gini":{"2017":29},"fifa":"KVX","timezones":["UTC+01:00"],"continents":["Europe"],"flags":{"png":"https://flagcdn.com/w320/xk.png","svg":"https://flagcdn.com/xk.svg"}},{"name":{"common":"Antarctica","official":"Antarctica"},"tld":[".aq"],"independent":false,"area":14000000,"flag":"🇦🇶","population":1000,"timezones":["UTC-03:00","UTC+03:00","UTC+05:00","UTC+06:00","UTC+07:00","UTC+08:00","UTC+10:00","UTC+12:00"],"continents":["Antarctica"],"flags":{"png":"https://flagcdn.com/w320/aq.png","svg":"https://flagcdn.com/aq.svg"}}]';
+const DATA_TEMP = '[{"name":{"common":"South Africa","official":"Republic of South Africa"},"tld":[".za"],"independent":true,"capital":["Bloemfontein","Cape Town","Pretoria"],"subregion":"Southern Africa","languages":{"afr":"Afrikaans","eng":"English","nbl":"Southern Ndebele","nso":"Northern Sotho","sot":"Southern Sotho","ssw":"Swazi","tsn":"Tswana","tso":"Tsonga","ven":"Venda","xho":"Xhosa","zul":"Zulu"},"borders":["BWA","LSO","MOZ","NAM","SWZ","ZWE"],"area":1221037,"flag":"🇿🇦","population":59308690,"gini":{"2014":63},"fifa":"RSA","timezones":["UTC+02:00"],"continents":["Africa"],"flags":{"png":"https://flagcdn.com/w320/za.png","svg":"https://flagcdn.com/za.svg","alt":"The flag of South Africa is composed of two equal horizontal bands of red and blue, with a yellow-edged black isosceles triangle superimposed on the hoist side of the field. This triangle has its base centered on the hoist end, spans about two-fifth the width and two-third the height of the field, and is enclosed on its sides by the arms of a white-edged green horizontally oriented Y-shaped band which extends along the boundary of the red and blue bands to the fly end of the field."}},{"name":{"common":"Kosovo","official":"Republic of Kosovo"},"capital":["Pristina"],"subregion":"Southeast Europe","languages":{"sqi":"Albanian","srp":"Serbian"},"borders":["ALB","MKD","MNE","SRB"],"area":10908,"flag":"🇽🇰","population":1775378,"gini":{"2017":29},"fifa":"KVX","timezones":["UTC+01:00"],"continents":["Europe"],"flags":{"png":"https://flagcdn.com/w320/xk.png","svg":"https://flagcdn.com/xk.svg"}},{"name":{"common":"Antarctica","official":"Antarctica"},"tld":[".aq"],"independent":false,"area":14000000,"flag":"🇦🇶","population":1000,"timezones":["UTC-03:00","UTC+03:00","UTC+05:00","UTC+06:00","UTC+07:00","UTC+08:00","UTC+10:00","UTC+12:00"],"continents":["Antarctica"],"flags":{"png":"https://flagcdn.com/w320/aq.png","svg":"https://flagcdn.com/aq.svg"}}]';
 
 const DATA_CANVAS = '{"Kosovo": "29.0", "South Africa": "63.0"}';
 
@@ -159,19 +159,17 @@ describe('sort', () => {
   it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 'population' and -1 (descending)`, () => {
     expect(sort(JSON.parse(DATA_TEMP), 'population', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
   });
-
   
-  it(`should return ${[JSON.parse(DATA_TEMP)]} for 'capital' and 1 (ascending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'capital', 1)).toEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
+  it(`should return ${JSON.parse(DATA_TEMP)} for 'capital' and 1 (ascending)`, () => {
+    expect(sort(JSON.parse(DATA_TEMP), 'capital', 1)).toStrictEqual(JSON.parse(DATA_TEMP));
   });
-
   
   it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 'capital' and 1 (ascending)`, () => {
-    expect(sort([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 'capital', 1)).toEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+    expect(sort([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 'capital', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
   });
 
   it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'capital' and -1 (descending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'capital', -1)).toEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+    expect(sort(JSON.parse(DATA_TEMP), 'capital', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
   });
 
 });
