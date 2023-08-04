@@ -1,11 +1,11 @@
-import {dataJson, filter, sort, search, canvas, densityPopulation, clockTimezones} from './data.js';
+import {dataJson, searchData, filterDataByContinent, filterDataBySubregion, filterDataByLanguage, sortDataByCountry, sortDataByCapital, sortDataByArea, sortDataByPopulation, calculateGiniCanvas, calculatePopulationDensity, searchClockTimezones} from './data.js';
 import {chartData} from './canvas.js';
 import {printData, createPaginator, showTable, showCards, showFlags} from './show.js';
 
 const dir = './data/countries/countries.json';
 const lines = 10;
 const filterOptions = ['Continents', 'Subregion', 'Languages'];
-const subFilterOptions = [[],[],[]];
+const arraySubFilterOptions = [[],[],[]];
 const arrayOfYears = [];
 let totalPages;
 let globalData;
@@ -50,6 +50,10 @@ const contentCalculus2 = document.querySelector('section[data-test="density-cont
 // Calculus 3: UTC converter
 const calculus3 = document.querySelector('#tab-option-clock');
 const contentCalculus3 = document.querySelector('section[data-test="clock-content"]');
+const changeTime = document.querySelector('#change-clock');
+const setTimeButton = document.querySelector('#set-clock');
+const overlay = document.querySelector('#overlay');
+const closePopupButton = document.querySelector('#close-popup-buttton');
 let chart;
 
 /**
@@ -73,6 +77,7 @@ function init() {
   startTime();
   totalPages = Math.ceil(globalData.length/lines);
   document.querySelector('nav section h3').innerHTML = "Flags of Countries";
+  inputSearch.value = '';
   switchBut.checked = false;
   backBut.disabled = true;
   createPaginator(totalPages, pageSelector);
@@ -157,16 +162,16 @@ function createEventListeners(){
     toggleView(event); //cards or table
   });
   inputSearch.addEventListener('keyup', () => {
-    searchData();
+    searchTheData();
   });
   selectFilter.addEventListener('change', ()=>{
-    filterData();
+    filterTheData();
   });
-  ascendingSortBut.addEventListener('click', (event) => {
-    sortData(event);
+  ascendingSortBut.addEventListener('click', () => {
+    sortTheData(theData, 1);
   });
-  descendingSortBut.addEventListener('click', (event) => {
-    sortData(event);
+  descendingSortBut.addEventListener('click', () => {
+    sortTheData(theData, -1);
   });
   pageSelector.addEventListener('change', (event) => {
     moveBetweenPages(event);
@@ -204,7 +209,28 @@ function createEventListeners(){
     // graphGiniIndex(0, 'bar');
     graphGiniIndex(0);
   });
+  changeTime.addEventListener('click', ()=>{
+    overlay.classList.add('active');
+  });
+  closePopupButton.addEventListener('click', ()=>{
+    overlay.classList.remove('active');
+  });
+  setTimeButton.addEventListener('click', ()=>{
+    overlay.classList.remove('active');
+    // const option1 = document.createElement('option');
+    // option1.value = "am";
+    // option1.text = "<span>AM</span>"
 
+    // const option2 = document.createElement('option');
+    // option2.value = "pm";
+    // option2.text = "<span>PM</span>"
+    
+    const hr = document.querySelector('#hour').value;
+    const min = document.querySelector('#minutes').value;
+    const ap = document.querySelector('#meridian').value;
+    setClock(hr, min, ap);
+  });
+  
 }
 
 /**
@@ -256,7 +282,7 @@ function graphGiniIndex(...elements){
   // 0: 0 by year, 1 global
   let dataGini, canvasGini, labels, values;
   if(elements[0] === 0){
-    dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
+    dataGini = calculateGiniCanvas(globalData, arrayOfYears[yearSelector.value]);
     labels = Object.keys(dataGini);
     values = Object.values(dataGini);
     canvasGini = document.querySelector('#gini-canvas-year');
@@ -269,14 +295,14 @@ function graphGiniIndex(...elements){
       chart = chartData(dataGini, canvasGini, elements[0]);
     }
   } else if (elements[0] === 1){
-    dataGini = canvas(globalData);
+    dataGini = calculateGiniCanvas(globalData);
     canvasGini = document.querySelector('#gini-canvas');
     chartData(dataGini, canvasGini, elements[0]);
   } else if (elements[0] === 2){
     const dataDensity = {};
-    subFilterOptions[0].forEach(continent => {
-      theData = filter(globalData, 'continents', continent);
-      const tempData = densityPopulation(theData);
+    arraySubFilterOptions[0].forEach(continent => {
+      theData = filterDataByContinent(globalData, continent);
+      const tempData = calculatePopulationDensity(theData);
       dataDensity[continent] = tempData.averageDensity;
     });
 
@@ -286,9 +312,17 @@ function graphGiniIndex(...elements){
 
 }
 
+function setClock(hr, min, ap){
+  (hr<10) ? hr=`0${hr}` : hr = `${hr}`;
+  (min<10) ? min=`0${min}` : min = `${min}`;
+  (ap === 'am') ? '<span>AM</span>' : '<span>PM</span>';
+  document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap.toUpperCase();
+  displayFlagsUTC();
+}
+
 function displayFlagsUTC(){
   const hourUTC = calculateUTC();
-  const countriesUTC = clockTimezones(globalData, hourUTC);
+  const countriesUTC = searchClockTimezones(globalData, hourUTC);
   const containerFlagsUTC = document.querySelector('#card-clock');
   showFlags(countriesUTC, containerFlagsUTC);
 }
@@ -314,7 +348,6 @@ function changeOptionCalculus(){
   if (chosen === 3){
     calculus3.classList.value = 'tab-option tab-option-active';
     contentCalculus3.classList.value = 'content content-active';
-    displayFlagsUTC();
   } else {
     calculus3.classList.value = 'tab-option';
     contentCalculus3.classList.value = 'content';
@@ -368,24 +401,37 @@ function toggleView() {
   printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
-function searchData(){
-  theData = search(globalData, inputSearch.value);
-  if(selectFilter.value !== '-1'){
-    const filterBy = filterOptions[selectFilter.value].toLowerCase();
-    const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
-    theData = filter(theData, filterBy, optionFilterBy);
-  }
+function searchTheData(){
+  theData = searchData(globalData, inputSearch.value);
+  if (parseInt(selectFilter.value) !== -1){
+    const valSubfilter = arraySubFilterOptions[selectFilter.value][selectSubFilter.value];
+    const valFilter = parseInt(selectFilter.value);
+
+    switch(valFilter){
+    case 0:
+      theData = filterDataByContinent(theData, valSubfilter);
+      break;
+    case 1:
+      theData = filterDataBySubregion(theData, valSubfilter);
+      break;
+    case 2:
+      theData = filterDataByLanguage(theData, valSubfilter);
+      break;
+    }}
   printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
-function filterData(){
-  const filterContainer = document.querySelector('#filter');
-  if (filterContainer.children.length > 0 || parseInt(selectFilter.value) === -1){
-    while (filterContainer.children[1]) {
-      filterContainer.removeChild(filterContainer.children[1]);
+function filterTheData(){
+  const container = document.querySelector('#filter');
+  const valSearch = inputSearch.value;
+  const valFilter = parseInt(selectFilter.value);
+
+  if (container.children.length > 0 || valFilter === -1){
+    while (container.children[1]) {
+      container.removeChild(container.children[1]);
     }
-    if (inputSearch.value !== ''){
-      theData = search(globalData, inputSearch.value);
+    if (valSearch !== ''){
+      theData = searchData(globalData, valSearch);
     } else {
       theData = globalData;
     }
@@ -393,17 +439,17 @@ function filterData(){
   }
 
   //Filtering with the option of the subfilter
-  if (parseInt(selectFilter.value) !== -1){
+  if (valFilter !== -1){
     selectSubFilter = document.createElement('select');
     selectSubFilter.id = "filter-by-option";
-    const opciones = subFilterOptions[selectFilter.value];
+    const opciones = arraySubFilterOptions[selectFilter.value];
     for (const i of opciones){
       const option = document.createElement('option');
       option.value = opciones.indexOf(i);
       option.text = i;
       selectSubFilter.add(option);
     }
-    filterContainer.append(selectSubFilter);
+    container.append(selectSubFilter);
 
     subFilter(); //Filtra la primera vez antes de empezar a recibir cambios
     selectSubFilter.addEventListener('change', () => {
@@ -413,29 +459,46 @@ function filterData(){
 }
 
 function subFilter(){
-  const filterBy = filterOptions[selectFilter.value].toLowerCase();
-  const optionFilterBy = subFilterOptions[selectFilter.value][selectSubFilter.value];
-  theData = filter(globalData, filterBy, optionFilterBy);
+  const optionFilterBy = arraySubFilterOptions[selectFilter.value][selectSubFilter.value];
+
+  switch(parseInt(selectFilter.value)){
+  case 0:
+    theData = filterDataByContinent(globalData, optionFilterBy);
+    break;
+  case 1:
+    theData = filterDataBySubregion(globalData, optionFilterBy);
+    break;
+  case 2:
+    theData = filterDataByLanguage(globalData, optionFilterBy);
+    break;
+  }
   if (inputSearch.value !== ''){
-    theData = search(theData, inputSearch.value);
+    theData = searchData(theData, inputSearch.value);
   }
   printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
-function sortData(event){
-  if(selectSort.value !== "-1"){
-    if (event.target.id.includes("ascending")){
-      theData = sort(theData, selectSort.value, 1);
-    } else if(event.target.id.includes("descending")){
-      theData = sort(theData, selectSort.value, -1);
-    }
-    printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
+function sortTheData(data, direction){
+  switch(selectSort.value){
+  case "country":
+    theData = sortDataByCountry(data, direction);
+    break;
+  case "capital":
+    theData = sortDataByCapital(data, direction);
+    break;
+  case "area":
+    theData = sortDataByArea(data, direction);
+    break;
+  case "population":
+    theData = sortDataByPopulation(data, direction);
+    break;
   }
+  printData(theData, cards, table, backBut, forwardBut, pageSelector, lines, switchBut.checked);
 }
 
 
 function createSelectorForFilterBy(){
-  createSubFilterOptions();
+  createArraySubFilterOptions();
   let option = document.createElement('option');
   option.value = "-1";
   option.text = "Filter 🎚️";
@@ -448,26 +511,26 @@ function createSelectorForFilterBy(){
   }
 }
 
-function createSubFilterOptions(){
+function createArraySubFilterOptions(){
   for (const i of globalData){
     for (const j of filterOptions){
       if (j.toLowerCase() === "continents"){
-        if (!(subFilterOptions[filterOptions.indexOf(j)].includes(i.continents[0]))){
-          subFilterOptions[filterOptions.indexOf(j)].push(i.continents[0]);
+        if (!(arraySubFilterOptions[filterOptions.indexOf(j)].includes(i.continents[0]))){
+          arraySubFilterOptions[filterOptions.indexOf(j)].push(i.continents[0]);
         }
-        subFilterOptions[filterOptions.indexOf(j)].sort();
+        arraySubFilterOptions[filterOptions.indexOf(j)].sort();
       } else if(j.toLowerCase() === "subregion" && typeof(i.subregion) === 'string'){
-        if (!(subFilterOptions[filterOptions.indexOf(j)].includes(i.subregion))){
-          subFilterOptions[filterOptions.indexOf(j)].push(i.subregion);
+        if (!(arraySubFilterOptions[filterOptions.indexOf(j)].includes(i.subregion))){
+          arraySubFilterOptions[filterOptions.indexOf(j)].push(i.subregion);
         }
-        subFilterOptions[filterOptions.indexOf(j)].sort();
+        arraySubFilterOptions[filterOptions.indexOf(j)].sort();
       } else if(j.toLowerCase() === "languages" && typeof(i.languages) === 'object'){
         for (const value of Object.values(i.languages)){
-          if (!(subFilterOptions[filterOptions.indexOf(j)].includes(value))){
-            subFilterOptions[filterOptions.indexOf(j)].push(value);
+          if (!(arraySubFilterOptions[filterOptions.indexOf(j)].includes(value))){
+            arraySubFilterOptions[filterOptions.indexOf(j)].push(value);
           }
         }
-        subFilterOptions[filterOptions.indexOf(j)].sort();
+        arraySubFilterOptions[filterOptions.indexOf(j)].sort();
       }
     }
   }
@@ -501,10 +564,13 @@ function moveBetweenPages(event){
 }
 
 function calculateUTC(){
+  let hour = parseInt(document.querySelector('#hour').value);
+  const minutes = parseInt(document.querySelector('#minutes').value);
+  const meridian = document.querySelector('#meridian').value;
+  console.log(hour);
+  console.log(minutes);
+  console.log(meridian);
   const today = new Date();
-  let hour = today.getHours();
-  const minutes = today.getMinutes();
-  const meridian = "pm";
   if(hour === "12" && meridian === "am") hour = "0";
   else if(meridian === "pm" && hour !== "12") hour = String(parseInt(hour) + 12);
   let desfase, UTC = 'UTC'; 
@@ -513,25 +579,18 @@ function calculateUTC(){
   if (hour < hourRef) {
     if(hour-hourRef < -12){
       desfase = 12 + hour - hourRef%12;
-      //console.log("op1");
     } else if (hour-hourRef >= -12){
       desfase = hour - hourRef;
-      //console.log("op2");
-      //Falta definir por minutos
     }
-    //console.log("Hacer algo");
   } else if(hour === hourRef){
     desfase = hour-hourRef;
-    //console.log("Hacer algo de nuevo");
-  } else if (hour > hourRef){ //calcular UTC hacia atrás
-    //console.log("Hacer nada");
+  } else if (hour > hourRef){
     if(hour-hourRef > 12){
       desfase = (hour%12) -12 -hourRef;
     } else if (hour-hourRef  < 12){
       desfase = (hour) - hourRef;
     }
   }
-  //(desfase === 0) ? alert(desfase >= 0) : console.log("");
   if(desfase >= 0) {
     (Math.abs(desfase) < 10) ? UTC += `+0${Math.abs(desfase)}`: UTC += `+${Math.abs(desfase)}`;
   }  else {
@@ -548,23 +607,14 @@ function calculateUTC(){
 function startTime() {
   const today = new Date();
   let hr = today.getHours();
-  let min = today.getMinutes();
-  const ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+  const min = today.getMinutes();
+  const ap = (hr<12) ? "am" : "pm";
   hr = (hr === 0) ? 12 : hr;
   hr = (hr > 12) ? hr - 12 : hr;
-  hr = checkTime(hr);
-  min = checkTime(min);
-  document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap;
-  setTimeout(function(){ startTime() }, 100);
+  document.getElementById("hour").value = hr;
+  document.getElementById("minutes").value = min;
+  document.getElementById("meridian").value = ap;
+  setClock(hr, min, ap);
 }
-
-function checkTime(i) {
-  if (i < 10) {
-    i = "0" + i;
-  }
-  return i;
-}
-
-
 
 fetchAndStore();
