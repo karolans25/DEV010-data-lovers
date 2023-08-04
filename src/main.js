@@ -217,14 +217,6 @@ function createEventListeners(){
   });
   setTimeButton.addEventListener('click', ()=>{
     overlay.classList.remove('active');
-    // const option1 = document.createElement('option');
-    // option1.value = "am";
-    // option1.text = "<span>AM</span>"
-
-    // const option2 = document.createElement('option');
-    // option2.value = "pm";
-    // option2.text = "<span>PM</span>"
-    
     const hr = document.querySelector('#hour').value;
     const min = document.querySelector('#minutes').value;
     const ap = document.querySelector('#meridian').value;
@@ -315,7 +307,7 @@ function graphGiniIndex(...elements){
 function setClock(hr, min, ap){
   (hr<10) ? hr=`0${hr}` : hr = `${hr}`;
   (min<10) ? min=`0${min}` : min = `${min}`;
-  (ap === 'am') ? '<span>AM</span>' : '<span>PM</span>';
+  (ap === 'am') ? 'AM' : 'PM';
   document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap.toUpperCase();
   displayFlagsUTC();
 }
