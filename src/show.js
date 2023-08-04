@@ -87,9 +87,10 @@ export const showCards = (theData, theCards, thePage, theLines) => {
   }
 }
 
-export const showFlags = (theData, ...elements) => {
-  console.log(theData);
-  console.log(elements[0]);
+export const showFlags = (theData, containerFlagsClock) => {
+  while (containerFlagsClock.firstChild) {
+    containerFlagsClock.removeChild(containerFlagsClock.firstChild);
+  }
 
   theData.forEach(country => {
     const cardFlag = document.createElement('section');
@@ -99,14 +100,14 @@ export const showFlags = (theData, ...elements) => {
     if(typeof country.flags.alt === 'string'){
       theFlag.alt = country.flags.alt;
     }
-    theFlag.style.width = "200px";
-    theFlag.style.height = "135px";
+    theFlag.style.width = "300px";
+    theFlag.style.height = "180px";
     const label = document.createElement('h4');
     label.innerHTML = country.name.common;
     
     cardFlag.append(label);
     cardFlag.append(theFlag);
-    elements[0].append(cardFlag);
+    containerFlagsClock.append(cardFlag);
   });
 }
 

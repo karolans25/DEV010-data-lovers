@@ -1,5 +1,10 @@
+/**
+ * Read the data from countries.json
+ *
+ * @param {string} dir - Data path.
+ * @returns {json} Promise resolved with a json object.
+ */
 export const dataJson = async function storeResponse(dir) {
-//const dataJson = async function storeResponse(dir) {
   const response = await fetch(dir);
   if (response.status !== 200) { 
     throw new Error('Hubo un problema accediendo al dataset.');
@@ -7,111 +12,15 @@ export const dataJson = async function storeResponse(dir) {
   return await response.json();
 }
 
-export const filter = (data, filterBy, lookFor) => {
-//const filter = (data, filterBy, lookFor) => {
-  if(typeof data !== 'object' || typeof filterBy !== 'string' || typeof lookFor !== 'string'){
-    throw new TypeError("Ingresó un valor inválido");
-  } else if (data.length === 0 || filterBy === '' || lookFor === ''){
-    throw new TypeError("Los datos vienen vacíos");
-  }
-  if (filterBy.toLowerCase() === 'continents'){
-    return data.filter(country => country.continents[0] === lookFor);
-  } else if (filterBy.toLowerCase() === 'subregion'){
-    return data.filter(country => country.subregion === lookFor);
-  } else if (filterBy.toLowerCase() === 'languages'){
-    const theCountries = [];
-    for (const i of data){
-      if(typeof(i.languages) === 'object'){
-        if(Object.values(i.languages).includes(lookFor)){
-          theCountries.push(i);
-        }
-      }
-    }
-    return theCountries;
-  }
-};
-
-export const sort = (data, sortBy, direction) =>{
-//const sort = (data, sortBy, direction) =>{
-  if(typeof data !== 'object' || typeof sortBy !== 'string' || typeof direction !== 'number'){
-    throw new TypeError("Ingresó un valor inválido");
-  } else if (data.length === 0 || sortBy === '' || ![1,-1].includes(direction)){
-    throw new TypeError("Los datos vienen incompletos");
-  }
-  let result;
-  if(sortBy.toLowerCase() === 'country'){
-    result = data.sort((a, b) => {
-      const aData = a.name.common.toUpperCase(); // convertir a mayúsculas para ordenar alfabéticamente correctamente
-      const bData = b.name.common.toUpperCase();
-      if (aData < bData) {
-        return -1; // si a es menor que b según la orden alfabética, colocar a antes que b
-      }
-      if (aData > bData) {
-        return 1; // si a es mayor que b, colocar a después de b
-      }
-      //return 0; // si los nombres son iguales, no cambiar el orden
-    });
-  } else if (sortBy.toLowerCase() === 'area'){
-    result = data.sort((a, b) => {
-      const aData = a.area;
-      const bData = b.area;
-      if (aData < bData) {
-        return -1; // si a es menor que b, colocar a antes que b
-      }
-      if (aData > bData) {
-        return 1; // si a es mayor que b, colocar a después de b
-      }
-      //return 0; // si los nombres son iguales, no cambiar el orden
-    });
-  } else if (sortBy.toLowerCase() === 'population'){
-    result = data.sort((a, b) => {
-      const aData = a.population;
-      const bData = b.population;
-      if (aData < bData) {
-        return -1; // si a es menor que b, colocar a antes que b
-      }
-      if (aData > bData) {
-        return 1; // si a es mayor que b, colocar a después de b
-      }
-      //return 0; // si los nombres son iguales, no cambiar el orden
-    });
-  } else if (sortBy.toLowerCase() === 'capital'){
-    let counter = 0;
-    result = data.sort((a, b) =>{
-      let aData, bData;
-      if (typeof a.capital === 'object') {
-        aData = a.capital.sort()[0];
-      } else {
-        counter ++;
-        const temp = data[data.length-counter];
-        data[data.length-counter] = a;
-        aData = temp;
-      }
-      if (typeof b.capital === 'object') {
-        bData = b.capital.sort()[0];
-      } else {
-        counter ++;
-        const temp = data[data.length-counter];
-        data[data.length-counter] = b;
-        bData = temp;
-      }
-      if (aData < bData){
-        return -1;
-      }
-      if (aData > bData){
-        return 1;
-      }
-    })
-  }
-  if(parseInt(direction) === 1){
-    return result;
-  } else if (parseInt(direction) === -1){
-    return result.reverse();
-  }
-}
-
-export const search = (data, lookFor) => {
-//const search = (data, lookFor) => {
+/**
+ * Look for countries that its common or official name or its capital starts
+ * with he word: lookFor
+ *
+ * @param {Array of jsons} data - Data of countries for searching.
+ * @param {string} lookFor - Word for searching coincidence.
+ * @returns {array} Array of countries's json or empty array
+ */
+export const searchData = (data, lookFor) => {
   if(typeof data !== 'object' || typeof lookFor !== 'string'){
     throw new TypeError("Ingresó un valor inválido");
   } else if (data.length === 0){
@@ -120,12 +29,221 @@ export const search = (data, lookFor) => {
     return data;
   }
   return data.filter(country => country.name.common.toLowerCase().startsWith(lookFor.toLowerCase()) || ((typeof(country.name.official) === 'string') ? country.name.official.toLowerCase().startsWith(lookFor.toLowerCase()) : false ) || ((typeof(country.capital) === 'object') ? country.capital.some(palabra => palabra.toLowerCase().startsWith(lookFor.toLowerCase())) : false ));
-
 };
 
-export const canvas = (data, ...elements) => {
-//const canvas = (data, ...elements) => {
-  // 0: lookFor
+/**
+ * Filter the data for the name of a continent given in lookFor
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {string} lookFor - Name of the continent.
+ * @returns {array of json} Array of countries's json with continent key equals 
+ * to lookFor
+ */
+export const filterDataByContinent = (data, lookFor) => {
+  if(typeof data !== 'object' || typeof lookFor !== 'string'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || lookFor === ''){
+    throw new TypeError("Los datos vienen vacíos");
+  }
+  return data.filter(country => country.continents[0] === lookFor);
+};
+
+/**
+ * Filter the data for the name of a subregion given in lookFor
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {string} lookFor - Name of the subregion.
+ * @returns {array of json} Array of countries's json with subregion key equals 
+ * to lookFor
+ */
+export const filterDataBySubregion = (data, lookFor) => {
+  if(typeof data !== 'object' || typeof lookFor !== 'string'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || lookFor === ''){
+    throw new TypeError("Los datos vienen vacíos");
+  }
+  return data.filter(country => country.subregion === lookFor);
+};
+
+/**
+ * Filter the data for the language spoken in a country
+ * 
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {string} lookFor - Language 
+ * @returns {array of json} Array of countries's json with continent key equals 
+ * to lookFor
+ */
+export const filterDataByLanguage = (data, lookFor) => {
+  if(typeof data !== 'object' || typeof lookFor !== 'string'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || lookFor === ''){
+    throw new TypeError("Los datos vienen vacíos");
+  }
+  const theCountries = [];
+  for (const i of data){
+    if(typeof(i.languages) === 'object'){
+      if(Object.values(i.languages).includes(lookFor)){
+        theCountries.push(i);
+      }
+    }
+  }
+  return theCountries;
+};
+  
+/**
+ * Sort the data by the common name of a country ascending (direction = 1) or 
+ * descending (direction = -1)
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {number} direction - (ascending) 1 or (descending) -1
+ * @returns {array of json} Array of countries's json sorted by common name
+ */
+export const sortDataByCountry = (data, direction) =>{
+  if(typeof data !== 'object' || typeof direction !== 'number'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || ![1,-1].includes(direction)){
+    throw new TypeError("Los datos vienen incompletos");
+  }
+  const result = data.sort((a, b) => {
+    const aData = a.name.common.toUpperCase(); 
+    const bData = b.name.common.toUpperCase();
+    if (aData < bData) {
+      return -1; //colocar a antes que b
+    }
+    if (aData > bData) {
+      return 1; //colocar a después de b
+    }
+    return 0; //no cambiar el orden
+  });
+  if(parseInt(direction) === 1){
+    return result;
+  } else if (parseInt(direction) === -1){
+    return result.reverse();
+  }
+}
+
+/**
+ * Sort the data by the first element of the array capital for each country 
+ * ascending (direction = 1) or descending (direction = -1)
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {number} direction - (ascending) 1 or (descending) -1
+ * @returns {array of json} Array of countries's json sorted by capital first 
+ * element of the array capital for each country
+ */
+export const sortDataByCapital = (data, direction) =>{
+  if(typeof data !== 'object' || typeof direction !== 'number'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || ![1,-1].includes(direction)){
+    throw new TypeError("Los datos vienen incompletos");
+  }
+  let counter = 0;
+  const result = data.sort((a, b) =>{
+    let aData, bData;
+    if (typeof a.capital === 'object') {
+      aData = a.capital[0];
+    } else {
+      counter ++;
+      const temp = data[data.length-counter];
+      data[data.length-counter] = a;
+      aData = temp;
+    }
+    if (typeof b.capital === 'object') {
+      bData = b.capital[0];
+    } else {
+      counter ++;
+      const temp = data[data.length-counter];
+      data[data.length-counter] = b;
+      bData = temp;
+    }
+    if (aData < bData){
+      return -1;
+    }
+    if (aData > bData){
+      return 1;
+    }
+  })
+
+  if(parseInt(direction) === 1){
+    return result;
+  } else if (parseInt(direction) === -1){
+    return result.reverse();
+  }
+}
+
+/**
+ * Sort the data by the value for area for each country 
+ * ascending (direction = 1) or descending (direction = -1)
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {number} direction - (ascending) 1 or (descending) -1
+ * @returns {array of json} Array of countries's json sorted by its area value
+ */
+export const sortDataByArea = (data, direction) =>{
+  if(typeof data !== 'object' || typeof direction !== 'number'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || ![1,-1].includes(direction)){
+    throw new TypeError("Los datos vienen incompletos");
+  }
+  const result = data.sort((a, b) => {
+    const aData = a.area;
+    const bData = b.area;
+    if (aData < bData) {
+      return -1; //colocar a antes que b
+    }
+    if (aData > bData) {
+      return 1; //colocar a después de b
+    }
+    return 0; //no cambiar el orden
+  });
+  if(parseInt(direction) === 1){
+    return result;
+  } else if (parseInt(direction) === -1){
+    return result.reverse();
+  }
+}
+
+/**
+ * Sort the data by the value for population for each country 
+ * ascending (direction = 1) or descending (direction = -1)
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {number} direction - (ascending) 1 or (descending) -1
+ * @returns {array of json} Array of countries's json sorted by its population
+ * value
+ */
+export const sortDataByPopulation = (data, direction) =>{
+  if(typeof data !== 'object' || typeof direction !== 'number'){
+    throw new TypeError("Ingresó un valor inválido");
+  } else if (data.length === 0 || ![1,-1].includes(direction)){
+    throw new TypeError("Los datos vienen incompletos");
+  }
+  const result = data.sort((a, b) => {
+    const aData = a.population;
+    const bData = b.population;
+    if (aData < bData) {
+      return -1; //colocar a antes que b
+    }
+    if (aData > bData) {
+      return 1; //colocar a después de b
+    }
+    return 0; //no cambiar el orden
+  });
+  if(parseInt(direction) === 1){
+    return result;
+  } else if (parseInt(direction) === -1){
+    return result.reverse();
+  }
+}
+  
+/**
+ * Return a json object with keys as countries's common name and gini index as * values
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @returns {json} Json with countries's common name as keys and gini indexes 
+ * as values
+ */
+export const calculateGiniCanvas = (data, ...elements) => {
   if(elements.length > 1){
     throw new TypeError("Revisar qué está ingresando adicional");
   }
@@ -150,9 +268,17 @@ export const canvas = (data, ...elements) => {
   }
 };
 
-export const densityPopulation = (data, ...elements) => {
-//const densityPopulation = (data, ...elements) => {
-  if(typeof data === 'object' && elements.length === 0){
+
+/**
+ * Calculate the population density for each country and calculate the average population density for the data. 
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @returns {json} Json with keys: avergaeDensity and data. 
+ * Data is a Json with keys: common name of countries and values: another Json. 
+ * The las Json mentioned has area, population and density as keys.
+ */
+export const calculatePopulationDensity = (data) => {
+  if(typeof data === 'object'){
     let average = 0.0, counter = 0;
     const densityJson = {};
     for(let i = 0; i<data.length; i++){
@@ -176,27 +302,30 @@ export const densityPopulation = (data, ...elements) => {
   }
 }
 
-export const clockTimezones = (data, ...elements) => {
-  if(typeof data !== 'object' || typeof elements[0] !== 'string'){
+/**
+ * Search the countries that has an specific timezone.
+ *
+ * @param {Arary of json} data - Data of countries for searching.
+ * @param {data} data - Data of countries for searching.
+ * @returns {Arary of json} Json with countries's common name as keys and gini indexes 
+ * as values
+ */
+export const searchClockTimezones = (data, timezone) => {
+  if(typeof data !== 'object' || typeof timezone !== 'string'){
     throw new TypeError("Ingresó un valor inválido");
   } else if (data.length === 0){
     throw new TypeError("Los datos vienen incompletos");
-  } else if (elements[0] === ''){
+  } else if (timezone === ''){
     return data;
   }
-  const searchUTC = elements[0];
-  if(searchUTC === "UTC-12:00"){
-    return data.filter(country => country.timezones.includes(searchUTC) || country.timezones.includes("UTC+12:00"));
+  let temp = [];
+  if(timezone === "UTC-12:00"){
+    const utc = timezone.split('-').join('+');
+    temp = data.filter(country => country.timezones.includes(timezone) || country.timezones.includes(utc));
   } else {
-    return data.filter(country => country.timezones.includes(searchUTC));
+    temp = data.filter(country => country.timezones.includes(timezone));
   }
+  //console.log(temp);
+  //return sortDataByCountry(temp, 1);
+  return temp;
 }
-
-
-/*
-const DATA_TEMP = '[{"name":{"common":"South Africa","official":"Republic of South Africa"},"tld":[".za"],"independent":true,"capital":["Pretoria","Bloemfontein","Cape Town"],"subregion":"Southern Africa","languages":{"afr":"Afrikaans","eng":"English","nbl":"Southern Ndebele","nso":"Northern Sotho","sot":"Southern Sotho","ssw":"Swazi","tsn":"Tswana","tso":"Tsonga","ven":"Venda","xho":"Xhosa","zul":"Zulu"},"borders":["BWA","LSO","MOZ","NAM","SWZ","ZWE"],"area":1221037,"flag":"🇿🇦","population":59308690,"gini":{"2014":63},"fifa":"RSA","timezones":["UTC+02:00"],"continents":["Africa"],"flags":{"png":"https://flagcdn.com/w320/za.png","svg":"https://flagcdn.com/za.svg","alt":"The flag of South Africa is composed of two equal horizontal bands of red and blue, with a yellow-edged black isosceles triangle superimposed on the hoist side of the field. This triangle has its base centered on the hoist end, spans about two-fifth the width and two-third the height of the field, and is enclosed on its sides by the arms of a white-edged green horizontally oriented Y-shaped band which extends along the boundary of the red and blue bands to the fly end of the field."}},{"name":{"common":"Kosovo","official":"Republic of Kosovo"},"capital":["Pristina"],"subregion":"Southeast Europe","languages":{"sqi":"Albanian","srp":"Serbian"},"borders":["ALB","MKD","MNE","SRB"],"area":10908,"flag":"🇽🇰","population":1775378,"gini":{"2017":29},"fifa":"KVX","timezones":["UTC+01:00"],"continents":["Europe"],"flags":{"png":"https://flagcdn.com/w320/xk.png","svg":"https://flagcdn.com/xk.svg"}},{"name":{"common":"Antarctica","official":"Antarctica"},"tld":[".aq"],"independent":false,"area":14000000,"flag":"🇦🇶","population":1000,"timezones":["UTC-03:00","UTC+03:00","UTC+05:00","UTC+06:00","UTC+07:00","UTC+08:00","UTC+10:00","UTC+12:00"],"continents":["Antarctica"],"flags":{"png":"https://flagcdn.com/w320/aq.png","svg":"https://flagcdn.com/aq.svg"}}]';
-
-console.log(DATA_TEMP);
-console.log("");
-console.log(JSON.stringify(sort(JSON.parse(DATA_TEMP), 'capital', 1)));
-*/
