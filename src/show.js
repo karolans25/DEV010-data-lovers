@@ -87,6 +87,29 @@ export const showCards = (theData, theCards, thePage, theLines) => {
   }
 }
 
+export const showFlags = (theData, ...elements) => {
+  console.log(theData);
+  console.log(elements[0]);
+
+  theData.forEach(country => {
+    const cardFlag = document.createElement('section');
+    const theFlag = document.createElement('img');
+    theFlag.className = "flip-card-img";
+    theFlag.src = country.flags.png;
+    if(typeof country.flags.alt === 'string'){
+      theFlag.alt = country.flags.alt;
+    }
+    theFlag.style.width = "200px";
+    theFlag.style.height = "135px";
+    const label = document.createElement('h4');
+    label.innerHTML = country.name.common;
+    
+    cardFlag.append(label);
+    cardFlag.append(theFlag);
+    elements[0].append(cardFlag);
+  });
+}
+
 const createTable = (thePage, theData, theLines, theTable) =>{
   page = thePage;
   data = theData;

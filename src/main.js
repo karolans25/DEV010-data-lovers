@@ -1,6 +1,6 @@
-import {dataJson, filter, sort, search, canvas, densityPopulation} from './data.js';
+import {dataJson, filter, sort, search, canvas, densityPopulation, clockTimezones} from './data.js';
 import {chartData} from './canvas.js';
-import {printData, createPaginator, showTable, showCards} from './show.js';
+import {printData, createPaginator, showTable, showCards, showFlags} from './show.js';
 
 const dir = './data/countries/countries.json';
 const lines = 10;
@@ -56,9 +56,6 @@ let chart;
  * Map container
  */
 const mapContainer = document.querySelector('#map-container');
-
-//const containerClock = document.querySelector('#clockdate');
-  
 
 /**
  * Función para cargar el dataset
@@ -233,8 +230,6 @@ function showCalculus(){
   calculus1.classList.value = 'tab-option tab-option-active';
   contentCalculus1.classList.value = 'content content-active';
   fillYearSelector();
-  // graphGiniIndex(0, 'bar');
-  // graphGiniIndex(1, 'horizontalBar');
   graphGiniIndex(0);
   graphGiniIndex(1);
 }
@@ -259,7 +254,6 @@ function  fillYearSelector(){
 
 function graphGiniIndex(...elements){
   // 0: 0 by year, 1 global
-  // 1: type 'bar' o 'horizontalBar'
   let dataGini, canvasGini, labels, values;
   if(elements[0] === 0){
     dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
@@ -270,7 +264,6 @@ function graphGiniIndex(...elements){
       //chart.config.type = 'horizontalBar';
       chart.config.data.labels = labels;
       chart.config.data.datasets[0].data = values;
-      //chart.config.data.datasets[0].label = `Gini Indexes reported in ${arrayOfYears[yearSelector.value]}`;
       chart.update();
     } else {
       chart = chartData(dataGini, canvasGini, elements[0]);
@@ -293,12 +286,17 @@ function graphGiniIndex(...elements){
 
 }
 
+function displayFlagsUTC(){
+  const hourUTC = calculateUTC();
+  const countriesUTC = clockTimezones(globalData, hourUTC);
+  const containerFlagsUTC = document.querySelector('#card-clock');
+  showFlags(countriesUTC, containerFlagsUTC);
+}
+
 function changeOptionCalculus(){
   if(chosen === 1){
     calculus1.classList.value = 'tab-option tab-option-active';
     contentCalculus1.classList.value = 'content content-active';
-    // graphGiniIndex(0, 'bar');
-    // graphGiniIndex(1, 'horizontalBar');
     graphGiniIndex(0);
     graphGiniIndex(1);
   } else {
@@ -316,6 +314,7 @@ function changeOptionCalculus(){
   if (chosen === 3){
     calculus3.classList.value = 'tab-option tab-option-active';
     contentCalculus3.classList.value = 'content content-active';
+    displayFlagsUTC();
   } else {
     calculus3.classList.value = 'tab-option';
     contentCalculus3.classList.value = 'content';
@@ -501,41 +500,60 @@ function moveBetweenPages(event){
   }
 }
 
-function startTime() {
-  // hora : 10:50 am
+function calculateUTC(){
   const today = new Date();
-  const hora = 10;
-  const minutos = 50;
-  const ampm = "am";
-  let afternoon;
-  (ampm === "pm") ? afternoon = true : afternoon = false;
-  let hora24;
-  let UTC = `UTC`;
-  (afternoon) ? hora24 = hora+12 : hora24 = hora ;
-  const horaRef = today.getUTCHours();
-  const minRef = today.getUTCMinutes();
-  if(horaRef > hora24){
-    ((horaRef - hora24) < 10 ) ? UTC += `-0${horaRef-hora24}` : UTC += `-${horaRef-hora24}`;
-  } else { //horaRef <= hora24
-    ((hora24 - horaRef) < 10 ) ? UTC += `+0${hora24 - horaRef}` : UTC += `+${hora24 - horaRef}`;
+  let hour = today.getHours();
+  const minutes = today.getMinutes();
+  const meridian = "pm";
+  if(hour === "12" && meridian === "am") hour = "0";
+  else if(meridian === "pm" && hour !== "12") hour = String(parseInt(hour) + 12);
+  let desfase, UTC = 'UTC'; 
+  const hourRef = today.getUTCHours(); 
+  const minuteRef = today.getUTCMinutes(); 
+  if (hour < hourRef) {
+    if(hour-hourRef < -12){
+      desfase = 12 + hour - hourRef%12;
+      //console.log("op1");
+    } else if (hour-hourRef >= -12){
+      desfase = hour - hourRef;
+      //console.log("op2");
+      //Falta definir por minutos
+    }
+    //console.log("Hacer algo");
+  } else if(hour === hourRef){
+    desfase = hour-hourRef;
+    //console.log("Hacer algo de nuevo");
+  } else if (hour > hourRef){ //calcular UTC hacia atrás
+    //console.log("Hacer nada");
+    if(hour-hourRef > 12){
+      desfase = (hour%12) -12 -hourRef;
+    } else if (hour-hourRef  < 12){
+      desfase = (hour) - hourRef;
+    }
   }
-  if(minRef > minutos){
-    ((minRef - minutos) < 30) ? UTC += ':00' : UTC += ':30';
-  } else { //minRef <= minutos
-    ((minutos - minRef) < 30 ) ? UTC += ':00' : UTC += ':30';
+  //(desfase === 0) ? alert(desfase >= 0) : console.log("");
+  if(desfase >= 0) {
+    (Math.abs(desfase) < 10) ? UTC += `+0${Math.abs(desfase)}`: UTC += `+${Math.abs(desfase)}`;
+  }  else {
+    (Math.abs(desfase) < 10) ? UTC += `-0${Math.abs(desfase)}`: UTC += `-${Math.abs(desfase)}`;
   }
+  if(minuteRef > minutes){
+    ((minuteRef - minutes) < 30) ? UTC += ':00' : UTC += ':30';
+  } else { //minRef <= minutes
+    ((minutes - minuteRef) < 30 ) ? UTC += ':00' : UTC += ':30';
+  }
+  return UTC;
+}
 
+function startTime() {
+  const today = new Date();
   let hr = today.getHours();
   let min = today.getMinutes();
-  //let sec = today.getSeconds();
   const ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
   hr = (hr === 0) ? 12 : hr;
   hr = (hr > 12) ? hr - 12 : hr;
-  //Add a zero in front of numbers<10
   hr = checkTime(hr);
   min = checkTime(min);
-  //sec = checkTime(sec);
-  //document.getElementById("clock").innerHTML = hr + " : " + min + " : " + sec + " " + ap;
   document.getElementById("clock").innerHTML = hr + " : " + min + " " + ap;
   setTimeout(function(){ startTime() }, 100);
 }
