@@ -278,6 +278,12 @@ canvas{
   padding: 15px;
 }
 
+#set-clock{
+  background: #01aeed;
+  color: #20033D;
+  width: 80%;
+}
+
 .chartBox[name="density-canvas-pie"]{
   display: flex;
 }
@@ -493,7 +499,6 @@ aside{
 .aside-info{
   color: #3F0447;
   line-height: 25px;
-  
 }
 
 #clock{
@@ -540,8 +545,8 @@ footer .heart {
 .popup{
   background: #B9ACCD;
   color: #1D0030;
-  max-width: 350px;
-  height: 210px;
+  max-width: 320px;
+  height: 200px;
   margin-left: calc(100%-50px);
   letter-spacing: 1px;
   line-height: 40px;
