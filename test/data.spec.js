@@ -6,7 +6,7 @@ const DATA_DENSITY = '{"averageDensity": "70.44", "data": {"Antarctica": {"area"
 
 
 /* eslint-disable */
-import {dataJson, filter, sort, search, canvas, densityPopulation } from '../src/data.js';
+import {dataJson, searchData, filterDataByContinent, filterDataBySubregion, filterDataByLanguage, sortDataByCountry, sortDataByCapital, sortDataByArea, sortDataByPopulation, calculateGiniCanvas, calculatePopulationDensity, searchClockTimezones } from '../src/data.js';
 
 /**Test para las función de cargar la data */
 describe('All test of get data',(done)=>{
@@ -72,180 +72,301 @@ describe('storeResponse', () => {
 });
 */
 
-/**Test para la funcionalidad filter */
-describe('filter', () => {
+
+/**Test para searchData */
+describe('searchData', () => {
   it('is a function', () => {
-    expect(typeof filter).toBe('function');
-  });
-
-  
-  it('should throw TypeError when invoked with wrong argument types', () => {
-    expect(() => filter('')).toThrow(TypeError);
-    expect(() => filter()).toThrow(TypeError);
-    expect(() => filter(0)).toThrow(TypeError);
-    expect(() => filter([],'', '')).toThrow(TypeError);
-    expect(() => filter(null, [], undefined)).toThrow(TypeError);
-    expect(() => filter(0, 0, 0)).toThrow(TypeError);
-  });
-  
-  it(`should return ${[JSON.parse(DATA_TEMP)[1]]} for 'Continents' and 'Europe' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Continents', 'Europe')).toStrictEqual([JSON.parse(DATA_TEMP)[1]]);
-  });
-
-  it(`should return [] for 'Continents' and 'America' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Continents', 'America')).toStrictEqual([]);
-  });
-
-  it(`should return ${JSON.parse(DATA_TEMP)[1]} for 'Subregion' and 'Southeast Europe' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Subregion', 'Southeast Europe')).toStrictEqual([JSON.parse(DATA_TEMP)[1]]);
-  });
-
-  it(`should return [] for 'Subregion' and 'Australia and New Zealand' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Subregion', 'Australia and New Zealand')).toStrictEqual([]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[0]]} for 'Languages' and 'English' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Languages', 'English')).toStrictEqual([JSON.parse(DATA_TEMP)[0]]);
-  });
-
-  it(`should return [] for 'Languages' and 'Spanish' `, () => {
-    expect(filter(JSON.parse(DATA_TEMP), 'Languages', 'Spanish')).toStrictEqual([]);
-  });
-
-});
-
-/**Test para sort */
-describe('sort', () => {
-  it('is a function', () => {
-    expect(typeof sort).toBe('function');
+    expect(typeof searchData).toBe('function');
   });
 
   it('should throw TypeError when invoked with wrong argument types', () => {
-    expect(() => sort()).toThrow(TypeError);
-    expect(() => sort(0)).toThrow(TypeError);
-    expect(() => sort(null, [], undefined)).toThrow(TypeError);
-    expect(() => sort([], '', 5)).toThrow(TypeError);
-    expect(() => sort(0, 0, 0)).toThrow(TypeError);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'country' and 1 (ascending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'country', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'country' and 1 (ascending)`, () => {
-    expect(sort([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]], 'country', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 'country' and -1 (descending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'country', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]} for 'area' and 1 (ascending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'area', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]} for 'area' and -1(descending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'area', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'population' and 1 (ascending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'population', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'population' and 1 (ascending)`, () => {
-    expect(sort([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 'population', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 'population' and -1 (descending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'population', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
-  });
-  
-  it(`should return ${JSON.parse(DATA_TEMP)} for 'capital' and 1 (ascending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'capital', 1)).toStrictEqual(JSON.parse(DATA_TEMP));
-  });
-  
-  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 'capital' and 1 (ascending)`, () => {
-    expect(sort([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 'capital', 1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
-  });
-
-  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 'capital' and -1 (descending)`, () => {
-    expect(sort(JSON.parse(DATA_TEMP), 'capital', -1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
-  });
-
-});
-
-/**Test para search */
-describe('search', () => {
-  it('is a function', () => {
-    expect(typeof search).toBe('function');
-  });
-
-  it('should throw TypeError when invoked with wrong argument types', () => {
-    expect(() => search()).toThrow(TypeError);
-    expect(() => search([])).toThrow(TypeError);
-    expect(() => search([], '')).toThrow(TypeError);
-    expect(() => search(0)).toThrow(TypeError);
-    expect(() => search(null, [], undefined)).toThrow(TypeError);
-    expect(() => search(0, 0)).toThrow(TypeError);
+    expect(() => searchData()).toThrow(TypeError);
+    expect(() => searchData([])).toThrow(TypeError);
+    expect(() => searchData([], '')).toThrow(TypeError);
+    expect(() => searchData(0)).toThrow(TypeError);
+    expect(() => searchData(null, [], undefined)).toThrow(TypeError);
+    expect(() => searchData(0, 0)).toThrow(TypeError);
   });
 
   it(`should return ${JSON.parse(DATA_TEMP)} for '' `, () => {
-    expect(search(JSON.parse(DATA_TEMP), '')).toStrictEqual(JSON.parse(DATA_TEMP));
+    expect(searchData(JSON.parse(DATA_TEMP), '')).toStrictEqual(JSON.parse(DATA_TEMP));
   });
 
   it(`should return ${[]} for 'Colombia' `, () => {
-    expect(search(JSON.parse(DATA_TEMP), 'Colombia')).toStrictEqual([]);
+    expect(searchData(JSON.parse(DATA_TEMP), 'Colombia')).toStrictEqual([]);
   });
 
   it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]} for 'pR' `, () => {
-    expect(search(JSON.parse(DATA_TEMP), 'pR')).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]);
+    expect(searchData(JSON.parse(DATA_TEMP), 'pR')).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]);
   });
 
   it(`should return ${[JSON.parse(DATA_TEMP)[0]]} for 'prEtOria' `, () => {
-    expect(search(JSON.parse(DATA_TEMP), 'prEtOria')).toStrictEqual([JSON.parse(DATA_TEMP)[0]]);
+    expect(searchData(JSON.parse(DATA_TEMP), 'prEtOria')).toStrictEqual([JSON.parse(DATA_TEMP)[0]]);
   });
 
   it(`should return ${[]} for 'prEtOriam' `, () => {
-    expect(search(JSON.parse(DATA_TEMP), 'prEtOriam')).toStrictEqual([]);
+    expect(searchData(JSON.parse(DATA_TEMP), 'prEtOriam')).toStrictEqual([]);
   });
 });
 
-/**Test para canvas */
-describe('canvas', () => {
+
+/**Test para la funcionalidad filter */
+describe('filterDataByContinent', () => {
   it('is a function', () => {
-    expect(typeof canvas).toBe('function');
+    expect(typeof filterDataByContinent).toBe('function');
+  });
+
+  
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => filterDataByContinent('')).toThrow(TypeError);
+    expect(() => filterDataByContinent()).toThrow(TypeError);
+    expect(() => filterDataByContinent(0)).toThrow(TypeError);
+    expect(() => filterDataByContinent([],'', '')).toThrow(TypeError);
+    expect(() => filterDataByContinent(null, [], undefined)).toThrow(TypeError);
+    expect(() => filterDataByContinent(0, 0, 0)).toThrow(TypeError);
+  });
+  
+  it(`should return ${[JSON.parse(DATA_TEMP)[1]]} for 'Europe' `, () => {
+    expect(filterDataByContinent(JSON.parse(DATA_TEMP), 'Europe')).toStrictEqual([JSON.parse(DATA_TEMP)[1]]);
+  });
+
+  it(`should return [] for 'America' `, () => {
+    expect(filterDataByContinent(JSON.parse(DATA_TEMP), 'America')).toStrictEqual([]);
+  });
+
+});
+
+/**Test para la funcionalidad filter */
+describe('filterDataBySubregion', () => {
+  it('is a function', () => {
+    expect(typeof filterDataBySubregion).toBe('function');
+  });
+
+  
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => filterDataBySubregion('')).toThrow(TypeError);
+    expect(() => filterDataBySubregion()).toThrow(TypeError);
+    expect(() => filterDataBySubregion(0)).toThrow(TypeError);
+    expect(() => filterDataBySubregion([],'', '')).toThrow(TypeError);
+    expect(() => filterDataBySubregion(null, [], undefined)).toThrow(TypeError);
+    expect(() => filterDataBySubregion(0, 0, 0)).toThrow(TypeError);
+  });
+  
+  it(`should return ${JSON.parse(DATA_TEMP)[1]} for 'Southeast Europe' `, () => {
+    expect(filterDataBySubregion(JSON.parse(DATA_TEMP), 'Southeast Europe')).toStrictEqual([JSON.parse(DATA_TEMP)[1]]);
+  });
+
+  it(`should return [] for 'Australia and New Zealand' `, () => {
+    expect(filterDataBySubregion(JSON.parse(DATA_TEMP), 'Australia and New Zealand')).toStrictEqual([]);
+  });
+
+});
+
+/**Test para la funcionalidad filterDataByLanguage */
+describe('filterDataByLanguage', () => {
+  it('is a function', () => {
+    expect(typeof filterDataByLanguage).toBe('function');
+  });
+
+  
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => filterDataByLanguage('')).toThrow(TypeError);
+    expect(() => filterDataByLanguage()).toThrow(TypeError);
+    expect(() => filterDataByLanguage(0)).toThrow(TypeError);
+    expect(() => filterDataByLanguage([],'', '')).toThrow(TypeError);
+    expect(() => filterDataByLanguage(null, [], undefined)).toThrow(TypeError);
+    expect(() => filterDataByLanguage(0, 0, 0)).toThrow(TypeError);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[0]]} for 'English' `, () => {
+    expect(filterDataByLanguage(JSON.parse(DATA_TEMP), 'English')).toStrictEqual([JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return [] for 'Languages' and 'Spanish' `, () => {
+    expect(filterDataByLanguage(JSON.parse(DATA_TEMP), 'Spanish')).toStrictEqual([]);
+  });
+
+});
+
+
+/**Test para sortDataByCountry */
+describe('sortDataByCountry', () => {
+  it('is a function', () => {
+    expect(typeof sortDataByCountry).toBe('function');
   });
 
   it('should throw TypeError when invoked with wrong argument types', () => {
-    expect(() => canvas()).toThrow(TypeError);
-    expect(() => canvas(0)).toThrow(TypeError);
-    expect(() => canvas(null, [], undefined)).toThrow(TypeError);
-    expect(() => canvas([], '', 5)).toThrow(TypeError);
-    expect(() => canvas([], [])).toThrow(TypeError);
-    expect(() => canvas(0, 0)).toThrow(TypeError);
+    expect(() => sortDataByCountry()).toThrow(TypeError);
+    expect(() => sortDataByCountry(0)).toThrow(TypeError);
+    expect(() => sortDataByCountry(null, [], undefined)).toThrow(TypeError);
+    expect(() => sortDataByCountry([], '', 5)).toThrow(TypeError);
+    expect(() => sortDataByCountry(0, 0, 0)).toThrow(TypeError);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 1 (ascending)`, () => {
+    expect(sortDataByCountry(JSON.parse(DATA_TEMP), 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 1 (ascending)`, () => {
+    expect(sortDataByCountry([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]], 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for -1 (descending)`, () => {
+    expect(sortDataByCountry(JSON.parse(DATA_TEMP), -1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
+  });
+});
+
+
+/**Test para sortDataByArea */
+describe('sortDataByArea', () => {
+  it('is a function', () => {
+    expect(typeof sortDataByArea).toBe('function');
+  });
+
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => sortDataByArea()).toThrow(TypeError);
+    expect(() => sortDataByArea(0)).toThrow(TypeError);
+    expect(() => sortDataByArea(null, [], undefined)).toThrow(TypeError);
+    expect(() => sortDataByArea([], '', 5)).toThrow(TypeError);
+    expect(() => sortDataByArea(0, 0, 0)).toThrow(TypeError);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]} for 1 (ascending)`, () => {
+    expect(sortDataByArea(JSON.parse(DATA_TEMP), 1)).toStrictEqual([JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[2]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]} for -1(descending)`, () => {
+    expect(sortDataByArea(JSON.parse(DATA_TEMP), -1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]]);
+  });
+
+});
+
+/**Test para sortDataByPopulation */
+describe('sortDataByPopulation', () => {
+  it('is a function', () => {
+    expect(typeof sortDataByPopulation).toBe('function');
+  });
+
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => sortDataByPopulation()).toThrow(TypeError);
+    expect(() => sortDataByPopulation(0)).toThrow(TypeError);
+    expect(() => sortDataByPopulation(null, [], undefined)).toThrow(TypeError);
+    expect(() => sortDataByPopulation([], '', 5)).toThrow(TypeError);
+    expect(() => sortDataByPopulation(0, 0, 0)).toThrow(TypeError);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 1 (ascending)`, () => {
+    expect(sortDataByPopulation(JSON.parse(DATA_TEMP), 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for 1 (ascending)`, () => {
+    expect(sortDataByPopulation([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for  -1 (descending)`, () => {
+    expect(sortDataByPopulation(JSON.parse(DATA_TEMP), -1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
+  });
+  
+});
+
+/**Test para sortDataByCapital */
+describe('sortDataByCapital', () => {
+  it('is a function', () => {
+    expect(typeof sortDataByCapital).toBe('function');
+  });
+
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => sortDataByCapital()).toThrow(TypeError);
+    expect(() => sortDataByCapital(0)).toThrow(TypeError);
+    expect(() => sortDataByCapital(null, [], undefined)).toThrow(TypeError);
+    expect(() => sortDataByCapital([], '', 5)).toThrow(TypeError);
+    expect(() => sortDataByCapital(0, 0, 0)).toThrow(TypeError);
+  });
+  
+  it(`should return ${JSON.parse(DATA_TEMP)} for and 1 (ascending)`, () => {
+    expect(sortDataByCapital(JSON.parse(DATA_TEMP), 1)).toStrictEqual(JSON.parse(DATA_TEMP));
+  });
+  
+  it(`should return ${[JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]} for 1 (ascending)`, () => {
+    expect(sortDataByCapital([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1]], 1)).toStrictEqual([JSON.parse(DATA_TEMP)[0], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[2]]);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]} for -1 (descending)`, () => {
+    expect(sortDataByCapital(JSON.parse(DATA_TEMP), -1)).toStrictEqual([JSON.parse(DATA_TEMP)[2], JSON.parse(DATA_TEMP)[1], JSON.parse(DATA_TEMP)[0]]);
+  });
+
+});
+
+
+/**Test para calculateGiniCanvas */
+describe('calculateGiniCanvas', () => {
+  it('is a function', () => {
+    expect(typeof calculateGiniCanvas).toBe('function');
+  });
+
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => calculateGiniCanvas()).toThrow(TypeError);
+    expect(() => calculateGiniCanvas(0)).toThrow(TypeError);
+    expect(() => calculateGiniCanvas(null, [], undefined)).toThrow(TypeError);
+    expect(() => calculateGiniCanvas([], '', 5)).toThrow(TypeError);
+    expect(() => calculateGiniCanvas([], [])).toThrow(TypeError);
+    expect(() => calculateGiniCanvas(0, 0)).toThrow(TypeError);
   });
 
   it(`should return ${JSON.parse(DATA_CANVAS)} for ${JSON.parse(DATA_TEMP)}`, () => {
-    expect(canvas(JSON.parse(DATA_TEMP))).toStrictEqual(JSON.parse(DATA_CANVAS));
+    expect(calculateGiniCanvas(JSON.parse(DATA_TEMP))).toStrictEqual(JSON.parse(DATA_CANVAS));
   });
 });
 
-/**Test para densityPopulation */
-describe('density population', () => {
+/**Test para calculatePopulationDensity */
+describe('calculatePopulationDensity', () => {
   it('is a function', () => {
-    expect(typeof densityPopulation).toBe('function');
+    expect(typeof calculatePopulationDensity).toBe('function');
   });
 
   it('should throw TypeError when invoked with wrong argument types', () => {
-    expect(() => densityPopulation()).toThrow(TypeError);
-    expect(() => densityPopulation(0)).toThrow(TypeError);
-    expect(() => densityPopulation(null, [], undefined)).toThrow(TypeError);
-    expect(() => densityPopulation([], '', 5)).toThrow(TypeError);
-    expect(() => densityPopulation([], [])).toThrow(TypeError);
-    expect(() => densityPopulation(0, 0)).toThrow(TypeError);
+    expect(() => calculatePopulationDensity()).toThrow(TypeError);
+    expect(() => calculatePopulationDensity(0)).toThrow(TypeError);
+    expect(() => calculatePopulationDensity(null, [], undefined)).toThrow(TypeError);
+    expect(() => calculatePopulationDensity([], '', 5)).toThrow(TypeError);
+    expect(() => calculatePopulationDensity([], [])).toThrow(TypeError);
+    expect(() => calculatePopulationDensity(0, 0)).toThrow(TypeError);
   });
 
   it(`should return ${JSON.parse(DATA_DENSITY)} for ${JSON.parse(DATA_TEMP)}`, () => {
-    expect(densityPopulation(JSON.parse(DATA_TEMP))).toStrictEqual(JSON.parse(DATA_DENSITY));
+    expect(calculatePopulationDensity(JSON.parse(DATA_TEMP))).toStrictEqual(JSON.parse(DATA_DENSITY));
   });
+});
+
+/**Test para searchClockTimezones */
+describe('searchClockTimezones', () => {
+  it('is a function', () => {
+    expect(typeof searchClockTimezones).toBe('function');
+  });
+
+  it('should throw TypeError when invoked with wrong argument types', () => {
+    expect(() => searchClockTimezones()).toThrow(TypeError);
+    expect(() => searchClockTimezones(0)).toThrow(TypeError);
+    expect(() => searchClockTimezones(null, [], undefined)).toThrow(TypeError);
+    expect(() => searchClockTimezones([], '', 5)).toThrow(TypeError);
+    expect(() => searchClockTimezones([], [])).toThrow(TypeError);
+    expect(() => searchClockTimezones(0, 0)).toThrow(TypeError);
+  });
+
+  it(`should return ${[JSON.parse(DATA_TEMP)[0]]} for UTC+02:00`, () => {
+    expect(searchClockTimezones(JSON.parse(DATA_TEMP), 'UTC+02:00')).toStrictEqual([JSON.parse(DATA_TEMP)[0]]);
+  });
+
+  it(`should return ${JSON.parse(DATA_TEMP)[1]} for UTC+01:00`, () => {
+    expect(searchClockTimezones(JSON.parse(DATA_TEMP), 'UTC+01:00')).toStrictEqual([JSON.parse(DATA_TEMP)[1]]);
+  });
+
+  it(`should return ${JSON.parse(DATA_TEMP)[2]} for UTC-03:00`, () => {
+    expect(searchClockTimezones(JSON.parse(DATA_TEMP), 'UTC-03:00')).toStrictEqual([JSON.parse(DATA_TEMP)[2]]);
+  });
+
+  it(`should return ${[]} for UTC-05:00`, () => {
+    expect(searchClockTimezones(JSON.parse(DATA_TEMP), 'UTC-05:00')).toStrictEqual([]);
+  });
+
 });

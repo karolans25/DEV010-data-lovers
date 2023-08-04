@@ -277,8 +277,8 @@ export const calculateGiniCanvas = (data, ...elements) => {
  * Data is a Json with keys: common name of countries and values: another Json. 
  * The las Json mentioned has area, population and density as keys.
  */
-export const calculatePopulationDensity = (data) => {
-  if(typeof data === 'object'){
+export const calculatePopulationDensity = (data, ...elements) => {
+  if(Array.isArray(data) && elements.length === 0){
     let average = 0.0, counter = 0;
     const densityJson = {};
     for(let i = 0; i<data.length; i++){
@@ -310,22 +310,17 @@ export const calculatePopulationDensity = (data) => {
  * @returns {Arary of json} Json with countries's common name as keys and gini indexes 
  * as values
  */
-export const searchClockTimezones = (data, timezone) => {
-  if(typeof data !== 'object' || typeof timezone !== 'string'){
-    throw new TypeError("Ingresó un valor inválido");
-  } else if (data.length === 0){
-    throw new TypeError("Los datos vienen incompletos");
-  } else if (timezone === ''){
-    return data;
-  }
-  let temp = [];
-  if(timezone === "UTC-12:00"){
-    const utc = timezone.split('-').join('+');
-    temp = data.filter(country => country.timezones.includes(timezone) || country.timezones.includes(utc));
+export const searchClockTimezones = (data, timezone,...elements) => {
+  if(Array.isArray(data) && typeof timezone === 'string' && elements.length === 0){
+    let temp = [];
+    if(timezone === "UTC-12:00"){
+      const utc = timezone.split('-').join('+');
+      temp = data.filter(country => country.timezones.includes(timezone) || country.timezones.includes(utc));
+    } else {
+      temp = data.filter(country => country.timezones.includes(timezone));
+    }
+    return temp;
   } else {
-    temp = data.filter(country => country.timezones.includes(timezone));
+    throw new TypeError("Ingresó datos inválidos");
   }
-  //console.log(temp);
-  //return sortDataByCountry(temp, 1);
-  return temp;
 }
