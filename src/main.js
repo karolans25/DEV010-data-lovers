@@ -63,7 +63,7 @@ async function fetchAndStore() {
     globalData = await dataJson(dir);
     init();
   } catch (error) {
-    console.error(error);
+    throw new Error (error);
   }
 }
 
@@ -474,9 +474,6 @@ function calculateUTC(){
   let hour = parseInt(document.querySelector('#hour').value);
   const minutes = parseInt(document.querySelector('#minutes').value);
   const meridian = document.querySelector('#meridian').value;
-  console.log(hour);
-  console.log(minutes);
-  console.log(meridian);
   const today = new Date();
   if(hour === "12" && meridian === "am") hour = "0";
   else if(meridian === "pm" && hour !== "12") hour = String(parseInt(hour) + 12);
