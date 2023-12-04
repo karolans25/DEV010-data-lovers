@@ -69,8 +69,7 @@ export const chartData = (theData, ...element) => {
     ],// Color del borde
     chartOptions = {};
   }
-   
-  // Podemos tener varios conjuntos de datos. Comencemos con uno
+
   const dataGini = {
     label: "Gini Index",
     data: values, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
@@ -106,7 +105,6 @@ export const pieData = (theData, element) => {
   const values = Object.values(theData);
   const graph = element;
 
-  // Podemos tener varios conjuntos de datos. Comencemos con uno
   const dataGini = {
     label: "Gini Indexes reported in 2022",
     data: values, // La data es un arreglo que debe tener la misma cantidad de valores que la cantidad de etiquetas
@@ -122,18 +120,8 @@ export const pieData = (theData, element) => {
       labels: labels,
       datasets: [
         dataGini,
-      // Aquí más datos...
       ]
     },
-    // options: {
-    //   scales: {
-    //     yAxes: [{
-    //       ticks: {
-    //         beginAtZero: true
-    //       }
-    //     }],
-    //   },
-    // }
   };
 
   // eslint-disable-next-line no-undef

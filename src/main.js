@@ -15,7 +15,6 @@ const navBarToggle = document.querySelector('.toggle');
 const navBarButtons = document.querySelector('.links');
 const navBarDataButton = document.querySelector('#data-link');
 const navBarCalculusButton = document.querySelector('#calculus-link');
-const navBarMapButton = document.querySelector('#map-link');
 
 /**
  * Data container
@@ -57,11 +56,6 @@ const closePopupButton = document.querySelector('#close-popup-buttton');
 let chart;
 
 /**
- * Map container
- */
-const mapContainer = document.querySelector('#map-container');
-
-/**
  * Función para cargar el dataset
  */
 async function fetchAndStore() {
@@ -87,53 +81,10 @@ function init() {
   showTable(theData, table, parseInt(pageSelector.value) + 1, lines);
   (switchBut.checked === true) ? cards.style.display = 'none' : table.style.display = 'none';
   createEventListeners();
-
-  /*
-  // check if geolocation is supported by the browser
-  if ("geolocation" in navigator) {
-  // get current position
-    navigator.geolocation.getCurrentPosition(showPosition);
-    console.log(navigator.geolocation.getCurrentPosition(showPosition));
-  } else {
-    console.log("Geolocation is not supported by this browser.");
-  }
-
-  function showPosition(position) {
-  // log latitude and longitude
-    console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude);
-  }
-  // Initialize and add the map
-  let map;
-
-  async function initMap() {
-  // The location of Uluru
-    const position = { lat: position.coords.latitude, lng: position.coords.longitude };
-    // Request needed libraries.
-    //@ts-ignore
-    const { Map } = await google.maps.importLibrary("maps");
-    const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
-
-    // The map, centered at Uluru
-    map = new Map(document.getElementById("map"), {
-      zoom: 4,
-      center: position,
-      mapId: "DEMO_MAP_ID",
-    });
-
-    // The marker, positioned at Uluru
-    const marker = new AdvancedMarkerView({
-      map: map,
-      position: position,
-      title: "Uluru",
-    });
-  }
-
-  await initMap();
-  */
+  navBarDataButton.click();
 }
 
 function createEventListeners(){
-  // Principal Navigation Bar 
   navBarToggle.addEventListener('click', ()=>{
     navBarToggle.classList.toggle('rotate');
     navBarButtons.classList.toggle('active');
@@ -141,20 +92,12 @@ function createEventListeners(){
   navBarDataButton.addEventListener('click', () => {
     dataContainer.style.display = "block";
     calculusContainer.style.display = "none";
-    mapContainer.style.display = "none";
     showData();
   });
   navBarCalculusButton.addEventListener('click', () => {
     dataContainer.style.display = "none";
     calculusContainer.style.display = "block";
-    mapContainer.style.display = "none";
     showCalculus();
-  });
-  navBarMapButton.addEventListener('click', () => {
-    dataContainer.style.display = "none";
-    calculusContainer.style.display = "none";
-    mapContainer.style.display = "block";
-    showMap();
   });
 
   // Data container
@@ -216,15 +159,7 @@ function createEventListeners(){
     overlay.classList.remove('active');
   });
   setTimeButton.addEventListener('click', ()=>{
-    overlay.classList.remove('active');
-    // const option1 = document.createElement('option');
-    // option1.value = "am";
-    // option1.text = "<span>AM</span>"
-
-    // const option2 = document.createElement('option');
-    // option2.value = "pm";
-    // option2.text = "<span>PM</span>"
-    
+    overlay.classList.remove('active');    
     const hr = document.querySelector('#hour').value;
     const min = document.querySelector('#minutes').value;
     const ap = document.querySelector('#meridian').value;
@@ -242,19 +177,25 @@ function showData(){
   document.querySelector('nav section h3').innerHTML = "Flags of Countries";
   dataContainer.style.display = "block";
   calculusContainer.style.display = "none";
-  mapContainer.style.display = "none";  
 }
 
 /**
- * FUnctions for Calculus View
+ * Functions for Calculus View
  */
 function showCalculus(){
   navBarToggle.classList.toggle('rotate');
   navBarButtons.classList.toggle('active');
   document.querySelector('nav section h3').innerHTML = "Calculus";
   calculusContainer.style.display = "flex";
-  calculus1.classList.value = 'tab-option tab-option-active';
-  contentCalculus1.classList.value = 'content content-active';
+  calculus1.click();
+  // calculus1.classList.value = 'tab-option tab-option-active';
+  // calculus2.classList.value = 'tab-option';
+  // calculus3.classList.value = 'tab-option';
+  // contentCalculus1.classList.value = 'content content-active';
+  // contentCalculus2.classList.value = 'content content-active';
+  // contentCalculus3.classList.value = 'content content-active';
+  // chosen = 1;
+  // changeOptionCalculus();
   fillYearSelector();
   graphGiniIndex(0);
   graphGiniIndex(1);
@@ -353,40 +294,6 @@ function changeOptionCalculus(){
     contentCalculus3.classList.value = 'content';
   }
 }
-
-
-
-/**
- * FUnctions for Map View
- */
-function showMap(){
-  navBarToggle.classList.toggle('rotate');
-  navBarButtons.classList.toggle('active');
-  document.querySelector('nav section h3').innerHTML = "Map";
-  dataContainer.style.display = "none";
-  calculusContainer.style.display = "none";
-  mapContainer.style.display = "flex";
-}
-
-/*
-function disableButton(button){
-  button.classList.add("disabled");
-  button.setAttribute("disabled", true);
-}
-
-function enableButton(button){
-  button.classList.remove("disabled");
-  button.removeAttribute("disabled");
-}
-*/
-
-/*
-  if(extra.length > 1){
-    const dataGini = canvas(globalData, arrayOfYears[yearSelector.value]);
-    const containerGiniGraph = document.querySelector('#gini-canvas');
-    chartData(dataGini, containerGiniGraph, extra[0]);
-  }
-*/
 
 function toggleView() {
   if(switchBut.checked === true){
