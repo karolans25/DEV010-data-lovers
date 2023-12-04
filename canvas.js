@@ -19,7 +19,7 @@ export const chartData = (theData, ...element) => {
   const graph = element[0];
   const ctx = graph.getContext('2d');
   let colorBg, borderColor, chartOptions;
-  if(element[1] === 0){
+  if(element[1] === 0){ // Gini Index per year
     colorBg = Array(Object.keys(theData).length).fill('rgba(54, 162, 235, 0.7)');
     borderColor = Array(Object.keys(theData).length).fill('rgba(54, 162, 235, 1)'); // Color del borde
     chartOptions = {
@@ -31,7 +31,7 @@ export const chartData = (theData, ...element) => {
         }],
       },
     };
-  } else if (element[1] === 1){
+  } else if (element[1] === 1){ // Gini Index Global
     colorBg = ctx.createLinearGradient(0,0, 0, 2500);
     colorBg.addColorStop(0, 'red');
     colorBg.addColorStop(0.4, 'lightyellow');
@@ -50,7 +50,7 @@ export const chartData = (theData, ...element) => {
         }
       }
     };
-  } else if (element[1] === 2){
+  } else if (element[1] === 2){ // Tipo de gráfico
     colorBg = [
       'lightblue',
       'lightgreen',
