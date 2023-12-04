@@ -75,10 +75,6 @@ nav{
   z-index: 10;
 }
 
-.contents{
-  min-width: 970px;
-}
-
 .ops{
   margin: 1px 20px 1px 20px;
 }
@@ -246,6 +242,7 @@ table tbody tr:hover{
 }
 
 .contents{
+  min-width: 970px;
   width: 100%;
   height: 85%;
 }
