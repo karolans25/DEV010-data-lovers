@@ -75,6 +75,10 @@ nav{
   z-index: 10;
 }
 
+.contents{
+  min-width: 970px;
+}
+
 .ops{
   margin: 1px 20px 1px 20px;
 }
