@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Lovers</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
+    <header>
+      <h1>Contries Around the World</h1>
+    </header>
+
+    <nav class="container">
+      <section class="container">
+        <h3></h3>
+        <ul class="links">
+          <li class="link">
+            <button class="link-button" id="data-link">Data</button>
+          </li>
+          <li class="link">
+            <button class="link-button" id="calculus-link">Calculus</button>
+          </li>
+        </ul>
+        <section class="toggle">
+          |||
+        </section>
+      </section>
+    </nav>
+
+    <article>
+
+      <section id="data-container" class="container">
+        <section class="container" name="container-options">
+          <section id="search" class="ops" >
+            <input type="text" name="search-by" id="search-by" placeholder="Search 🔍">
+          </section>
+          <section id="filter" class="ops" >
+              <select name="fiter-by" id="filter-by"></select>
+          </section>
+          <section id="sort" class="ops" >
+            <!-- <label for="sort-by">Sort by: </label> -->
+            <select name="sort-by" id="sort-by">
+              <!-- <option value="-1">Sort</option> -->
+              <option value="country">Country</option>
+              <option value="capital">Capital</option>
+              <option value="area">Area</option>
+              <option value="population">Population</option>
+            </select>
+            <button id="sort-ascending-button">⏬ A-Z</button>
+            <button id="sort-descending-button">⏫ Z-A</button> 
+          </section>
+        </section>
+        <section class="container" name="container-optins-data">      
+          <section id="pages" class="ops" >
+            <label for="select-pages">Page: </label>
+            <button id="back-button">&laquo;</button>
+            <!-- <button id="back-button">&laquo<img id="back-button" src="assets/flecha-izquierda.png" alt="Anterior"></button-->
+            <select name="page-selector" id="page-selector"></select>
+            <button id="forward-button">&raquo;</button>
+            <!-- <button id="forward-button"><img id="forward-button" src="assets/flecha-correcta.png" alt="Siguiente"></button> -->
+          </section>
+          <section>
+            <section class="switch ops" >
+              <img src="./assets/flag.png" alt="flags" width="29px" height="29px">
+              <input id="switch" type="checkbox">
+              <label for="switch" class="lbl"></label>
+              <img src="./assets/table.png" alt="table" width="29px" height="29px">
+            </section>
+          </section>
+          </section>
+        <section class="container" id="data">
+          <section class="container" id="cards"></section>
+
+          <section class="container" id="table">
+            <table></table>
+          </section>
+        </section>
+      </section>
+
+      <section id="calculus-container" class="container">
+        <section class="tab-container">
+          <ul class="tab-options">
+            <li id="tab-option-gini" class="tab-option option-active">Gini</li>
+            <li id="tab-option-density" class="tab-option">Pop. Density</li>
+            <li id="tab-option-clock" class="tab-option">Clock</li>
+          </ul>
+        </section>
+        <section class="contents">
+          <section data-test="gini-content" class="content">
+            <!-- <section> -->
+            <h3>Gini Index</h3>
+            <aside>
+              The Gini index, or Gini co-efficient, measures income distribution across a population. <strong>The co-efficient ranges from <font color="green">0 (or 0%)</font> to <font color="red">1 (or 100%)</font></strong>, with 0 representing <strong><font color="green">perfect equality</font></strong> and 1 representing <strong><font color="red">perfect inequality</font></strong>. The Gini co-efficient is an important tool for analyzing income or wealth distribution within a country or region, but it should not be mistaken for an absolute measurement of income or wealth.
+            </aside>
+            <h4>Gini Index By Year</h4>
+            <aside>
+              In the next graph you can find the countries that reported the last Gini Index by year. 
+            </aside>
+          <!-- </section> -->
+            <section class="chartBox" name="gini-canvas-year">
+              <select id="year-selector"></select>
+              <canvas id="gini-canvas-year" width="100%" height="100px"></canvas>
+            </section> 
+            <h4>Gini Index for each Country</h4>
+            <aside>
+              In the next graph you can see where is located each country in the inequality global perspective. The first ones are the most inequality countries (colored in red) and the latest ones are the more equality ones (colored in green).
+            </aside>
+            <section class="chartBox">
+              <canvas id="gini-canvas" width="100%" height="600px"></canvas>
+            </section>
+          </section>
+
+          <section data-test="density-content" class="content">
+            <h3>Population Density</h3>
+            <aside>
+              Population density is the concentration of individuals within a species in a specific geographic locale. Population density data can be used to quantify demographic information and to assess relationships with ecosystems, human health, and infrastructure. Population density can be used to describe the location, growth, and migration of many organisms. In the case of humans, population density is often discussed in relation to urbanization, immigration, and population demographics.
+            </aside>
+            <section class="chartBox" name="density-canvas-pie">
+              <canvas id="density-canvas-pie" width="50px" height="50px"></canvas>
+            </section> 
+          </section>
+          <section data-test="clock-content" class="content">
+            <h3>Countries Time</h3> 
+            <section id="clock-input">
+              <section id="clock"></section>
+              <button id="change-clock">Change Time</button>
+
+            </section>
+            <section id="card-clock" class="container"></section>
+            
+          </section>
+        </section>
+      </section>
+
+      <section id="map-container" class="container">
+        <h1 style="color: #B9ACCD">To be continued...</h1>
+      </section>
+
+    </article>
+
+    <section class="overlay container" id="overlay">
+      <section class="popup" id="popup">
+        <a href="#" id="close-popup-buttton" class="close-popup-button">✖️</a>
+        <h3>Choose the Time:</h3>
+        <!-- <form> -->
+          <input type="number" id="hour" min="0" max="12" step="1" value="0" size="4">
+          <span style="color:#fff; font-size:30px;">:</span>
+          <input type="number" id="minutes" min="0" max="59" step="1" value="0" size="4">
+          <select id="meridian">
+            <option value="am" selected>AM</option>
+            <option value="pm">PM</option>
+          </select>
+          <button id="set-clock" value="Set">Set Time</button>
+        <!-- </form> -->
+      </section>
+    </section>
+
+
+    <footer>
+      <section>Hecho con <span class="heart">&hearts;</span> por <strong>Carolina Pulido Gómez</strong></section>
+      <section>
+        <a href="https://www.twitch.tv/karolans25" ><ion-icon name="logo-twitch"></ion-icon><span>Twitch</span></a>
+        <a href="https://github.com/karolans25/DEV010-cipher" ><ion-icon name="logo-github"></ion-icon><span>Github</span></a>
+      </section>
+    </footer>
+
+    <script src="main.js" type="module"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/Chart.min.js"></script>
+    <script>
+      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: "YOUR_API_KEY_HERE",
+        // Add other bootstrap parameters as needed, using camel case.
+        // Use the 'v' parameter to indicate the version to load (alpha, beta, weekly, etc.)
+      });
+    </script>
+    
+  </body>
+</html>
