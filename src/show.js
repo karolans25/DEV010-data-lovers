@@ -22,15 +22,10 @@
  * =============================================================================
 */
 const titles = ['No', 'Country', 'Capital', 'Languages', 'Area', 'Population', 'Gini'];
-//const titles = ['No', 'Country', 'Capital', 'Area', 'Population', 'Gini'];
 let data, cards, table, lines, page;
 
 export const printData = (data, cards, table, backBut, forwardBut, pageSelector, lines, check) => {
   const totalPages = Math.ceil(data.length/lines);
-  //Revisar que el alert salga una sola vez
-  if(totalPages === 0){
-    //alert("Didn't find countries according to your searching parameters.");
-  }
   if(totalPages === 1){
     backBut.disabled = true;
     forwardBut.disabled = true;
